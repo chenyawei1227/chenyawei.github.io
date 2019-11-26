@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="dusign, hexo-theme-snail">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          Java关键字之static - Hexo-theme-snail
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2019/11/22/Java关键字之static/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    
+      <!-- background effects start -->
+      <link rel="stylesheet" href="/css/dusign-star.css">
+    
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    
+      <link rel="stylesheet" href="/css/toc-star.css">
+    
+
+    <link rel="stylesheet" href="/css/dusign-common.css">
+    <link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      <link rel="stylesheet" href="/css/font-awesome.star.css">
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+            <canvas id="canv" width="1440" height="768"></canvas>
+<script>
+  var num = 200;
+  var w = window.innerWidth;
+  var h = window.innerHeight;
+  var max = 100;
+  var _x = 0;
+  var _y = 0;
+  var _z = 150;
+  var dtr = function(d) {
+    return d * Math.PI / 180;
+  };
+
+  var rnd = function() {
+    return Math.sin(Math.floor(Math.random() * 360) * Math.PI / 180);
+  };
+  var dist = function(p1, p2, p3) {
+    return Math.sqrt(Math.pow(p2.x - p1.x, 2) + Math.pow(p2.y - p1.y, 2) + Math.pow(p2.z - p1.z, 2));
+  };
+
+  var cam = {
+    obj: {
+      x: _x,
+      y: _y,
+      z: _z
+    },
+    dest: {
+      x: 0,
+      y: 0,
+      z: 1
+    },
+    dist: {
+      x: 0,
+      y: 0,
+      z: 200
+    },
+    ang: {
+      cplane: 0,
+      splane: 0,
+      ctheta: 0,
+      stheta: 0
+    },
+    zoom: 1,
+    disp: {
+      x: w / 2,
+      y: h / 2,
+      z: 0
+    },
+    upd: function() {
+      cam.dist.x = cam.dest.x - cam.obj.x;
+      cam.dist.y = cam.dest.y - cam.obj.y;
+      cam.dist.z = cam.dest.z - cam.obj.z;
+      cam.ang.cplane = -cam.dist.z / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z);
+      cam.ang.splane = cam.dist.x / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z);
+      cam.ang.ctheta = Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.z * cam.dist.z) / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.y * cam.dist.y + cam.dist.z * cam.dist.z);
+      cam.ang.stheta = -cam.dist.y / Math.sqrt(cam.dist.x * cam.dist.x + cam.dist.y * cam.dist.y + cam.dist.z * cam.dist.z);
+    }
+  };
+
+  var trans = {
+    parts: {
+      sz: function(p, sz) {
+        return {
+          x: p.x * sz.x,
+          y: p.y * sz.y,
+          z: p.z * sz.z
+        };
+      },
+      rot: {
+        x: function(p, rot) {
+          return {
+            x: p.x,
+            y: p.y * Math.cos(dtr(rot.x)) - p.z * Math.sin(dtr(rot.x)),
+            z: p.y * Math.sin(dtr(rot.x)) + p.z * Math.cos(dtr(rot.x))
+          };
+        },
+        y: function(p, rot) {
+          return {
+            x: p.x * Math.cos(dtr(rot.y)) + p.z * Math.sin(dtr(rot.y)),
+            y: p.y,
+            z: -p.x * Math.sin(dtr(rot.y)) + p.z * Math.cos(dtr(rot.y))
+          };
+        },
+        z: function(p, rot) {
+          return {
+            x: p.x * Math.cos(dtr(rot.z)) - p.y * Math.sin(dtr(rot.z)),
+            y: p.x * Math.sin(dtr(rot.z)) + p.y * Math.cos(dtr(rot.z)),
+            z: p.z
+          };
+        }
+      },
+      pos: function(p, pos) {
+        return {
+          x: p.x + pos.x,
+          y: p.y + pos.y,
+          z: p.z + pos.z
+        };
+      }
+    },
+    pov: {
+      plane: function(p) {
+        return {
+          x: p.x * cam.ang.cplane + p.z * cam.ang.splane,
+          y: p.y,
+          z: p.x * -cam.ang.splane + p.z * cam.ang.cplane
+        };
+      },
+      theta: function(p) {
+        return {
+          x: p.x,
+          y: p.y * cam.ang.ctheta - p.z * cam.ang.stheta,
+          z: p.y * cam.ang.stheta + p.z * cam.ang.ctheta
+        };
+      },
+      set: function(p) {
+        return {
+          x: p.x - cam.obj.x,
+          y: p.y - cam.obj.y,
+          z: p.z - cam.obj.z
+        };
+      }
+    },
+    persp: function(p) {
+      return {
+        x: p.x * cam.dist.z / p.z * cam.zoom,
+        y: p.y * cam.dist.z / p.z * cam.zoom,
+        z: p.z * cam.zoom,
+        p: cam.dist.z / p.z
+      };
+    },
+    disp: function(p, disp) {
+      return {
+        x: p.x + disp.x,
+        y: -p.y + disp.y,
+        z: p.z + disp.z,
+        p: p.p
+      };
+    },
+    steps: function(_obj_, sz, rot, pos, disp) {
+      var _args = trans.parts.sz(_obj_, sz);
+      _args = trans.parts.rot.x(_args, rot);
+      _args = trans.parts.rot.y(_args, rot);
+      _args = trans.parts.rot.z(_args, rot);
+      _args = trans.parts.pos(_args, pos);
+      _args = trans.pov.plane(_args);
+      _args = trans.pov.theta(_args);
+      _args = trans.pov.set(_args);
+      _args = trans.persp(_args);
+      _args = trans.disp(_args, disp);
+      return _args;
+    }
+  };
+
+  (function() {
+    "use strict";
+    var threeD = function(param) {
+      this.transIn = {};
+      this.transOut = {};
+      this.transIn.vtx = (param.vtx);
+      this.transIn.sz = (param.sz);
+      this.transIn.rot = (param.rot);
+      this.transIn.pos = (param.pos);
+    };
+
+    threeD.prototype.vupd = function() {
+      this.transOut = trans.steps(
+
+        this.transIn.vtx,
+        this.transIn.sz,
+        this.transIn.rot,
+        this.transIn.pos,
+        cam.disp
+      );
+    };
+
+    var Build = function() {
+      this.vel = 0.04;
+      this.lim = 360;
+      this.diff = 200;
+      this.initPos = 100;
+      this.toX = _x;
+      this.toY = _y;
+      this.go();
+    };
+
+    Build.prototype.go = function() {
+      this.canvas = document.getElementById("canv");
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+      this.$ = canv.getContext("2d");
+      this.$.globalCompositeOperation = 'source-over';
+      this.varr = [];
+      this.dist = [];
+      this.calc = [];
+
+      for (var i = 0, len = num; i < len; i++) {
+        this.add();
+      }
+
+      this.rotObj = {
+        x: 0,
+        y: 0,
+        z: 0
+      };
+      this.objSz = {
+        x: w / 5,
+        y: h / 5,
+        z: w / 5
+      };
+    };
+
+    Build.prototype.add = function() {
+      this.varr.push(new threeD({
+        vtx: {
+          x: rnd(),
+          y: rnd(),
+          z: rnd()
+        },
+        sz: {
+          x: 0,
+          y: 0,
+          z: 0
+        },
+        rot: {
+          x: 20,
+          y: -20,
+          z: 0
+        },
+        pos: {
+          x: this.diff * Math.sin(360 * Math.random() * Math.PI / 180),
+          y: this.diff * Math.sin(360 * Math.random() * Math.PI / 180),
+          z: this.diff * Math.sin(360 * Math.random() * Math.PI / 180)
+        }
+      }));
+      this.calc.push({
+        x: 360 * Math.random(),
+        y: 360 * Math.random(),
+        z: 360 * Math.random()
+      });
+    };
+
+    Build.prototype.upd = function() {
+      cam.obj.x += (this.toX - cam.obj.x) * 0.05;
+      cam.obj.y += (this.toY - cam.obj.y) * 0.05;
+    };
+
+    Build.prototype.draw = function() {
+      this.$.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      cam.upd();
+      this.rotObj.x += 0.1;
+      this.rotObj.y += 0.1;
+      this.rotObj.z += 0.1;
+
+      for (var i = 0; i < this.varr.length; i++) {
+        for (var val in this.calc[i]) {
+          if (this.calc[i].hasOwnProperty(val)) {
+            this.calc[i][val] += this.vel;
+            if (this.calc[i][val] > this.lim) this.calc[i][val] = 0;
+          }
+        }
+
+        this.varr[i].transIn.pos = {
+          x: this.diff * Math.cos(this.calc[i].x * Math.PI / 180),
+          y: this.diff * Math.sin(this.calc[i].y * Math.PI / 180),
+          z: this.diff * Math.sin(this.calc[i].z * Math.PI / 180)
+        };
+        this.varr[i].transIn.rot = this.rotObj;
+        this.varr[i].transIn.sz = this.objSz;
+        this.varr[i].vupd();
+        if (this.varr[i].transOut.p < 0) continue;
+        var g = this.$.createRadialGradient(this.varr[i].transOut.x, this.varr[i].transOut.y, this.varr[i].transOut.p, this.varr[i].transOut.x, this.varr[i].transOut.y, this.varr[i].transOut.p * 2);
+        this.$.globalCompositeOperation = 'lighter';
+        g.addColorStop(0, 'hsla(255, 255%, 255%, 1)');
+        g.addColorStop(.5, 'hsla(' + (i + 2) + ',85%, 40%,1)');
+        g.addColorStop(1, 'hsla(' + (i) + ',85%, 40%,.5)');
+        this.$.fillStyle = g;
+        this.$.beginPath();
+        this.$.arc(this.varr[i].transOut.x, this.varr[i].transOut.y, this.varr[i].transOut.p * 2, 0, Math.PI * 2, false);
+        this.$.fill();
+        this.$.closePath();
+      }
+    };
+    Build.prototype.anim = function() {
+      window.requestAnimationFrame = (function() {
+        return window.requestAnimationFrame ||
+          function(callback, element) {
+            window.setTimeout(callback, 1000 / 60);
+          };
+      })();
+      var anim = function() {
+        this.upd();
+        this.draw();
+        window.requestAnimationFrame(anim);
+      }.bind(this);
+      window.requestAnimationFrame(anim);
+    };
+
+    Build.prototype.run = function() {
+      this.anim();
+
+      window.addEventListener('mousemove', function(e) {
+        this.toX = (e.clientX - this.canvas.width / 2) * -0.8;
+        this.toY = (e.clientY - this.canvas.height / 2) * 0.8;
+      }.bind(this));
+      window.addEventListener('touchmove', function(e) {
+        e.preventDefault();
+        this.toX = (e.touches[0].clientX - this.canvas.width / 2) * -0.8;
+        this.toY = (e.touches[0].clientY - this.canvas.height / 2) * 0.8;
+      }.bind(this));
+      window.addEventListener('mousedown', function(e) {
+        for (var i = 0; i < 100; i++) {
+          this.add();
+        }
+      }.bind(this));
+      window.addEventListener('touchstart', function(e) {
+        e.preventDefault();
+        for (var i = 0; i < 100; i++) {
+          this.add();
+        }
+      }.bind(this));
+    };
+    var app = new Build();
+    app.run();
+  })();
+  window.addEventListener('resize', function() {
+    canvas.width = w = window.innerWidth;
+    canvas.height = h = window.innerHeight;
+  }, false);
+</script>
+
+<style  type="text/css">
+  body{
+    background-color: rgba(26,26,26,1);
+    text-align: -webkit-auto;
+    color: white;
+  }
+  body div,body p,body ul,body li,div p,p{
+    color: white;
+    filter:alpha(Opacity=90);
+    -moz-opacity:0.9;
+    opacity: 0.9; 
+  }
+  body hr{
+    background-color: rgba(255,255,255,0.4);
+    height: 1px;
+    border: none;
+  }
+  #cnblogs_post_body p img{
+    max-width: 100%;
+  }
+  #container {
+    width: 90%;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0);
+  }
+  #canv{
+    position: fixed;
+  }
+  .cnblogs_code {
+    color: #f8f8f8;
+    background-color: rgba(245, 245, 245, 0);
+    border: 1px solid #cccccc6e;
+  }
+  .cnblogs_code span{
+    color: #ccc!important;
+    background-color: #f5f5f500!important;
+  }
+  .cnblogs_code div {
+    background-color: rgba(0, 0, 0, 0);
+  }
+  .cnblogs_code_toolbar a:link{
+    background-color: #f5f5f500!important;
+  }
+  .cnblogs_code_toolbar a:link img{
+    background-color:#f5f5f500!important;
+  }
+  div.commentform textarea.comment_textarea {
+    background-color: #f0f8ff00;
+  }
+</style>
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                        </div>
+                        <h1>Java关键字之static</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Dusign on
+                            2019-11-22
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">1.2k</span> and
+                                Reading Time <span class="post-count">4</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Mr.Chen&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h4 id="一-什么是static关键字"><a href="#一-什么是static关键字" class="headerlink" title="一. 什么是static关键字"></a>一. 什么是static关键字</h4><ul>
+<li>我们可以基于一个类创建多个该类的对象，每个对象都拥有自己的成员，互相独立。然而在某些时候，我们更希望该类所有的对象共享同一个成员。此时就是 static 大显身手的时候了！！</li>
+<li>Java 中被 static修饰的成员称为静态成员或类成员。它属于整个类所有，而不是某个对象所有，即被==类的所有对象==所共享。</li>
+<li>方便在没有创建对象的情况下进行调用（变量或方法）。</li>
+<li>静态成员可以使用类名直接访问，也可以使用对象名进行访问。</li>
+</ul>
+<h4 id="二-静态变量"><a href="#二-静态变量" class="headerlink" title="二. 静态变量"></a>二. 静态变量</h4><p>使用 static 可以修饰变量：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test1</span> </span>&#123;</span><br><span class="line">    <span class="comment">// static修饰的变量为静态变量，所有类的对象共享hobby</span></span><br><span class="line">    <span class="keyword">static</span> String hobby = <span class="string">"Tedu"</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 静态变量可以直接使用类名来访问，无需创建对象</span></span><br><span class="line">        System.out.println(<span class="string">"通过类名访问hobby："</span> + Test1.hobby);</span><br><span class="line">        <span class="comment">// 创建类的对象</span></span><br><span class="line">        Test1 t1 = <span class="keyword">new</span> Test1();</span><br><span class="line">        <span class="comment">// 使用对象名访问静态变量</span></span><br><span class="line">        System.out.println(<span class="string">"使用对象名访hobby:"</span> + t1.hobby);</span><br><span class="line">        <span class="comment">// 使用对象名的形式修改静态变量的值</span></span><br><span class="line">        t1.hobby = <span class="string">"cjj"</span>;</span><br><span class="line">        <span class="comment">// 再次使用类名访问静态白变量，值已经被修改</span></span><br><span class="line">        System.out.println(<span class="string">"通过类名访问hobby："</span> + Test1.hobby);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">通过类名访问hobby：Tedu</span><br><span class="line">使用对象名访hobby:Tedu</span><br><span class="line">通过类名访问hobby：cjj</span><br></pre></td></tr></table></figure></p>
+<h4 id="三-static-使用之静态方法"><a href="#三-static-使用之静态方法" class="headerlink" title="三. static 使用之静态方法"></a>三. static 使用之静态方法</h4><p>使用 static 修饰方法，称为静态方法或类方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test01</span> </span>&#123;</span><br><span class="line">    <span class="comment">//使用static关键字声明静态方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"欢迎你：Cjj!"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//直接使用类名调用静态方法</span></span><br><span class="line">        Test01.print();</span><br><span class="line">        <span class="comment">//也可以通过对象名调用，当然更推荐使用类名调用</span></span><br><span class="line">        Test01 t1 = <span class="keyword">new</span> Test01();</span><br><span class="line">        t1.print();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br> 运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">欢迎你：Cjj!</span><br><span class="line">欢迎你：Cjj!</span><br></pre></td></tr></table></figure><br>3.static 使用之静态初始化块<br>Java 中可以通过初始化块进行数据赋值。如：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p><strong>注意：</strong>  </p>
+<ol>
+<li>静态成员属于整个类，当系统第一次使用该类时，就会为其分配内存空间直到该类被卸载才会进行资源回收！~~ </li>
+<li>静态方法中可以直接调用同类中的静态成员，但不能直接调用非静态成员。如：<br><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g94qojv9thj30x4096jsf.jpg" alt=""><br>如果希望在静态方法中调用非静态变量，可以通过创建类的对象，然后通过对象来访问非静态变量。如：<br><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g94qpd5dvhj30x20cmabh.jpg" alt=""></li>
+<li>在普通成员方法中，则可以直接访问同类的非静态变量和静态变量，如：<br><img src="https://tva1.sinaimg.cn/large/006y8mN6gy1g94qqy58fnj30x60a8t9s.jpg" alt=""></li>
+<li>静态方法中不能直接调用非静态方法，需要通过对象来访问非静态方法。如：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test01</span> </span>&#123;</span><br><span class="line">    String name = <span class="string">"Cjj"</span>; <span class="comment">//非静态成员变量</span></span><br><span class="line">    <span class="keyword">static</span> String hobby = <span class="string">"study"</span>; <span class="comment">//静态成员变量</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//普通成员方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">print1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"普通成员方法~~~"</span>); </span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//静态成员方法</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"静态成员方法~~~"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">//普通成员方法必须通过对象来调用</span></span><br><span class="line">        Test01 t1 = <span class="keyword">new</span> Test01();</span><br><span class="line">        t1.print1();</span><br><span class="line">        <span class="comment">//可以直接调用静态方法</span></span><br><span class="line">        print2();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="四-static-使用之静态初始化块"><a href="#四-static-使用之静态初始化块" class="headerlink" title="四.static 使用之静态初始化块"></a>四.static 使用之静态初始化块</h4>Java 中可以通过初始化块进行数据赋值。如：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test01</span> </span>&#123;</span><br><span class="line">    String name = <span class="string">"chenyw"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//通过初始化块为成员变量赋值</span></span><br><span class="line">    &#123;</span><br><span class="line">        name = <span class="string">"cjj"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Test01 test01 = <span class="keyword">new</span> Test01();</span><br><span class="line">        System.out.println(<span class="string">"name="</span>+test01.name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+运行结果：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">name=cjj</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>注意：</strong></p>
+<p>静态初始化块只在类加载时执行，且只会执行一次，同时静态初始化块只能给静态变量赋值，不能初始化普通的成员变量。</p>
+<p>我们来看一段代码：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test02</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> num1;</span><br><span class="line">    <span class="keyword">int</span> num2;</span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">int</span> num3;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Test02</span><span class="params">()</span> </span>&#123;<span class="comment">// 构造方法</span></span><br><span class="line">        num1 = <span class="number">11</span>;</span><br><span class="line">        System.out.println(<span class="string">"通过构造方法为变量num1赋值"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#123; <span class="comment">// 初始化块</span></span><br><span class="line">        num2 = <span class="number">22</span>;</span><br><span class="line">        System.out.println(<span class="string">"通过初始化块为变量num2赋值"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;<span class="comment">// 静态初始化块</span></span><br><span class="line">        num3 = <span class="number">33</span>;</span><br><span class="line">        System.out.println(<span class="string">"通过静态初始化块为静态变量num3赋值"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Test02 t1 = <span class="keyword">new</span> Test02(); <span class="comment">//创建对象</span></span><br><span class="line">        System.out.println(<span class="string">"num1:"</span> + t1.num1);</span><br><span class="line">        System.out.println(<span class="string">"num2:"</span> + t1.num2);</span><br><span class="line">        System.out.println(<span class="string">"num3:"</span> + num3);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br>运行结果：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">通过静态初始化块为静态变量num3赋值</span><br><span class="line">通过初始化块为变量num2赋值</span><br><span class="line">通过构造方法为变量num1赋值</span><br><span class="line">num1:11</span><br><span class="line">num2:22</span><br><span class="line">num3:33</span><br></pre></td></tr></table></figure><br><em>通过输出结果，我们可以看到，程序运行时静态初始化块最先被执行，然后执行普通初始化块，最后才执行构造方法。由于静态初始化块只在类加载时执行一次，所以当再次创建对象 hello2 时并未执行静态初始化块。类是在第一次使用的时候才加载，加载之后就不会移除</em></p>
+<p>内容来源：<a href="https://www.cnblogs.com/chuijingjing/p/9452893.html" target="_blank" rel="noopener">https://www.cnblogs.com/chuijingjing/p/9452893.html</a></p>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/11/23/部署Hexo博客到阿里云centOS7/" data-toggle="tooltip" data-placement="top" title="部署Hexo博客到阿里云centOS7">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/11/22/搭建自己的Hexo博客/" data-toggle="tooltip" data-placement="top" title="搭建自己的Hexo博客">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">dusign</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="undefined"
+                    data-server="undefined"
+                    data-type="undefined"
+                    data-fixed="undefined" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Fri Nov 22 2019 03:07:58 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Dusign&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Dusign&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Dusign&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:white;
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(255,255,255,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(255,255,255,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/dusign">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/dusignr">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/Gang Du">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/dusignr">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Dusign 2019 
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<!-- Search -->
+<script src="/js/search.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>
