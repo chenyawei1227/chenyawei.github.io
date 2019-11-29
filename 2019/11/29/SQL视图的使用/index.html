@@ -16,11 +16,11 @@
     <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <title>
         
-          test - Hexo-theme-snail
+          SQL视图的使用 - Hexo-theme-snail
         
     </title>
 
-    <link rel="canonical" href="https://bytenote.cn/2019/11/27/test/">
+    <link rel="canonical" href="https://bytenote.cn/2019/11/29/SQL视图的使用/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -112,18 +112,18 @@
                         <div class="tags">
                             
                         </div>
-                        <h1>test</h1>
+                        <h1>SQL视图的使用</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Luke on
-                            2019-11-27
+                            2019-11-29
                         </span>
 
                         
                             <div class="blank_box"></div>
                             <span class="meta">
-                                Words <span class="post-count">0</span> and
-                                Reading Time <span class="post-count">1</span> Minutes
+                                Words <span class="post-count">720</span> and
+                                Reading Time <span class="post-count">2</span> Minutes
                             </span>
                             <div class="blank_box"></div>
                             <!-- 不蒜子统计 start -->
@@ -255,19 +255,41 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <h3 id="1-视图作用"><a href="#1-视图作用" class="headerlink" title="1.视图作用"></a>1.视图作用</h3><p>试图是虚拟的表。与包含数据的表不一样，试图只包含使用时动态的检索数据的查询。 可以用与表基本相同的方式使用它们。对视图执行select操作，过滤和排序数据，将视图联结到其他视图或表，甚至添加和更新数据（添加和更新数据有某些限制） </p>
+<ul>
+<li>简化复杂的SQL操作，过滤信息，计算字段等。编写查询后，可以方便的重用它而不必知道其基本查询细节</li>
+<li>使用表的一部分而不是整个表。</li>
+<li>保护数据。可以授予用户访问表的特定部分的权限，而不是整个表的访问权限</li>
+<li>更改数据格式和表示。视图可返回与底层表的表示和格式不同的数据。</li>
+</ul>
+<h3 id="2-视图的规则和限制"><a href="#2-视图的规则和限制" class="headerlink" title="2.视图的规则和限制"></a>2.视图的规则和限制</h3><ul>
+<li>与表一样，视图命名必须唯一。视图的数目没有限制。</li>
+<li>要有创建视图的权限。</li>
+<li>视图可以嵌套，可以利用从其他视图中检索数据的查询来构造视图。（嵌套视图可能会严重降低查询性能，在生产环境中使用之前，应该对其进行全面的测试）</li>
+<li>许多DBMS（Microsoft在SQL Server）禁止在视图查询中使用ORDER BY子句</li>
+<li>有些DBMS要求对返回的所有列进行命名，如果列是计算字段，需要使用别名。</li>
+<li>有些DBMS把视图作为自渎的查询。不能将数据写回底层表。</li>
+</ul>
+<h3 id="3-创建视图"><a href="#3-创建视图" class="headerlink" title="3.创建视图"></a>3.创建视图</h3><h4 id="3-1-利用视图极大简化了复杂的联结"><a href="#3-1-利用视图极大简化了复杂的联结" class="headerlink" title="3.1 利用视图极大简化了复杂的联结"></a>3.1 利用视图极大简化了复杂的联结</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> c.cust_name,c.cust_contact</span><br><span class="line"><span class="keyword">FROM</span> Customers c, Orders o, OrderItems i</span><br><span class="line"><span class="keyword">WHERE</span> c.cust_id = o.cust_id</span><br><span class="line"><span class="keyword">AND</span> i.order_num = o.order_num</span><br><span class="line"><span class="keyword">AND</span> i.prod_id = <span class="string">'RGAN01'</span>;</span><br></pre></td></tr></table></figure>
+<p>创建：我想把上面这条查询包装成为一个名为ProductCustomers的虚拟表（视图）：<strong>创建视图时尽量不绑定特定数据</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> ProductCustomers <span class="keyword">AS</span> </span><br><span class="line"><span class="keyword">SELECT</span> c.cust_name,c.cust_contact</span><br><span class="line"><span class="keyword">FROM</span> Customers c, Orders o, OrderItems i</span><br><span class="line"><span class="keyword">WHERE</span> c.cust_id = o.cust_id</span><br><span class="line"><span class="keyword">AND</span> i.order_num = o.order_num;</span><br></pre></td></tr></table></figure>
+<p>查询：可以通过下面语句检索相同数据,<strong>利用视图极大简化了复杂的联结</strong></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> cust_name,cust_contact</span><br><span class="line"><span class="keyword">FROM</span> ProductCustomers</span><br><span class="line"><span class="keyword">WHERE</span> prod_id = <span class="string">'RGAN01'</span>;</span><br></pre></td></tr></table></figure>
+<p>删除：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">VIEW</span> ProductCustomers;</span><br></pre></td></tr></table></figure>
+<h4 id="3-2-利用视图格式化检索出的数据"><a href="#3-2-利用视图格式化检索出的数据" class="headerlink" title="3.2 利用视图格式化检索出的数据"></a>3.2 利用视图格式化检索出的数据</h4><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="keyword">CONCAT</span>(<span class="keyword">RTRIM</span>(vend_name),<span class="string">"("</span>,<span class="keyword">RTRIM</span>(vend_country),<span class="string">")"</span> )</span><br><span class="line">	<span class="keyword">AS</span> vend_title</span><br><span class="line"><span class="keyword">FROM</span> Vendors</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> Vend_name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RTRIM</span>(vend_name) + <span class="string">'('</span> + <span class="keyword">RTRIM</span>(vend_country) + <span class="string">')'</span></span><br><span class="line">	<span class="keyword">AS</span> vend_title</span><br><span class="line"><span class="keyword">FROM</span> Vendors</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RTRIM</span>(vend_name) || <span class="string">'('</span> || <span class="keyword">RTRIM</span>(vend_country) || <span class="string">')'</span></span><br><span class="line">	<span class="keyword">AS</span> vend_title</span><br><span class="line"><span class="keyword">FROM</span> Vendors</span><br><span class="line"><span class="keyword">ORDER</span> <span class="keyword">BY</span> vend_name;</span><br><span class="line"></span><br><span class="line">上面3条语句执行结果相同</span><br></pre></td></tr></table></figure>
+<p>假设经常使用这个格式的结果，不用在每次需要时执行这样的拼接，而是创建一个视图：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">VIEW</span> VendorLocations <span class="keyword">AS</span></span><br><span class="line"><span class="keyword">SELECT</span> <span class="keyword">RTRIM</span>(vend_name) + <span class="string">'('</span> + <span class="keyword">RTRIM</span>(vend_country) + <span class="string">')'</span></span><br><span class="line">	<span class="keyword">AS</span> vend_title</span><br><span class="line"><span class="keyword">FROM</span> Vendors;</span><br><span class="line"></span><br><span class="line">查询时执行：</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> *</span><br><span class="line"><span class="keyword">FROM</span> VendorLocations;</span><br></pre></td></tr></table></figure>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>视图为虚拟的表。它们包含的不是数据而是根据需要检索数据的查询。提供一套封装select语句的层次，可用来简化数据处理，重新格式化或保护基础数据。</p>
+
                 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2019/11/29/SQL视图的使用/" data-toggle="tooltip" data-placement="top" title="SQL视图的使用">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2019/11/23/部署Hexo博客到阿里云centOS7/" data-toggle="tooltip" data-placement="top" title="部署Hexo博客到阿里云centOS7">Next Post &rarr;</a>
+                            <a href="/2019/11/27/test/" data-toggle="tooltip" data-placement="top" title="test">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -369,7 +391,7 @@ const myTheme = {
 
 
 const gitment = new Gitment({
-    id: 'Wed Nov 27 2019 04:15:26 GMT+0800', // optional
+    id: 'Fri Nov 29 2019 15:42:00 GMT+0800', // optional
     owner: "chenyawei1227",
     repo: "comments",
     oauth: {
