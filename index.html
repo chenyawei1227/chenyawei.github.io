@@ -160,13 +160,6 @@
 
                         
                         <li>
-                            <a href="/tags/">Tags</a>
-                        </li>
-                        
-                    
-
-                        
-                        <li>
                             <a href="/about/">About</a>
                         </li>
                         
@@ -175,6 +168,13 @@
                         
                         <li>
                             <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
                         </li>
                         
                     
@@ -254,9 +254,112 @@
 
     
 
+    
+
+    
+
 
 
 <!-- Main Content -->
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2019/12/05/快速排序/">
+                <h2 class="post-title">
+                    快速排序
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    快速排序思路：快速排序时间最好情况下的复杂度为O(\log_2 n)，待排序序列越无序，本算法效率越高。最坏情况下的时间复杂度为O(n^2)，平均复杂度为$O(\log_2 n)$，
+
+对一个序列A[1]、A[2]、… 、A[n]，调整序列中元素的位置，一趟排序后，使得A[1]的左侧所有元素都不超过A[1]、右侧所有元素都大于A[1].
+然后，以A[1]位置分割左右两部分递归快速排序
+
+12......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Luke on
+                    2019-12-05
+                </p>
+                <div class="tags">
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2019/12/05/归并排序/">
+                <h2 class="post-title">
+                    归并排序
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    二路归并排序思路：将原始序列看作N个只包含一个元素的有序子序列，然后每次迭代归并两个相邻的有序子序列，直到最后只剩下一个有序的序列。时间复杂度为O(\log_2 n)
+代码：
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152#include &lt;c......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Luke on
+                    2019-12-05
+                </p>
+                <div class="tags">
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2019/12/05/插入排序/">
+                <h2 class="post-title">
+                    插入排序
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    直接插入思路：每趟将一个待排序的关键字按照其值的大小，插入到有序序列中的正确的位置，直到全部序列有序。其时间复杂度为O(n^2), 待排序的元素超过10^5的规模时是无法承受的。
+代码：
+123456789101112131415161718192021222324252627282930#include &lt;cstdio&gt;#include &lt;algorithm&gt;tem......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Luke on
+                    2019-12-05
+                </p>
+                <div class="tags">
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
 
     
 
@@ -492,53 +595,16 @@ Java 中被 static修饰的成员称为静态成员或类成员。它属于整�
 
     
 
-    
-
-        <div class="post-preview">
-
-            <a href="/2019/11/01/Hexo-Theme-Snail/">
-                <h2 class="post-title">
-                    Hexo-Theme-Snail
-                </h2>
-                <h3 class="post-subtitle">
-                    A succinct hexo theme.
-                </h3>
-                <div class="post-content-preview">
-                    hexo-theme-snailView Hexo-Theme-Snail Sources On Github &#10174; 
-View Live Super Snail Blog &#10174;
-
-Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, that can be set ......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Luke on
-                    2019-11-01
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#dusign" title="dusign">dusign</a>
-                    
-                      <a href="/tags/#hexo-theme-snail" title="hexo-theme-snail">hexo-theme-snail</a>
-                    
-                      <a href="/tags/#snail" title="snail">snail</a>
-                    
-                      <a href="/tags/#hexo" title="hexo">hexo</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
 
 
 <!-- Pager -->
 
 <ul class="pager">
     
+    
+        <li class="next">
+            <a href="/archives/2/">Older Posts &rarr;</a>
+        </li>
     
 </ul>
 
@@ -651,23 +717,23 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
     <ul>
       
         <li>
+          <a href="/2019/12/05/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F/">快速排序</a>
+        </li>
+      
+        <li>
+          <a href="/2019/12/05/%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F/">归并排序</a>
+        </li>
+      
+        <li>
+          <a href="/2019/12/05/%E6%8F%92%E5%85%A5%E6%8E%92%E5%BA%8F/">插入排序</a>
+        </li>
+      
+        <li>
           <a href="/2019/12/05/two-pointers%E7%BC%96%E7%A8%8B%E6%80%9D%E6%83%B3/">two pointers编程思想</a>
         </li>
       
         <li>
           <a href="/2019/12/05/lower-bound%E5%92%8Cupper-bound%E5%87%BD%E6%95%B0%E5%BA%94%E7%94%A8/">lower_bound和upper_bound函数应用</a>
-        </li>
-      
-        <li>
-          <a href="/2019/12/04/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">贪心算法</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/29/SQL%E8%A7%86%E5%9B%BE%E7%9A%84%E4%BD%BF%E7%94%A8/">SQL视图的使用</a>
-        </li>
-      
-        <li>
-          <a href="/2019/11/23/%E9%83%A8%E7%BD%B2Hexo%E5%8D%9A%E5%AE%A2%E5%88%B0%E9%98%BF%E9%87%8C%E4%BA%91centOS7/">部署Hexo博客到阿里云centOS7</a>
         </li>
       
     </ul>
@@ -696,7 +762,7 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
     </div>
 
         <hr>
