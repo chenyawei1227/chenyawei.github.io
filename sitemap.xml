@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://bytenote.cn/about/index.html</loc>
+    
+    <lastmod>2019-12-08T12:42:59.529Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://bytenote.cn/about/index-1.html</loc>
     
     <lastmod>2019-12-08T12:15:50.796Z</lastmod>
@@ -110,13 +117,6 @@
     <loc>https://bytenote.cn/archive/index.html</loc>
     
     <lastmod>2019-11-26T18:02:22.694Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://bytenote.cn/about/index.html</loc>
-    
-    <lastmod>2019-11-26T18:02:22.693Z</lastmod>
     
   </url>
   
