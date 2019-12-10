@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://bytenote.cn/2019/12/09/Java%25E9%259B%2586%25E5%2590%2588-%25E5%258D%25B3%25E5%25AE%25B9%25E5%2599%25A8/</loc>
+    
+    <lastmod>2019-12-10T17:36:43.026Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://bytenote.cn/2019/12/10/springMVC%25E9%2585%258D%25E7%25BD%25AEform%25E6%2594%25AF%25E6%258C%2581PUT%25E5%2592%258CDELETE%25E6%2596%25B9%25E6%25B3%2595/</loc>
     
     <lastmod>2019-12-10T17:35:06.606Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>https://bytenote.cn/2019/12/08/try-catch-finally%25E5%2585%25B3%25E9%2594%25AE%25E5%25AD%2597%25E7%259B%25B8%25E5%2585%25B3%25E9%2597%25AE%25E9%25A2%2598/</loc>
     
     <lastmod>2019-12-09T15:45:37.905Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://bytenote.cn/2019/12/09/Java%25E9%259B%2586%25E5%2590%2588-%25E5%258D%25B3%25E5%25AE%25B9%25E5%2599%25A8/</loc>
-    
-    <lastmod>2019-12-09T05:54:04.194Z</lastmod>
     
   </url>
   

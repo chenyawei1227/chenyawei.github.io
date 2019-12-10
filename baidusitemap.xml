@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://bytenote.cn/2019/12/09/Java%E9%9B%86%E5%90%88-%E5%8D%B3%E5%AE%B9%E5%99%A8/</loc>
+    <lastmod>2019-12-10</lastmod>
+  </url>  <url>
     <loc>https://bytenote.cn/2019/12/10/springMVC%E9%85%8D%E7%BD%AEform%E6%94%AF%E6%8C%81PUT%E5%92%8CDELETE%E6%96%B9%E6%B3%95/</loc>
     <lastmod>2019-12-10</lastmod>
   </url>  <url>
@@ -11,9 +14,6 @@
     <lastmod>2019-12-10</lastmod>
   </url>  <url>
     <loc>https://bytenote.cn/2019/12/08/try-catch-finally%E5%85%B3%E9%94%AE%E5%AD%97%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98/</loc>
-    <lastmod>2019-12-09</lastmod>
-  </url>  <url>
-    <loc>https://bytenote.cn/2019/12/09/Java%E9%9B%86%E5%90%88-%E5%8D%B3%E5%AE%B9%E5%99%A8/</loc>
     <lastmod>2019-12-09</lastmod>
   </url>  <url>
     <loc>https://bytenote.cn/2019/11/22/Java%E5%85%B3%E9%94%AE%E5%AD%97%E4%B9%8Bstatic/</loc>
