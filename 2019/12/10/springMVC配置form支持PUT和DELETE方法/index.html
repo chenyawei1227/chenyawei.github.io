@@ -16,11 +16,11 @@
     <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <title>
         
-          快速排序 - Hexo-theme-snail
+          springMVC配置form支持PUT和DELETE方法 - Hexo-theme-snail
         
     </title>
 
-    <link rel="canonical" href="https://bytenote.cn/2019/12/05/快速排序/">
+    <link rel="canonical" href="https://bytenote.cn/2019/12/10/springMVC配置form支持PUT和DELETE方法/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -111,23 +111,25 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                              <a class="tag" href="/tags/#操作记录" title="操作记录">操作记录</a>
                             
-                              <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                              <a class="tag" href="/tags/#java" title="java">java</a>
+                            
+                              <a class="tag" href="/tags/#spring" title="spring">spring</a>
                             
                         </div>
-                        <h1>快速排序</h1>
+                        <h1>springMVC配置form支持PUT和DELETE方法</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Luke on
-                            2019-12-05
+                            2019-12-10
                         </span>
 
                         
                             <div class="blank_box"></div>
                             <span class="meta">
-                                Words <span class="post-count">410</span> and
-                                Reading Time <span class="post-count">2</span> Minutes
+                                Words <span class="post-count">0</span> and
+                                Reading Time <span class="post-count">1</span> Minutes
                             </span>
                             <div class="blank_box"></div>
                             <!-- 不蒜子统计 start -->
@@ -259,25 +261,15 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h3 id="快速排序思路："><a href="#快速排序思路：" class="headerlink" title="快速排序思路："></a>快速排序思路：</h3><p>快速排序时间最好情况下的复杂度为<script type="math/tex">O(\log_2 n)</script>，待排序序列越无序，本算法效率越高。最坏情况下的时间复杂度为<script type="math/tex">O(n^2)</script>，平均复杂度为$O(\log_2 n)$，</p>
-<ul>
-<li>对一个序列A[1]、A[2]、… 、A[n]，调整序列中元素的位置，一趟排序后，使得A[1]的左侧所有元素都不超过A[1]、右侧所有元素都大于A[1].</li>
-<li>然后，以A[1]位置分割左右两部分递归快速排序</li>
-</ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//一趟关键元素（主原）排序</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp = A[left];</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[right] &gt; temp) right--;</span><br><span class="line">        A[left] = A[right];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[left] &lt;= temp ) left++;</span><br><span class="line">        A[right] = A[left];</span><br><span class="line">    &#125;</span><br><span class="line">    A[left] = temp;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//优化主原没有把区间[left,right]分成两个近似的子区间:随机的选择主原</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">randPartition</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> randNum = (round(<span class="number">1.0</span>*rand()/RAND_MAX*(right - left) + left));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"randNum: %d\n"</span>,randNum);</span><br><span class="line">    swap(A[randNum],A[left]);</span><br><span class="line">    <span class="keyword">int</span> temp = A[left];</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[right] &gt; temp) right--;</span><br><span class="line">        A[left] = A[right];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[left] &lt;= temp) left++;</span><br><span class="line">        A[right] = A[left]; </span><br><span class="line">    &#125;</span><br><span class="line">    A[left] = temp;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span> A[],<span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="comment">//int pos = partition(A,left,right);</span></span><br><span class="line">        <span class="keyword">int</span> pos = randPartition(A,left,right);</span><br><span class="line">        quickSort(A,left,pos - <span class="number">1</span>);</span><br><span class="line">        quickSort(A,pos + <span class="number">1</span>,right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> A[] = &#123;<span class="number">35</span>,<span class="number">18</span>,<span class="number">16</span>,<span class="number">72</span>,<span class="number">24</span>,<span class="number">65</span>,<span class="number">12</span>,<span class="number">88</span>,<span class="number">46</span>,<span class="number">28</span>,<span class="number">100</span>,<span class="number">66</span>,<span class="number">866</span>&#125;;</span><br><span class="line">    quickSort(A,<span class="number">0</span>,<span class="number">9</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,A[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+                
                 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2019/12/06/二叉树的遍历和创建/" data-toggle="tooltip" data-placement="top" title="二叉树的遍历和创建">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2019/12/05/归并排序/" data-toggle="tooltip" data-placement="top" title="归并排序">Next Post &rarr;</a>
+                            <a href="/2019/12/09/java泛型/" data-toggle="tooltip" data-placement="top" title="java泛型">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -379,7 +371,7 @@ const myTheme = {
 
 
 const gitment = new Gitment({
-    id: 'Thu Dec 05 2019 22:57:01 GMT+0800', // optional
+    id: 'Tue Dec 10 2019 20:18:01 GMT+0800', // optional
     owner: "chenyawei1227",
     repo: "comments",
     oauth: {
@@ -426,9 +418,11 @@ const gitment = new Gitment({
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                          <a class="tag" href="/tags/#操作记录" title="操作记录">操作记录</a>
                         
-                          <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                          <a class="tag" href="/tags/#java" title="java">java</a>
+                        
+                          <a class="tag" href="/tags/#spring" title="spring">spring</a>
                         
                     </div>
                 </section>

@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://bytenote.cn/2019/12/10/springMVC%25E9%2585%258D%25E7%25BD%25AEform%25E6%2594%25AF%25E6%258C%2581PUT%25E5%2592%258CDELETE%25E6%2596%25B9%25E6%25B3%2595/</loc>
+    
+    <lastmod>2019-12-10T12:19:10.298Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://bytenote.cn/2019/12/08/try-catch-finally%25E5%2585%25B3%25E9%2594%25AE%25E5%25AD%2597%25E7%259B%25B8%25E5%2585%25B3%25E9%2597%25AE%25E9%25A2%2598/</loc>
+    
+    <lastmod>2019-12-09T15:45:37.905Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://bytenote.cn/2019/12/09/java%25E6%25B3%259B%25E5%259E%258B/</loc>
     
     <lastmod>2019-12-09T05:54:28.937Z</lastmod>
@@ -33,13 +47,6 @@
     <loc>https://bytenote.cn/2019/11/23/%25E9%2583%25A8%25E7%25BD%25B2Hexo%25E5%258D%259A%25E5%25AE%25A2%25E5%2588%25B0%25E9%2598%25BF%25E9%2587%258C%25E4%25BA%2591centOS7/</loc>
     
     <lastmod>2019-12-09T05:50:45.646Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://bytenote.cn/2019/12/08/try-catch-finally%25E5%2585%25B3%25E9%2594%25AE%25E5%25AD%2597%25E7%259B%25B8%25E5%2585%25B3%25E9%2597%25AE%25E9%25A2%2598/</loc>
-    
-    <lastmod>2019-12-09T05:49:53.610Z</lastmod>
     
   </url>
   
