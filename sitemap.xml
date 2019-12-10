@@ -4,7 +4,7 @@
 
     <sitemap>
         <loc>https://bytenote.cn/post-sitemap.xml</loc>
-        <lastmod>2019-12-10T17:21:59.800Z</lastmod>
+        <lastmod>2019-12-10T17:27:08.333Z</lastmod>
     </sitemap>
 
     <sitemap>
@@ -13,8 +13,13 @@
     </sitemap>
 
     <sitemap>
+        <loc>https://bytenote.cn/category-sitemap.xml</loc>
+        <lastmod>2019-12-10T17:27:08.333Z</lastmod>
+    </sitemap>
+
+    <sitemap>
         <loc>https://bytenote.cn/tag-sitemap.xml</loc>
-        <lastmod>2019-12-10T17:21:59.800Z</lastmod>
+        <lastmod>2019-12-10T17:27:08.333Z</lastmod>
     </sitemap>
 
 </sitemapindex>
