@@ -8,6 +8,20 @@
     </url>
 
     <url>
+        <loc>https://bytenote.cn/categories/SrpingBoot/java/</loc>
+        <lastmod>2019-12-11T05:10:06.878Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://bytenote.cn/categories/SrpingBoot/</loc>
+        <lastmod>2019-12-11T05:10:06.878Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://bytenote.cn/categories/java/</loc>
         <lastmod>2019-12-10T18:10:36.183Z</lastmod>
         <changefreq>weekly</changefreq>
