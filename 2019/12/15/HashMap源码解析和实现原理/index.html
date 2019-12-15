@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          HashMap源码解析和实现原理 - Hexo-theme-snail
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2019/12/15/HashMap源码解析和实现原理/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    
+      <link rel="stylesheet" href="/css/dusign-light.css">
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    
+      <link rel="stylesheet" href="/css/toc.css">
+    
+
+    <link rel="stylesheet" href="/css/dusign-common.css">
+    <link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      <link rel="stylesheet" href="/css/font-awesome.css">
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#java" title="java">java</a>
+                            
+                              <a class="tag" href="/tags/#基础理解" title="基础理解">基础理解</a>
+                            
+                        </div>
+                        <h1>HashMap源码解析和实现原理</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2019-12-15
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">5.5k</span> and
+                                Reading Time <span class="post-count">22</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="一-HashMap表简介"><a href="#一-HashMap表简介" class="headerlink" title="一.HashMap表简介"></a>一.HashMap表简介</h2><h3 id="1-1-先了解下什么是hash表，"><a href="#1-1-先了解下什么是hash表，" class="headerlink" title="1.1 先了解下什么是hash表，"></a>1.1 先了解下什么是hash表，</h3><p>将需要检索的元素映射成可以快速检索的hash值，hashCode = hash(key); 存储hash值（即为hash桶）底层通常是用数组实现的，因为数组的随机寻址时间是O(1)常数时间（底层是硬件电路的线形地址变换直接查找过去，速度非常快根长度无关）。如果多个元素的hash值相同，称为hash碰撞。核心是基于哈希值的桶和链表。</p>
+<p>致命缺陷就是hash碰撞。解决碰撞比较出名的有四种 ： (1)开放定址法 (2)链地址法 (3)再哈希法 (4)公共溢出区域法</p>
+<h3 id="1-2-原理"><a href="#1-2-原理" class="headerlink" title="1.2 原理"></a>1.2 原理</h3><p>原理图：</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9xb6o4i3uj30wa0g0q5v.jpg" alt="image-20191215124612391"></p>
+<p>HashMap采用Entry数组来存储key-value对，每一个键值对组成了一个Entry实体，Entry类实际上是一个单向的链表结构，它具有Next指针，可以连接下一个Entry实体。 只是在JDK1.8中，链表长度大于8的时候，链表会转成红黑树！ <em>为什么用数组+链表？</em> 数组是用来确定桶的位置，利用元素的key的hash值对数组长度取模得到. 链表是用来解决hash冲突问题，当出现hash值一样的情形，就在数组上的对应位置形成一条链表。</p>
+<p><code>ps</code>:这里的hash值并不是指hashcode，而是将hashcode高低十六位异或过的。至于为什么要这么做，继续往下看。</p>
+<p><em>我用LinkedList代替数组结构可以么?</em> 这里我稍微说明一下，此题的意思是，源码中是这样的</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Entry[] table = new Entry[capacity];</span><br></pre></td></tr></table></figure>
+<p><code>ps：</code>Entry就是一个链表节点。 那我用下面这样表示</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Entry&gt; table = new LinkedList&lt;Entry&gt;();</span><br></pre></td></tr></table></figure>
+<p>是否可行? </p>
+<p>答案很明显，必须是可以的。 但是效率会比数组慢。</p>
+<p><em>既然是可以的,为什么HashMap不用LinkedList,而选用数组?</em> </p>
+<p>因为用数组效率最高！ 在HashMap中，定位桶的位置是利用元素的key的哈希值对数组长度取模得到。此时，我们已得到桶的位置。显然数组的查找效率比LinkedList大。</p>
+<p><em>那ArrayList，底层也是数组，查找也快啊，为啥不用ArrayList?</em> </p>
+<p>因为采用基本数组结构，扩容机制可以自己定义，HashMap中数组扩容刚好是2的次幂，在做取模运算的效率高。 而ArrayList的扩容机制是1.5倍扩容，那ArrayList为什么是1.5倍扩容这就不在本文说明了。</p>
+<h3 id="1-3-HashMap-中-hash-函数怎么是实现的"><a href="#1-3-HashMap-中-hash-函数怎么是实现的" class="headerlink" title="1.3 HashMap 中 hash 函数怎么是实现的?"></a>1.3 HashMap 中 hash 函数怎么是实现的?</h3><p>我们可以看到，在 hashmap 中要找到某个元素，需要根据 key 的 hash 值来求得对应数组中的位置。如何计算这个位置就是 hash 算法。</p>
+<p>前面说过，hashmap 的数据结构是数组和链表的结合，所以我们当然希望这个 hashmap 里面的元素位置尽量的分布均匀些，尽量使得每个位置上的元素数量只有一个。那么当我们用 hash 算法求得这个位置的时候，马上就可以知道对应位置的元素就是我们要的，而不用再去遍历链表。所以，我们首先想到的就是把 hashcode 对数组长度取模运算。这样一来，元素的分布相对来说是比较均匀的。</p>
+<p>但是“模”运算的消耗还是比较大的，能不能找一种更快速、消耗更小的方式？我们来看看 JDK1.8 源码是怎么做的（被楼主修饰了一下）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (key == <span class="keyword">null</span>)&#123;</span><br><span class="line">  	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">int</span> h;</span><br><span class="line">  h = key.hashCode()；返回散列值也就是hashcode</span><br><span class="line">  <span class="keyword">return</span> (n-<span class="number">1</span>)&amp;(h ^ (h &gt;&gt;&gt; <span class="number">16</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9xbzt0bsmj317s0kydsg.jpg" alt="image-20191215131412249"></p>
+<p>简单来说就是：</p>
+<ul>
+<li>高16 bit 不变，低16 bit 和高16 bit 做了一个异或（得到的 hashcode 转化为32位二进制，前16位和后16位低16 bit和高16 bit做了一个异或）</li>
+<li>(n·1) &amp; hash = -&gt; 得到下标</li>
+</ul>
+<h3 id="1-4-拉链法导致的链表过深，为什么不用二叉查找树代替而选择红黑树？为什么不一直使用红黑树？"><a href="#1-4-拉链法导致的链表过深，为什么不用二叉查找树代替而选择红黑树？为什么不一直使用红黑树？" class="headerlink" title="1.4 拉链法导致的链表过深，为什么不用二叉查找树代替而选择红黑树？为什么不一直使用红黑树？"></a>1.4 拉链法导致的链表过深，为什么不用二叉查找树代替而选择红黑树？为什么不一直使用红黑树？</h3><p>之所以选择红黑树是为了解决二叉查找树的缺陷：二叉查找树在特殊情况下会变成一条线性结构（这就跟原来使用链表结构一样了，造成层次很深的问题），遍历查找会非常慢。而红黑树在插入新数据后可能需要通过左旋、右旋、变色这些操作来保持平衡。引入红黑树就是为了查找数据快，解决链表查询深度的问题。我们知道红黑树属于平衡二叉树，为了保持“平衡”是需要付出代价的，但是该代价所损耗的资源要比遍历线性链表要少。所以当长度大于8的时候，会使用红黑树；如果链表长度很短的话，根本不需要引入红黑树，引入反而会慢。</p>
+<h3 id="1-5-CocurrentHashMap"><a href="#1-5-CocurrentHashMap" class="headerlink" title="1.5 CocurrentHashMap"></a>1.5 CocurrentHashMap</h3><h4 id="1-JDK-1-7"><a href="#1-JDK-1-7" class="headerlink" title="1). JDK 1.7"></a>1). JDK 1.7</h4><ul>
+<li><p>CocurrentHashMap 是由 Segment 数组和 HashEntry 数组和链表组成</p>
+</li>
+<li><p>Segment 是基于重入锁（ReentrantLock）：<br>一个数据段竞争锁。</p>
+</li>
+<li><p>每个 HashEntry 一个链表结构的元素，利用 Hash 算法得到索引确定归属的数据段，也就是对应到在修改时需要竞争获取的锁。</p>
+</li>
+<li><p>ConcurrentHashMap 支持 CurrencyLevel（Segment 数组数量）的线程并发。<br>每当一个线程占用锁访问一个 Segment 时，不会影响到其他的 Segment</p>
+</li>
+<li><p>核心数据如 value，以及链表都是 volatile 修饰的，保证了获取时的可见性</p>
+</li>
+<li><p>首先是通过 key 定位到 Segment，之后在对应的 Segment 中进行具体的 put 操作如下：</p>
+</li>
+<li><ul>
+<li>将当前 Segment 中的 table 通过 key 的 hashcode 定位到 HashEntry。</li>
+<li>遍历该 HashEntry，如果不为空则判断传入的 key 和当前遍历的 key 是否相等，相等则覆盖旧的 value</li>
+<li>不为空则需要新建一个 HashEntry 并加入到 Segment 中，同时会先判断是否需要扩容</li>
+<li>最后会解除在 1 中所获取当前 Segment 的锁。</li>
+</ul>
+</li>
+<li><p>虽然 HashEntry 中的 value 是用 volatile 关键词修饰的，但是并不能保证并发的原子性，所以 put 操作时仍然需要加锁处理</p>
+</li>
+</ul>
+<p>首先第一步的时候会尝试获取锁，如果获取失败肯定就有其他线程存在竞争，则利用 scanAndLockForPut() 自旋获取锁。</p>
+<ul>
+<li>尝试自旋获取锁</li>
+<li>如果重试的次数达到了 MAX_SCAN_RETRIES 则改为阻塞锁获取，保证能获取成功。<br>最后解除当前 Segment 的锁</li>
+</ul>
+<h4 id="2-（JDK-1-8）"><a href="#2-（JDK-1-8）" class="headerlink" title="2) （JDK 1.8）"></a>2) （JDK 1.8）</h4><p>CocurrentHashMap 抛弃了原有的 Segment 分段锁，采用了 <code>CAS + synchronized</code> 来保证并发安全性。其中的 <code>val next</code> 都用了 volatile 修饰，保证了可见性。</p>
+<h2 id="二-HashMap默认容量是多少？HashMap的数组大小为什么一定要是2的幂？"><a href="#二-HashMap默认容量是多少？HashMap的数组大小为什么一定要是2的幂？" class="headerlink" title="二.HashMap默认容量是多少？HashMap的数组大小为什么一定要是2的幂？"></a>二.HashMap默认容量是多少？HashMap的数组大小为什么一定要是2的幂？</h2><h3 id="2-1HashMap默认容量是多少？"><a href="#2-1HashMap默认容量是多少？" class="headerlink" title="2.1HashMap默认容量是多少？"></a>2.1HashMap默认容量是多少？</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The default initial capacity - MUST be a power of two.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> DEFAULT_INITIAL_CAPACITY = <span class="number">1</span> &lt;&lt; <span class="number">4</span>; <span class="comment">// aka 16</span></span><br></pre></td></tr></table></figure>
+<p>默认初始容量为16，1左移4位等于16. 因为左移等于乘于2，即为2的幂。即为hash桶的数量必须是2的n次方。</p>
+<h3 id="2-2-如果自定义不是2的幂会怎样？"><a href="#2-2-如果自定义不是2的幂会怎样？" class="headerlink" title="2.2 如果自定义不是2的幂会怎样？"></a>2.2 如果自定义不是2的幂会怎样？</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Constructs an empty &lt;tt&gt;HashMap&lt;/tt&gt; with the specified initial</span></span><br><span class="line"><span class="comment"> * capacity and load factor.</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  initialCapacity the initial capacity</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span>  loadFactor      the load factor</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@throws</span> IllegalArgumentException if the initial capacity is negative</span></span><br><span class="line"><span class="comment"> *         or the load factor is nonpositive</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">(<span class="keyword">int</span> initialCapacity, <span class="keyword">float</span> loadFactor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &lt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal initial capacity: "</span> +</span><br><span class="line">                                           initialCapacity);</span><br><span class="line">    <span class="keyword">if</span> (initialCapacity &gt; MAXIMUM_CAPACITY)</span><br><span class="line">        initialCapacity = MAXIMUM_CAPACITY;</span><br><span class="line">    <span class="keyword">if</span> (loadFactor &lt;= <span class="number">0</span> || Float.isNaN(loadFactor))</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"Illegal load factor: "</span> +</span><br><span class="line">                                           loadFactor);</span><br><span class="line">    <span class="keyword">this</span>.loadFactor = loadFactor;</span><br><span class="line">    <span class="keyword">this</span>.threshold = tableSizeFor(initialCapacity);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>看这个构造方法知道，我们是可以自定义初始容量的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Returns a power of two size for the given target capacity.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">tableSizeFor</span><span class="params">(<span class="keyword">int</span> cap)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> n = cap - <span class="number">1</span>;</span><br><span class="line">    n |= n &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">    n |= n &gt;&gt;&gt; <span class="number">2</span>;</span><br><span class="line">    n |= n &gt;&gt;&gt; <span class="number">4</span>;</span><br><span class="line">    n |= n &gt;&gt;&gt; <span class="number">8</span>;</span><br><span class="line">    n |= n &gt;&gt;&gt; <span class="number">16</span>;</span><br><span class="line">    <span class="keyword">return</span> (n &lt; <span class="number">0</span>) ? <span class="number">1</span> : (n &gt;= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假如我们把initialCapacity调整为17，上面代码对于给定的目标容量，返回两倍大小的幂。如果我们调整为17就大于<script type="math/tex">2^4=16</script> 就会4+1的操作，设置初始值为<script type="math/tex">2^5=32</script>。</p>
+<h3 id="2-3-为什么一定要是2的幂呢？"><a href="#2-3-为什么一定要是2的幂呢？" class="headerlink" title="2.3 为什么一定要是2的幂呢？"></a>2.3 为什么一定要是2的幂呢？</h3><p>首先，hashCode是int类型，取值范围是<script type="math/tex">-2^{31}</script>到<script type="math/tex">+2^{31}</script>之间，需要解决怎么把取值范围映射到(0～N)如0～15上，N相对很小。tab[i = (n - 1) &amp; hash] 即 数组的长度n减去1与hash(k)的值 &amp;（按位与）运算。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Implements Map.put and related methods.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> hash hash for key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> key the key</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> value the value to put</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> onlyIfAbsent if true, don't change existing value</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> evict if false, the table is in creation mode.</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> previous value, or null if none</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">final</span> V <span class="title">putVal</span><span class="params">(<span class="keyword">int</span> hash, K key, V value, <span class="keyword">boolean</span> onlyIfAbsent,</span></span></span><br><span class="line"><span class="function"><span class="params">                   <span class="keyword">boolean</span> evict)</span> </span>&#123;</span><br><span class="line">        Node&lt;K,V&gt;[] tab; Node&lt;K,V&gt; p; <span class="keyword">int</span> n, i;</span><br><span class="line">        <span class="keyword">if</span> ((tab = table) == <span class="keyword">null</span> || (n = tab.length) == <span class="number">0</span>)</span><br><span class="line">            n = (tab = resize()).length;</span><br><span class="line">        <span class="keyword">if</span> ((p = tab[i = (n - <span class="number">1</span>) &amp; hash]) == <span class="keyword">null</span>) <span class="comment">//数组的长度n减去1与hash(k)的值 &amp;（按位与）运算</span></span><br><span class="line">            tab[i] = newNode(hash, key, value, <span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br></pre></td></tr></table></figure>
+<p>(Length - 1) &amp; hash这样运算的原因，即为为什么一定是2的幂的原因？</p>
+<p><script type="math/tex">length=2^n</script> 二进制表示为100000… 最高位是1低位全是0，所有length-1就能得到全部是1的二进制。例如：<script type="math/tex">2^4</script>二进制位10000，减1后二进制是1111。这样对1111按位与（&amp;）运算能非常快速的拿到数组下标，并且分布还是均匀的。</p>
+<p>HashMap为了存取高效，要尽量较少碰撞，就是要尽量把数据分配均匀，每个链表长度大致相同，这个实现就在把数据存到哪个链表中的算法；因为2的n次方实际就是1后面n个0，2的n次方-1，实际就是n个1。 例如长度为8时候，3&amp;(8-1)=3  2&amp;(8-1)=2 ，不同位置上，不碰撞。 而长度为5的时候，3&amp;(5-1)=0  2&amp;(5-1)=0，都在0上，出现碰撞了。 所以，保证容积是2的n次方，是为了保证在做(length-1)的时候，每一位都能&amp;1  ，也就是和1111……1111111进行与运算。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9x80nf6afj317e0q6gsy.jpg" alt="image-20191215105635360" style="zoom:50%;" /></p>
+<h2 id="三-默认负载因子是多少？为什么选择这个值？"><a href="#三-默认负载因子是多少？为什么选择这个值？" class="headerlink" title="三.默认负载因子是多少？为什么选择这个值？"></a>三.默认负载因子是多少？为什么选择这个值？</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The load factor used when none specified in constructor.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">float</span> DEFAULT_LOAD_FACTOR = <span class="number">0.75f</span>;</span><br></pre></td></tr></table></figure>
+<p>是时间和空间上的综合考量。</p>
+<h2 id="四-HashMap如何扩容？"><a href="#四-HashMap如何扩容？" class="headerlink" title="四.HashMap如何扩容？"></a>四.HashMap如何扩容？</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">  * Constructs an empty &lt;tt&gt;HashMap&lt;/tt&gt; with the default initial capacity</span></span><br><span class="line"><span class="comment">  * (16) and the default load factor (0.75).</span></span><br><span class="line"><span class="comment">  */</span></span><br><span class="line"> <span class="function"><span class="keyword">public</span> <span class="title">HashMap</span><span class="params">()</span> </span>&#123;</span><br><span class="line">     <span class="keyword">this</span>.loadFactor = DEFAULT_LOAD_FACTOR; <span class="comment">// all other fields defaulted</span></span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>HashMap的构造方法，默认初始容量为16，负载因子为0.75.当put值的时候才会有一个16容量的桶，空间才会开辟出来。</p>
+<p>当一个hash桶中的元素的数量等于16*0.75=12的时候，就会扩容。每次扩容一倍，当元素减少时也不缩容。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9x8ugopekj31480oogql.jpg" alt="image-20191215112509858" style="zoom:50%;" /></p>
+<h2 id="四-HashMap为什么是线程不安全的？"><a href="#四-HashMap为什么是线程不安全的？" class="headerlink" title="四.HashMap为什么是线程不安全的？"></a>四.HashMap为什么是线程不安全的？</h2><p>此题可以组成如下连环炮来问 </p>
+<ul>
+<li>HashMap在并发编程环境下有什么问题啊? </li>
+<li>在jdk1.8中还有这些问题么? </li>
+<li>你一般怎么解决这些问题的？</li>
+</ul>
+<p><em>HashMap在并发编程环境下有什么问题啊?</em> </p>
+<ul>
+<li>(1)多线程扩容，引起的死循环问题 </li>
+<li>(2)多线程put的时候可能导致元素丢失 </li>
+<li>(3)put非null元素后get出来的却是null</li>
+</ul>
+<p><em>在jdk1.8中还有这些问题么?</em></p>
+<p>在jdk1.8中，死循环问题已经解决。其他两个问题还是存在。</p>
+<p><em>你一般怎么解决这些问题的？</em></p>
+<p>比如ConcurrentHashmap，Hashtable等线程安全等集合类。</p>
+<h2 id="五-Java7到Java8做了哪些改进？为什么？"><a href="#五-Java7到Java8做了哪些改进？为什么？" class="headerlink" title="五.Java7到Java8做了哪些改进？为什么？"></a>五.Java7到Java8做了哪些改进？为什么？</h2><h3 id="5-1-Java7中"><a href="#5-1-Java7中" class="headerlink" title="5.1 Java7中"></a>5.1 Java7中</h3><ul>
+<li><p>非常容易碰到死锁</p>
+<p>首先造成死锁的原因是用户使用不规范，因为hashMap不是线程安全的。多个线程访问hash时就有可能死锁。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9x955gk7yj312c0omgxb.jpg" alt="image-20191215113532801"></p>
+<p>当代码正好访问key:3或key:7时，就会出现死循环。cpu会爆满，造成死机。</p>
+<p>死锁的详细分析：<a href="https://coolshell.cn/articles/9606.html" target="_blank" rel="noopener">https://coolshell.cn/articles/9606.html</a></p>
+</li>
+<li><p>有潜在的安全问题</p>
+<ul>
+<li><p>CVE-2011-4858，Tomcat邮件组的讨论</p>
+<p>通过精心设计的hashcode相同http请求参数，会放到同一个桶里面， 会使其退化成链表，它的查找操作复杂度是O(n),N个元素的可能上升到n方。引发DoS</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-2-Java8中"><a href="#5-2-Java8中" class="headerlink" title="5.2 Java8中"></a>5.2 Java8中</h3><ul>
+<li>由<strong>数组+链表</strong>的结构改为<strong>数组+链表+红黑树</strong>。</li>
+<li>优化了高位运算的hash算法：h^(h&gt;&gt;&gt;16)</li>
+<li>扩容后，元素要么是在原位置，要么是在原位置再移动2次幂的位置，且链表顺序不变。</li>
+</ul>
+<p>最后一条是重点，因为最后一条的变动，hashmap在1.8中，不会在出现死循环问题。</p>
+<p><em>为什么在解决hash冲突的时候，不直接用红黑树?而选择先用链表，再转红黑树?</em> </p>
+<p>因为TreeNode的大小约为常规节点的两倍，因为红黑树需要进行左旋，右旋，变色这些操作来保持平衡，而单链表不需要。 当元素小于8个当时候，此时做查询操作，链表结构已经能保证查询性能。当元素大于8个的时候，此时需要红黑树来加快查询速度，但是新增节点的效率变慢了。是不直接用红黑树的原因。</p>
+<h4 id="5-2-1当hash桶里面是链表的时候，结点在桶里的数量预值是多少，它会变成红黑树？"><a href="#5-2-1当hash桶里面是链表的时候，结点在桶里的数量预值是多少，它会变成红黑树？" class="headerlink" title="5.2.1当hash桶里面是链表的时候，结点在桶里的数量预值是多少，它会变成红黑树？"></a>5.2.1当hash桶里面是链表的时候，结点在桶里的数量预值是多少，它会变成红黑树？</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * The bin count threshold for using a tree rather than list for a</span></span><br><span class="line"><span class="comment"> * bin.  Bins are converted to trees when adding an element to a</span></span><br><span class="line"><span class="comment"> * bin with at least this many nodes. The value must be greater</span></span><br><span class="line"><span class="comment"> * than 2 and should be at least 8 to mesh with assumptions in</span></span><br><span class="line"><span class="comment"> * tree removal about conversion back to plain bins upon</span></span><br><span class="line"><span class="comment"> * shrinkage.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> TREEIFY_THRESHOLD = <span class="number">8</span>;</span><br></pre></td></tr></table></figure>
+<p>答案是8</p>
+<h4 id="5-2-2-为什么选择阀值是8，才转红黑树呢？"><a href="#5-2-2-为什么选择阀值是8，才转红黑树呢？" class="headerlink" title="5.2.2 为什么选择阀值是8，才转红黑树呢？"></a>5.2.2 为什么选择阀值是8，才转红黑树呢？</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">     * Because TreeNodes are about twice the size of regular nodes, we</span><br><span class="line">     * use them only when bins contain enough nodes to warrant use</span><br><span class="line">     * (see TREEIFY_THRESHOLD). <span class="function">And when they become too <span class="title">small</span> <span class="params">(due to</span></span></span><br><span class="line"><span class="function"><span class="params">     * removal or resizing)</span> they are converted back to plain bins.  In</span></span><br><span class="line"><span class="function">     * usages with well-distributed user hashCodes, tree bins are</span></span><br><span class="line"><span class="function">     * rarely used.  Ideally, under random hashCodes, the frequency of</span></span><br><span class="line"><span class="function">     * nodes in bins follows a Poisson distribution</span></span><br><span class="line"><span class="function">     * <span class="params">(http://en.wikipedia.org/wiki/Poisson_distribution)</span> with a</span></span><br><span class="line"><span class="function">     * parameter of about 0.5 on average <span class="keyword">for</span> the <span class="keyword">default</span> resizing</span></span><br><span class="line"><span class="function">     * threshold of 0.75, although with a large variance because of</span></span><br><span class="line"><span class="function">     * resizing granularity. Ignoring variance, the expected</span></span><br><span class="line"><span class="function">     * occurrences of list size k <span class="title">are</span> <span class="params">(exp(<span class="number">-0.5</span>)</span> * <span class="title">pow</span><span class="params">(<span class="number">0.5</span>, k)</span> /</span></span><br><span class="line"><span class="function">     * <span class="title">factorial</span><span class="params">(k)</span>). The first values are:</span></span><br><span class="line"><span class="function">     *</span></span><br><span class="line"><span class="function">     * 0:    0.60653066</span></span><br><span class="line"><span class="function">     * 1:    0.30326533</span></span><br><span class="line"><span class="function">     * 2:    0.07581633</span></span><br><span class="line"><span class="function">     * 3:    0.01263606</span></span><br><span class="line"><span class="function">     * 4:    0.00157952</span></span><br><span class="line"><span class="function">     * 5:    0.00015795</span></span><br><span class="line"><span class="function">     * 6:    0.00001316</span></span><br><span class="line"><span class="function">     * 7:    0.00000094</span></span><br><span class="line"><span class="function">     * 8:    0.00000006</span></span><br><span class="line"><span class="function">     * more: less than 1 in ten million</span></span><br><span class="line"><span class="function">        </span></span><br><span class="line"><span class="function">因为TreeNode的大小约为常规节点的两倍，所以我们</span></span><br><span class="line"><span class="function">仅在垃圾箱包含足以保证使用的节点时才使用它们</span></span><br><span class="line"><span class="function">（请参阅TREEIFY_THRESHOLD）。 当它们变得太小时（由于</span></span><br><span class="line"><span class="function">移除或调整大小），它们会转换回普通垃圾箱。 在</span></span><br><span class="line"><span class="function">分布良好的用户hashCode的用法</span></span><br><span class="line"><span class="function">很少使用。 理想情况下，在随机hashCodes下，</span></span><br><span class="line"><span class="function">箱中的节点遵循泊松分布</span></span><br><span class="line"><span class="function">（http:<span class="comment">//en.wikipedia.org/wiki/Poisson_distribution），</span></span></span><br><span class="line"><span class="function">默认调整大小的平均参数约为0.5</span></span><br><span class="line"><span class="function">阈值0.75，尽管由于</span></span><br><span class="line"><span class="function">调整粒度。 忽略差异，预期</span></span><br><span class="line"><span class="function">列表大小k的出现是（exp（-0.5）* pow（0.5，k）/</span></span><br><span class="line"><span class="function">阶乘（k））。 第一个值是：</span></span><br></pre></td></tr></table></figure>
+<p>因为，hash桶里面的节点个数服从柏松分布（平均参数<script type="math/tex">\lambda</script>约为0.5）,桶里有0个的概率为0.60653066，有1个的概率为0.30326533，有8个多概率为0.00000006，小于10亿分子1，概率非常小了。</p>
+<h4 id="5-2-3-当链表转为红黑树后，什么时候退化为链表"><a href="#5-2-3-当链表转为红黑树后，什么时候退化为链表" class="headerlink" title="5.2.3 当链表转为红黑树后，什么时候退化为链表?"></a>5.2.3 当链表转为红黑树后，什么时候退化为链表?</h4><p>为6的时候退转为链表。中间有个差值7可以防止链表和树之间频繁的转换。假设一下，如果设计成链表个数超过8则链表转换成树结构，链表个数小于8则树结构转换成链表，如果一个HashMap不停的插入、删除元素，链表个数在8左右徘徊，就会频繁的发生树转链表、链表转树，效率会很低。</p>
+<h4 id="5-2-4-为什么为什么要先高16位异或低16位再取模运算"><a href="#5-2-4-为什么为什么要先高16位异或低16位再取模运算" class="headerlink" title="5.2.4 为什么为什么要先高16位异或低16位再取模运算?"></a>5.2.4 <em>为什么为什么要先高16位异或低16位再取模运算?</em></h4><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9xafc0hrqj30u00x47vv.jpg" alt="image-20191215121954442"></p>
+<h2 id="六-hashmap的get-put的过程"><a href="#六-hashmap的get-put的过程" class="headerlink" title="六.hashmap的get/put的过程?"></a>六.hashmap的get/put的过程?</h2><h3 id="6-1-知道hashmap中put元素的过程是什么样么"><a href="#6-1-知道hashmap中put元素的过程是什么样么" class="headerlink" title="6.1 知道hashmap中put元素的过程是什么样么?"></a>6.1 知道hashmap中put元素的过程是什么样么?</h3><p>对key的hashCode()做hash运算，计算index; 如果没碰撞直接放到bucket里； 如果碰撞了，以链表的形式存在buckets后； 如果碰撞导致链表过长(大于等于TREEIFY_THRESHOLD)，就把链表转换成红黑树(JDK1.8中的改动)； 如果节点已经存在就替换old value(保证key的唯一性) 如果bucket满了(超过load factor*current capacity)，就要resize。</p>
+<h3 id="6-2-知道hashmap中get元素的过程是什么样么？"><a href="#6-2-知道hashmap中get元素的过程是什么样么？" class="headerlink" title="6.2 知道hashmap中get元素的过程是什么样么？"></a>6.2 知道hashmap中get元素的过程是什么样么？</h3><p>对key的hashCode()做hash运算，计算index; 如果在bucket里的第一个节点里直接命中，则直接返回； 如果有冲突，则通过key.equals(k)去查找对应的Entry; </p>
+<ul>
+<li>若为树，则在树中通过key.equals(k)查找，O(logn)； </li>
+<li>若为链表，则在链表中通过key.equals(k)查找，O(n)。</li>
+</ul>
+<h3 id="6-3-你还知道哪些hash算法？"><a href="#6-3-你还知道哪些hash算法？" class="headerlink" title="6.3 你还知道哪些hash算法？"></a>6.3 你还知道哪些hash算法？</h3><p>先说一下hash算法干嘛的，Hash函数是指把一个大范围映射到一个小范围。把大范围映射到一个小范围的目的往往是为了节省空间，使得数据容易保存。 比较出名的有MurmurHash、MD4、MD5等等</p>
+<p><em>说说String中hashcode的实现?(此题频率很高)</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h = hash;</span><br><span class="line">    <span class="keyword">if</span> (h == <span class="number">0</span> &amp;&amp; value.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">char</span> val[] = value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; value.length; i++) &#123;</span><br><span class="line">            h = <span class="number">31</span> * h + val[i];</span><br><span class="line">        &#125;</span><br><span class="line">        hash = h;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>String类中的hashCode计算方法还是比较简单的，就是以31为权，每一位为字符的ASCII值进行运算，用自然溢出来等效取模。</p>
+<p>哈希计算公式可以计为<code>s[0]*31^(n-1) + s[1]*31^(n-2) + ... + s[n-1]</code></p>
+<p>那为什么以31为质数呢?</p>
+<p>主要是因为31是一个奇质数，所以<code>31*i=32*i-i=(i&lt;&lt;5)-i</code>，这种位移与减法结合的计算相比一般的运算快很多。</p>
+<h3 id="6-4-说说String中hashcode的实现-此题频率很高"><a href="#6-4-说说String中hashcode的实现-此题频率很高" class="headerlink" title="6.4 说说String中hashcode的实现?(此题频率很高)"></a>6.4 说说String中hashcode的实现?<em>(此题频率很高)</em></h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h = hash;</span><br><span class="line">    <span class="keyword">if</span> (h == <span class="number">0</span> &amp;&amp; value.length &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">char</span> val[] = value;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; value.length; i++) &#123;</span><br><span class="line">            h = <span class="number">31</span> * h + val[i];</span><br><span class="line">        &#125;</span><br><span class="line">        hash = h;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> h;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="七-你一般用什么作为HashMap的key"><a href="#七-你一般用什么作为HashMap的key" class="headerlink" title="七. 你一般用什么作为HashMap的key?"></a>七. 你一般用什么作为HashMap的key?</h2><h3 id="7-1健可以为Null值么"><a href="#7-1健可以为Null值么" class="headerlink" title="7.1健可以为Null值么?"></a>7.1<em>健可以为Null值么?</em></h3><p>必须可以，key为null的时候，hash算法最后的值以0来计算，也就是放在数组的第一个位置。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">hash</span><span class="params">(Object key)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">int</span> h;</span><br><span class="line">    <span class="keyword">return</span> (key == <span class="keyword">null</span>) ? <span class="number">0</span> : (h = key.hashCode()) ^ (h &gt;&gt;&gt; <span class="number">16</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="7-2你一般用什么作为HashMap的key"><a href="#7-2你一般用什么作为HashMap的key" class="headerlink" title="7.2你一般用什么作为HashMap的key?"></a>7.2<em>你一般用什么作为HashMap的key?</em></h3><p>一般用Integer、String这种不可变类当HashMap当key，而且String最为常用。  </p>
+<ul>
+<li>(1)因为字符串是不可变的，所以在它创建的时候hashcode就被缓存了，不需要重新计算。这就使得字符串很适合作为Map中的键，字符串的处理速度要快过其它的键对象。这就是HashMap中的键往往都使用字符串。 </li>
+<li>(2)因为获取对象的时候要用到equals()和hashCode()方法，那么键对象正确的重写这两个方法是非常重要的,这些类已经很规范的覆写了hashCode()以及equals()方法。</li>
+</ul>
+<h3 id="7-3-我用可变类当HashMap的key有什么问题"><a href="#7-3-我用可变类当HashMap的key有什么问题" class="headerlink" title="7.3 我用可变类当HashMap的key有什么问题?"></a>7.3 <em>我用可变类当HashMap的key有什么问题?</em></h3><p>hashcode可能发生改变，导致put进去的值，无法get出，如下所示</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">HashMap&lt;List&lt;String&gt;, Object&gt; changeMap = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">list.add(<span class="string">"hello"</span>);</span><br><span class="line">Object objectValue = <span class="keyword">new</span> Object();</span><br><span class="line">changeMap.put(list, objectValue);</span><br><span class="line">System.out.println(changeMap.get(list));</span><br><span class="line">list.add(<span class="string">"hello world"</span>);<span class="comment">//hashcode发生了改变</span></span><br><span class="line">System.out.println(changeMap.get(list));</span><br></pre></td></tr></table></figure>
+<p>输出值如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">java.lang.Object@<span class="number">74</span>a14482</span><br><span class="line"><span class="keyword">null</span></span><br></pre></td></tr></table></figure>
+<p>7.4 <em>如果让你实现一个自定义的class作为HashMap的key该如何实现？</em></p>
+<p>此题考察两个知识点 </p>
+<ul>
+<li>重写hashcode和equals方法注意什么? </li>
+<li>如何设计一个不变类</li>
+</ul>
+<p><strong>针对问题一，记住下面四个原则即可</strong> </p>
+<p>(1)两个对象相等，hashcode一定相等 (2)两个对象不等，hashcode不一定不等 (3)hashcode相等，两个对象不一定相等 (4)hashcode不等，两个对象一定不等 </p>
+<p><strong>针对问题二，记住如何写一个不可变类</strong> </p>
+<p>(1)类添加final修饰符，保证类不被继承。 如果类可以被继承会破坏类的不可变性机制，只要继承类覆盖父类的方法并且继承类可以改变成员变量值，那么一旦子类以父类的形式出现时，不能保证当前类是否可变。</p>
+<p>(2)保证所有成员变量必须私有，并且加上final修饰 通过这种方式保证成员变量不可改变。但只做到这一步还不够，因为如果是对象成员变量有可能再外部改变其值。所以第4点弥补这个不足。</p>
+<p>(3)不提供改变成员变量的方法，包括setter 避免通过其他接口改变成员变量的值，破坏不可变特性。</p>
+<p>(4)通过构造器初始化所有成员，进行深拷贝(deep copy) 如果构造器传入的对象直接赋值给成员变量，还是可以通过对传入对象的修改进而导致改变内部变量的值。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">ImmutableDemo</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] myArray;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ImmutableDemo</span><span class="params">(<span class="keyword">int</span>[] array)</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">this</span>.myArray = array; <span class="comment">// wrong  </span></span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式不能保证不可变性，myArray和array指向同一块内存地址，用户可以在ImmutableDemo之外通过修改array对象的值来改变myArray内部的值。 为了保证内部的值不被修改，可以采用深度copy来创建一个新内存保存传入的值。正确做法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">MyImmutableDemo</span> </span>&#123;  </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span>[] myArray;  </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MyImmutableDemo</span><span class="params">(<span class="keyword">int</span>[] array)</span> </span>&#123;  </span><br><span class="line">        <span class="keyword">this</span>.myArray = array.clone();   </span><br><span class="line">    &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>(5)在getter方法中，不要直接返回对象本身，而是克隆对象，并返回对象的拷贝 这种做法也是防止对象外泄，防止通过getter获得内部可变成员对象后对成员变量直接操作，导致成员变量发生改变。</p>
+<p>6.Resize效率很低。</p>
+<hr>
+<p>参考资料：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/76735726" target="_blank" rel="noopener">https://zhuanlan.zhihu.com/p/76735726</a></p>
+<p><a href="https://www.bilibili.com/video/av71408100?from=search&amp;seid=15190327219708388729" target="_blank" rel="noopener">https://www.bilibili.com/video/av71408100?from=search&amp;seid=15190327219708388729</a></p>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2019/12/11/SpringBoot-自定义starter/" data-toggle="tooltip" data-placement="top" title="SpringBoot-自定义starter ">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="undefined"
+                    data-server="undefined"
+                    data-type="undefined"
+                    data-fixed="undefined" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Sun Dec 15 2019 15:16:10 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#java" title="java">java</a>
+                        
+                          <a class="tag" href="/tags/#基础理解" title="基础理解">基础理解</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<!-- Search -->
+<script src="/js/search.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>

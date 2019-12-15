@@ -8,6 +8,20 @@
     </url>
 
     <url>
+        <loc>https://bytenote.cn/categories/java/%25E5%259F%25BA%25E7%25A1%2580%25E7%2590%2586%25E8%25A7%25A3/</loc>
+        <lastmod>2019-12-15T07:18:01.014Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://bytenote.cn/categories/java/</loc>
+        <lastmod>2019-12-15T07:18:01.014Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://bytenote.cn/categories/SrpingBoot/java/</loc>
         <lastmod>2019-12-11T05:10:06.878Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -17,13 +31,6 @@
     <url>
         <loc>https://bytenote.cn/categories/SrpingBoot/</loc>
         <lastmod>2019-12-11T05:10:06.878Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://bytenote.cn/categories/java/</loc>
-        <lastmod>2019-12-10T18:10:36.183Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -73,13 +80,6 @@
     <url>
         <loc>https://bytenote.cn/categories/%25E6%2593%258D%25E4%25BD%259C%25E8%25AE%25B0%25E5%25BD%2595/</loc>
         <lastmod>2019-12-10T18:09:43.543Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://bytenote.cn/categories/java/%25E5%259F%25BA%25E7%25A1%2580%25E7%2590%2586%25E8%25A7%25A3/</loc>
-        <lastmod>2019-12-10T18:09:38.270Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
