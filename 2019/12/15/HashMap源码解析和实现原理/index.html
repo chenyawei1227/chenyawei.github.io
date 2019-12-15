@@ -259,7 +259,7 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h2 id="一-HashMap表简介"><a href="#一-HashMap表简介" class="headerlink" title="一.HashMap表简介"></a>一.HashMap表简介</h2><h3 id="1-1-先了解下什么是hash表，"><a href="#1-1-先了解下什么是hash表，" class="headerlink" title="1.1 先了解下什么是hash表，"></a>1.1 先了解下什么是hash表，</h3><p>将需要检索的元素映射成可以快速检索的hash值，hashCode = hash(key); 存储hash值（即为hash桶）底层通常是用数组实现的，因为数组的随机寻址时间是O(1)常数时间（底层是硬件电路的线形地址变换直接查找过去，速度非常快根长度无关）。如果多个元素的hash值相同，称为hash碰撞。核心是基于哈希值的桶和链表。</p>
+                <h2 id="一-HashMap简介"><a href="#一-HashMap简介" class="headerlink" title="一.HashMap简介"></a>一.HashMap简介</h2><h3 id="1-1-先了解下什么是hash表，"><a href="#1-1-先了解下什么是hash表，" class="headerlink" title="1.1 先了解下什么是hash表，"></a>1.1 先了解下什么是hash表，</h3><p>将需要检索的元素映射成可以快速检索的hash值，hashCode = hash(key); 存储hash值（即为hash桶）底层通常是用数组实现的，因为数组的随机寻址时间是O(1)常数时间（底层是硬件电路的线形地址变换直接查找过去，速度非常快根长度无关）。如果多个元素的hash值相同，称为hash碰撞。核心是基于哈希值的桶和链表。</p>
 <p>致命缺陷就是hash碰撞。解决碰撞比较出名的有四种 ： (1)开放定址法 (2)链地址法 (3)再哈希法 (4)公共溢出区域法</p>
 <h3 id="1-2-原理"><a href="#1-2-原理" class="headerlink" title="1.2 原理"></a>1.2 原理</h3><p>原理图：</p>
 <p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1g9xb6o4i3uj30wa0g0q5v.jpg" alt="image-20191215124612391"></p>
@@ -430,6 +430,10 @@
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2019/12/15/JUC多线程/" data-toggle="tooltip" data-placement="top" title="JUC多线程">&larr; Previous Post</a>
+                        </li>
                     
                     
                         <li class="next">
