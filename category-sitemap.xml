@@ -8,6 +8,20 @@
     </url>
 
     <url>
+        <loc>https://bytenote.cn/categories/redis/%25E4%25B8%25AD%25E9%2597%25B4%25E4%25BB%25B6/</loc>
+        <lastmod>2020-01-14T04:09:48.878Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://bytenote.cn/categories/redis/</loc>
+        <lastmod>2020-01-14T04:09:48.878Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://bytenote.cn/categories/java/%25E5%259F%25BA%25E7%25A1%2580%25E7%2590%2586%25E8%25A7%25A3/</loc>
         <lastmod>2019-12-15T13:43:52.391Z</lastmod>
         <changefreq>weekly</changefreq>

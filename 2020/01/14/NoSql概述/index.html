@@ -16,7 +16,7 @@
     <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <title>
         
-          NoSql概述 - Hexo-theme-snail
+          NoSql入门和概述 - Hexo-theme-snail
         
     </title>
 
@@ -111,8 +111,12 @@
                     <div class="post-heading">
                         <div class="tags">
                             
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                            
+                              <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
+                            
                         </div>
-                        <h1>NoSql概述</h1>
+                        <h1>NoSql入门和概述</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Chenyawei on
@@ -122,8 +126,8 @@
                         
                             <div class="blank_box"></div>
                             <span class="meta">
-                                Words <span class="post-count">0</span> and
-                                Reading Time <span class="post-count">1</span> Minutes
+                                Words <span class="post-count">1.8k</span> and
+                                Reading Time <span class="post-count">6</span> Minutes
                             </span>
                             <div class="blank_box"></div>
                             <!-- 不蒜子统计 start -->
@@ -181,14 +185,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -255,7 +259,108 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                
+                <h2 id="一、NoSql入门和概述"><a href="#一、NoSql入门和概述" class="headerlink" title="一、NoSql入门和概述"></a>一、NoSql入门和概述</h2><h3 id="1、互联网时代背景下大机遇，为什么用nosql"><a href="#1、互联网时代背景下大机遇，为什么用nosql" class="headerlink" title="1、互联网时代背景下大机遇，为什么用nosql"></a>1、互联网时代背景下大机遇，为什么用nosql</h3><ol>
+<li><p>单机MySQL的美好时代</p>
+<p>一个网站的访问量一般都不大，而且更多的是静态页面，动态交互类型的网站不多，用单个数据库完全可以轻松应对。上述架构下，数据存储的瓶颈是什么？数据量的总大小一个机器放不下时，数据的索引（B+Tree）一个机器的内存放不下时，访问量（读写混合）一个实例不能承受。</p>
+</li>
+<li><p>Memcached（缓存）+MySQL+垂直拆分</p>
+<p>随着访问量的上升，几乎发部分使用MySQL架构的网站在数据库上都开始出现性能问题，web程序不再仅仅专注在功能上，同时也在追求性能。程序员们开始大量的使用缓存技术来缓解数据库的压力，优化数据库的结构和索引。开始比较流行的是通过文件缓存来缓解数据库压力，但是访问量继续增大的时候，多台web机器通过文件缓存不能共享，大量的小文件缓存也带来了比较高的IO压力。因此，<strong>Memcached就成为了一个非常时尚的技术产品</strong>。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahbqczbgrj31fg0pak42.jpg" alt="image-20200101201621062"></p>
+</li>
+<li><p>Mysql主从读写分离</p>
+<p>由于数据库的写入压力增加，<strong>Memcached</strong>只能缓解数据库的读取压力。读写集中在一个数据库上让数据库不堪负，大部分网站开始使用<strong>主从复制</strong>技术来达到读写分离，以提高读写性能和读库的可扩展性。Mysql的master-slave模式成为这个时候的网站标配。</p>
+</li>
+<li><p>分表分库+水平拆分+mysql集群</p>
+<p>在<strong>Memcached</strong>的高速缓存，MySQL的主从复制读写分离的基础之上，这是MySQL的主库的写压力开始出现瓶颈，而数据量的持续猛增，由于<strong>MyISAM</strong>使用表锁，在高并发下会出现严重的锁问题，大量的高并发MySQL应用开始使用<strong>InnoDB</strong>引擎代替MyISQM。同时开始流行使用分表分库来缓解写压力和数据增长的扩展问题。这个时候，分表分库成了一个热门技术，是面试的热门问题也是业界讨论的热门技术问题。也就是在这个时候，MySQL推出了还不太稳定的表分区，虽然MySQL推出了MySQL Cluster集群，但性能也不能很好满足互联网的要求，只能在高可靠性上提供了非常大的保证。</p>
+</li>
+<li><p>MySQL的扩展性瓶颈</p>
+<p>MySQL数据库也经常存储一些大文本字段，导致数据库表非常的大，在做数据库恢复的时候就导致非常的慢，不容易快速回复数据库。比如1000万4KB大小的文本就接近40GB的大小，如果能把这些数据从MySQL省去，MySQL将变得非常的小。关系数据库很强大，但是它并不能很好的应付所有的应用场景。MySQL的扩展性差（需要复杂的技术来实现），大数据下IO压力大，表结构更改困难，正式当前使用MySQL的开发人员面临的问题。</p>
+</li>
+<li><p>今天是什么样子</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahbynkfsoj31a00u07wj.jpg" alt="image-20200101202416020"></p>
+</li>
+<li><p>为什么使用NoSQL？</p>
+<p>今天我们可以通过第三方平台（如Google，Facebook等）可以很容易的访问和抓取数据。用户个人信息，社交网络，地理位置，用户产生的数据和用户操作日志已经成倍的增加。<strong>我们如果要对这些用户数据进行挖掘，那SQL数据库已经不适合这些应用了</strong>，NoSQL数据库的发展却能很好的处理这些大的数据。</p>
+</li>
+</ol>
+<h3 id="2、NoSQL是什么"><a href="#2、NoSQL是什么" class="headerlink" title="2、NoSQL是什么"></a>2、NoSQL是什么</h3><p>NoSQL（NoSQL = Not Only SQL），意思是不仅仅是SQL，<strong>泛指非关系型的数据库。</strong></p>
+<p>随着互联网web2.0网站的兴起，传统的关系数据库在应付web2.0网站，特别是超大规模和高并发的SNS类型的web2.0纯动态网站已经显得力不从心，暴露了很多难以克服的问题，而非关系型的数据库则由于其本身的特点得到了非常迅速的发展。NoSQL数据库的产生就是为了解决大规模数据集合多重数据种类带来的挑战，尤其是大数据应用难题，包含超大规模数据的存储。（例如古河或Facebook每天为他们的用户手机万亿比特的数据）。<strong>这些类型的数据存储不需要固定的模式，无需多余操作就可以横向扩展。</strong></p>
+<h3 id="3-能干嘛，NoSQL-数据库的优势"><a href="#3-能干嘛，NoSQL-数据库的优势" class="headerlink" title="3.  能干嘛，NoSQL 数据库的优势"></a>3.  能干嘛，NoSQL 数据库的优势</h3><ul>
+<li><p>易扩展</p>
+<p>NoSQL数据库种类繁多，但是一个共同的特点都是<strong>去掉关系数据库的关系型特性。</strong>数据之间无关系，这样就非常容易扩展。也无形之间，在架构的层面上带来了可扩展的能力。</p>
+</li>
+<li><p>大数据量高性能</p>
+<p>NoSQL数据里都具有非常高的读写性能，尤其在大数据量下，同样表现优秀。这得益于它的无关系性，数据库的结构简单。一般MySQL使用<strong>Query Cache</strong>，每次表的更新Cache就失效，是一种大粒度的Cache，在针对web2.0的交互频繁的应用，Cache性能不高。而NoSQL的Cache是记录级的，是一种细粒度的Cache，所以NoSQL在这个层面上来说就要性能高很多了。</p>
+</li>
+<li><p>多样灵活的数据模型</p>
+<p>NoSQL无需事先为要存储的数据建立字段，随时可以存储自定义的数据格式。而在关系数据库里，<strong>增删字段</strong></p>
+<p>是一件非常麻烦的事情。如果是非常大数据量的表，增加字段简直就是一个噩梦。</p>
+</li>
+<li><p>传统RDBMS VS NOSQL</p>
+<p>RDBMS（关系型数据库）</p>
+<ul>
+<li><p>高度组织化结构化数据</p>
+</li>
+<li><p>结构化查询语言（SQL）</p>
+</li>
+<li><p>数据和关系都存储在单独的表中。</p>
+</li>
+<li><p>数据操纵语言，数据定义语言</p>
+</li>
+<li><p>严格的一致性</p>
+</li>
+<li><p>基础事务</p>
+</li>
+</ul>
+<p>NoSQL</p>
+<ul>
+<li><p>代表着不仅仅是SQL</p>
+</li>
+<li><p>没有声明性查询语言</p>
+</li>
+<li><p>没有预定义的模式</p>
+</li>
+<li><p><strong>键值对存储</strong>，列存储，文档存储，图形数据库</p>
+</li>
+<li><p>最终一致性，而非ACID属性</p>
+</li>
+<li><p>非结构化和不可预知的数据</p>
+</li>
+<li><p>CAP定理</p>
+</li>
+<li><p>高性能，高可用和可伸缩性</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-常用的nosql"><a href="#4-常用的nosql" class="headerlink" title="4. 常用的nosql"></a>4. 常用的nosql</h3><p>​    Redis / Memcache / Mongdb</p>
+<h3 id="5-怎么玩"><a href="#5-怎么玩" class="headerlink" title="5. 怎么玩"></a>5. 怎么玩</h3><p>KV<br>Cache<br>Persistence</p>
+<h3 id="6、目前互联网的新要求：3V-和3-高"><a href="#6、目前互联网的新要求：3V-和3-高" class="headerlink" title="6、目前互联网的新要求：3V 和3 高"></a>6、<strong>目前互联网的新要求：3V </strong>和<strong>3</strong> <strong>高</strong></h3><p>大数据时代的 3V </p>
+<ul>
+<li><p>Volume：海量，数据量极大 </p>
+</li>
+<li><p>Variety：多样 </p>
+<p>数据类型：文本、图片、音频、视频…… </p>
+<p>终端设备：PC、移动端、嵌入式设备…… </p>
+</li>
+<li><p>Velocity：实时 </p>
+<p>直播，金融证券…… </p>
+</li>
+</ul>
+<p>互联网时代的 3 高 </p>
+<ul>
+<li><p>高可扩</p>
+<p>不断优化现有的功能，不断开发新的功能； </p>
+</li>
+<li><p>高性能 </p>
+<p>不能让用户感觉到等待的时间； </p>
+</li>
+<li><p>高并发</p>
+<p>同时处理并发请求的能力，如双十一的秒杀、抢购火车票； </p>
+<p>提升硬件，优化系统，优化项目，将费时的操作进入异步处理；</p>
+</li>
+</ul>
+
                 
                 <hr>
                 <!-- Pager -->
@@ -302,10 +407,10 @@
                 <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
 
                 <div class="aplayer"
-                    data-id="undefined"
-                    data-server="undefined"
-                    data-type="undefined"
-                    data-fixed="undefined" >
+                    data-id=""
+                    data-server=""
+                    data-type=""
+                    data-fixed="" >
                 </div>
                 -->
                 <!-- require APlayer end -->
@@ -412,6 +517,10 @@ const gitment = new Gitment({
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                        
+                          <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
+                        
                     </div>
                 </section>
                 
@@ -734,29 +843,12 @@ const gitment = new Gitment({
         
 
         
-            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&#34;🌱&#34;,&#34;just do it&#34;,&#34;🌾&#34;,&#34;🍀&#34;,&#34;don&#39;t give up&#34;,&#34;🍂&#34;,&#34;🌻&#34;,&#34;try it again&#34;,&#34;🍃&#34;,&#34;never say die&#34;,&#34;🌵&#34;,&#34;🌿&#34;,&#34;🌴&#34;]' color='[&#34;rgb(121,93,179)&#34; ,&#34;rgb(76,180,231)&#34; ,&#34;rgb(184,90,154)&#34; ,&#34;rgb(157,211,250)&#34; ,&#34;rgb(255,0,0)&#34; ,&#34;rgb(242,153,29)&#34; ,&#34;rgb(23,204,16)&#34; ,&#34;rgb(222,0,0)&#34; ,&#34;rgb(22,36,92)&#34; ,&#34;rgb(127,24,116)&#34; ,&#34;rgb(119,195,79)&#34; ,&#34;rgb(4,77,34)&#34; ,&#34;rgb(122,2,60)&#34;]'></script>
         
 
         <!-- background effects end -->
     
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
- -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 
 </html>
