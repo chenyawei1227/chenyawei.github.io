@@ -16,11 +16,11 @@
     <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <title>
         
-          快速排序 - Hexo-theme-snail
+          Redis的五大数据类型 - Hexo-theme-snail
         
     </title>
 
-    <link rel="canonical" href="https://bytenote.cn/2019/12/05/快速排序/">
+    <link rel="canonical" href="https://bytenote.cn/2020/01/14/Redis的五大数据类型/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -111,23 +111,23 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
                             
-                              <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                              <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
                             
                         </div>
-                        <h1>快速排序</h1>
+                        <h1>Redis的五大数据类型</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Chenyawei on
-                            2019-12-05
+                            2020-01-14
                         </span>
 
                         
                             <div class="blank_box"></div>
                             <span class="meta">
-                                Words <span class="post-count">410</span> and
-                                Reading Time <span class="post-count">2</span> Minutes
+                                Words <span class="post-count">1k</span> and
+                                Reading Time <span class="post-count">3</span> Minutes
                             </span>
                             <div class="blank_box"></div>
                             <!-- 不蒜子统计 start -->
@@ -259,25 +259,113 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h3 id="快速排序思路："><a href="#快速排序思路：" class="headerlink" title="快速排序思路："></a>快速排序思路：</h3><p>快速排序时间最好情况下的复杂度为<script type="math/tex">O(\log_2 n)</script>，待排序序列越无序，本算法效率越高。最坏情况下的时间复杂度为<script type="math/tex">O(n^2)</script>，平均复杂度为$O(\log_2 n)$，</p>
-<ul>
-<li>对一个序列A[1]、A[2]、… 、A[n]，调整序列中元素的位置，一趟排序后，使得A[1]的左侧所有元素都不超过A[1]、右侧所有元素都大于A[1].</li>
-<li>然后，以A[1]位置分割左右两部分递归快速排序</li>
+                <h2 id="一、Redis的五大数据类型"><a href="#一、Redis的五大数据类型" class="headerlink" title="一、Redis的五大数据类型"></a>一、Redis的五大数据类型</h2><ul>
+<li><p>String（字符串）</p>
+<p>String（字符串）</p>
+<p>string是redis最基本的类型，可以理解为Memcached一样的类型，一个key对应一个value。</p>
+<p>string类型是二进制安全的，意思是redis的string可以包含任何数据。比如ipg图片或者序列化的对象。</p>
+<p>string类型是Redis最基本的数据结构，一个redis中字符串value最多可以是512M。</p>
+</li>
+<li><p>Hash（哈希，类似java里的Map）</p>
+<p>Hash（哈希）</p>
+<p>Redis hash是一个键值对集合。</p>
+<p>Redis hash是一个string类型的field和value的映射表，hash特别适合用于存储对象。</p>
+<p>类似java里面的Map<String,Object></p>
+</li>
+<li><p>List（列表）</p>
+<p>List(列表)</p>
+<p>Redis列表是简单的字符串列表，按照插入顺序排序。可以添加一个元素到列表的头部（左边）或者尾部（右边）。</p>
+<p>它的底层是一个链表。</p>
+</li>
+<li><p>Set（集合)</p>
+<p>Set（集合）</p>
+<p>Redis的Set是string类型的无序集合。它是通过HashTable实现的。</p>
+</li>
+<li><p>Zset（sorted set：有序集合）</p>
+<p>zzset(sorted set：有序集合)</p>
+<p>Redis zset 和 set 一样也是string类型元素的集合,且不允许重复的成员。</p>
+<p>不同的是每个元素都会关联一个double类型的分数。</p>
+<p>redis正是通过分数来为集合中的成员进行从小到大的排序。zset的成员是唯一的,但分数(score)却可以重复。</p>
+</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//一趟关键元素（主原）排序</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp = A[left];</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[right] &gt; temp) right--;</span><br><span class="line">        A[left] = A[right];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[left] &lt;= temp ) left++;</span><br><span class="line">        A[right] = A[left];</span><br><span class="line">    &#125;</span><br><span class="line">    A[left] = temp;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//优化主原没有把区间[left,right]分成两个近似的子区间:随机的选择主原</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">randPartition</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> randNum = (round(<span class="number">1.0</span>*rand()/RAND_MAX*(right - left) + left));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"randNum: %d\n"</span>,randNum);</span><br><span class="line">    swap(A[randNum],A[left]);</span><br><span class="line">    <span class="keyword">int</span> temp = A[left];</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[right] &gt; temp) right--;</span><br><span class="line">        A[left] = A[right];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[left] &lt;= temp) left++;</span><br><span class="line">        A[right] = A[left]; </span><br><span class="line">    &#125;</span><br><span class="line">    A[left] = temp;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span> A[],<span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="comment">//int pos = partition(A,left,right);</span></span><br><span class="line">        <span class="keyword">int</span> pos = randPartition(A,left,right);</span><br><span class="line">        quickSort(A,left,pos - <span class="number">1</span>);</span><br><span class="line">        quickSort(A,pos + <span class="number">1</span>,right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> A[] = &#123;<span class="number">35</span>,<span class="number">18</span>,<span class="number">16</span>,<span class="number">72</span>,<span class="number">24</span>,<span class="number">65</span>,<span class="number">12</span>,<span class="number">88</span>,<span class="number">46</span>,<span class="number">28</span>,<span class="number">100</span>,<span class="number">66</span>,<span class="number">866</span>&#125;;</span><br><span class="line">    quickSort(A,<span class="number">0</span>,<span class="number">9</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,A[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>哪里去获得redis常见数据类型操作命令: <a href="http://redisdoc.com/" target="_blank" rel="noopener">http://redisdoc.com/</a></p>
+<h2 id="二、Redis-键-key"><a href="#二、Redis-键-key" class="headerlink" title="二、Redis 键(key)"></a>二、Redis 键(key)</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahedgtxgxj30hv0iogmu.jpg" alt="img"> </p>
+<p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">keys *</span><br><span class="line">exists key的名字,判断某个key是否存在</span><br><span class="line">move key db --&gt;当前库就没有了，被移出了</span><br><span class="line">expire key 秒钟：为给定的key设置过期时间</span><br><span class="line">ttl key查看还有多少秒过期，-1表示永不过期，-2表示已过期</span><br><span class="line">type key 查看你的key是什么类型</span><br></pre></td></tr></table></figure>
+<h2 id="三、Redis字符串-String-，单值单value"><a href="#三、Redis字符串-String-，单值单value" class="headerlink" title="三、Redis字符串(String)，单值单value"></a>三、Redis字符串(String)，单值单value</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahef8wrbpj30ma0hi75m.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahefabmn4j30mb07f0t5.jpg" alt="img"> </p>
+<p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">set/get/del/append/strlen</span><br><span class="line">Incr/decr/incrby/decrby,一定要是数字才能进行加减</span><br><span class="line">getrange/setrange</span><br><span class="line">setex(set with expire)键秒值/setnx(set if not exist)</span><br><span class="line">mset/mget/msetnx</span><br><span class="line">getset(先get在set)</span><br></pre></td></tr></table></figure>
+<p>getrange:获取指定区间范围内的值，类似between……and的关系</p>
+<p>从零到负一表示全部</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahep76q5wj308r049mx5.jpg" alt="img"> </p>
+<p>setrange设置指定区间范围内的值，格式是setrange key值 具体值</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahep8fc4dj309r043dft.jpg" alt="img"> </p>
+<h2 id="四、Redis列表-List-，单值多value"><a href="#四、Redis列表-List-，单值多value" class="headerlink" title="四、Redis列表(List)，单值多value"></a>四、Redis列表(List)，单值多value</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheq787trj30mb0cwwfg.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheq8lhguj30md08s0t7.jpg" alt="img"> </p>
+<p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">lpush/rpush/lrange</span><br><span class="line">lpop/rpop</span><br><span class="line">lindex,按照索引下表获得元素（从上到下）</span><br><span class="line">llen</span><br><span class="line">lren key 删N个value</span><br><span class="line">ltrim key 开始index 结束index，截取指定范围的值后再赋值给key</span><br><span class="line">rpoplpush 源列表 目的列表</span><br><span class="line">lset key index value</span><br><span class="line">linsert key before/after 值1 值2</span><br><span class="line">性能总结</span><br><span class="line">它是一个字符链表，left，right都可以插入添加。</span><br><span class="line">如果键不存在，创建新的链表。</span><br><span class="line">如果键已经存在，新增内容。</span><br><span class="line">如果值全移除，对应的键也就消失了。</span><br><span class="line">链表的操作无论是头和尾效率都极高，但假如是对中间元素进行操作，效率就很惨淡了。</span><br></pre></td></tr></table></figure>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahessv0whj30a80b3jrn.jpg" alt="img"> 通过索引获取列表中的元素 lindex key index</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahet8sto5j309b03a0sn.jpg" alt="img"> </p>
+<p> * 从left往right删除2个值等于v1的元素，返回的值为实际删除的数量</p>
+<p> * LREM list3 0 值，表示删除全部给定的值。零个就是全部值</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahetnaoaej30em0cy74p.jpg" alt="img"> </p>
+<p>ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索引 结束索引</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheu8ut4pj30do0cpgm0.jpg" alt="img"> a </p>
+<p>移除列表的最后一个元素，并将该元素添加到另一个列表并返回</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheugs9e4j30a1066jrd.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheuqkspuj309t0fd0t1.jpg" alt="img"> </p>
+<p>在list某个已有值的前后再添加具体值</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheuz2lsgj30dx0g1t9c.jpg" alt="img"> </p>
+<h2 id="五、Redis集合-Set-，单值多value"><a href="#五、Redis集合-Set-，单值多value" class="headerlink" title="五、Redis集合(Set)，单值多value"></a>五、Redis集合(Set)，单值多value</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahf9sda8ej30cy0iimya.jpg" alt="img"> </p>
+<p>案例</p>
+<ul>
+<li>sadd/smembers/sismember</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfbi56gxj30av09pwep.jpg" alt="img"> </p>
+<ul>
+<li><p>scard，获取集合里面的元素个数</p>
+<p>获取集合里面的元素个数</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfblc0dyj30ao02xwee.jpg" alt="img"> </p>
+</li>
+<li><p>srem key value 删除集合中元素</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfbo6porj307q01x744.jpg" alt="img"> </p>
+</li>
+<li><p>srandmember key 某个整数(随机出几个数)</p>
+<p>*  从set集合里面随机取出2个</p>
+<p>*  如果超过最大数量就全部取出，</p>
+<p>*  如果写的值是负数，比如-3 ，表示需要取出3个，但是可能会有重复值。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfchmmonj30970diwev.jpg" alt="img"> </p>
+</li>
+<li><p>spop key 随机出栈</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfd7ypxkj307v07x74b.jpg" alt="img"> </p>
+</li>
+<li><p>smove key1 key2 在key1里某个值      作用是将key1里的某个值赋给key2</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfdt5vwcj308s07laa3.jpg" alt="img"> </p>
+</li>
+<li><p>数学集合类</p>
+<p>差集：sdiff</p>
+<p>在第一个set里面而不在后面任何一个set里面的项</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfgn46iqj309s07nwek.jpg" alt="img"> </p>
+<p>交集：sinter</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfgl5p8qj309v0bbt8x.jpg" alt="img"> </p>
+<p>并集：sunion</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfghfbktj30a3057745.jpg" alt="img"> </p>
+</li>
+</ul>
 
                 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2019/12/06/二叉树的遍历和创建/" data-toggle="tooltip" data-placement="top" title="二叉树的遍历和创建">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2019/12/05/归并排序/" data-toggle="tooltip" data-placement="top" title="归并排序">Next Post &rarr;</a>
+                            <a href="/2020/01/14/Redis入门介绍/" data-toggle="tooltip" data-placement="top" title="Redis入门介绍">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -379,7 +467,7 @@ const myTheme = {
 
 
 const gitment = new Gitment({
-    id: 'Thu Dec 05 2019 22:57:01 GMT+0800', // optional
+    id: 'Tue Jan 14 2020 12:13:20 GMT+0800', // optional
     owner: "chenyawei1227",
     repo: "comments",
     oauth: {
@@ -426,9 +514,9 @@ const gitment = new Gitment({
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
                         
-                          <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                          <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
                         
                     </div>
                 </section>

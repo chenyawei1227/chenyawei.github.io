@@ -16,11 +16,11 @@
     <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <title>
         
-          快速排序 - Hexo-theme-snail
+          Redis入门介绍 - Hexo-theme-snail
         
     </title>
 
-    <link rel="canonical" href="https://bytenote.cn/2019/12/05/快速排序/">
+    <link rel="canonical" href="https://bytenote.cn/2020/01/14/Redis入门介绍/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -111,22 +111,22 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
                             
-                              <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                              <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
                             
                         </div>
-                        <h1>快速排序</h1>
+                        <h1>Redis入门介绍</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Chenyawei on
-                            2019-12-05
+                            2020-01-14
                         </span>
 
                         
                             <div class="blank_box"></div>
                             <span class="meta">
-                                Words <span class="post-count">410</span> and
+                                Words <span class="post-count">721</span> and
                                 Reading Time <span class="post-count">2</span> Minutes
                             </span>
                             <div class="blank_box"></div>
@@ -259,12 +259,29 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h3 id="快速排序思路："><a href="#快速排序思路：" class="headerlink" title="快速排序思路："></a>快速排序思路：</h3><p>快速排序时间最好情况下的复杂度为<script type="math/tex">O(\log_2 n)</script>，待排序序列越无序，本算法效率越高。最坏情况下的时间复杂度为<script type="math/tex">O(n^2)</script>，平均复杂度为$O(\log_2 n)$，</p>
+                <h2 id="Redis入门介绍"><a href="#Redis入门介绍" class="headerlink" title="Redis入门介绍"></a>Redis入门介绍</h2><h3 id="1-是什么"><a href="#1-是什么" class="headerlink" title="1. 是什么"></a>1. 是什么</h3><p>Redis：REmote DIctionary Server（远程字典服务器），是完全开源免费的，用C语言编写的，遵守BSD协议，是一个高性能的（key/value）分布式内存数据库，基于内存运行并支持持久化的NoSQL数据库，被称为数据结构数据库。</p>
+<p>Redis与其他key-value缓存产品有一下三个特点：</p>
 <ul>
-<li>对一个序列A[1]、A[2]、… 、A[n]，调整序列中元素的位置，一趟排序后，使得A[1]的左侧所有元素都不超过A[1]、右侧所有元素都大于A[1].</li>
-<li>然后，以A[1]位置分割左右两部分递归快速排序</li>
+<li>Redis支持数据的持久化，可以将内存中的数据保持在磁盘中，重启的时候可以再次加载进行使用</li>
+<li>Redis不仅仅支持简单的key-value类型的数据，同时还提供list，set，zset，hash等数据结构的存储</li>
+<li>Redis支持数据的备份，即master-slave模式的数据备份。</li>
 </ul>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdlib&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cmath&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//一趟关键元素（主原）排序</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">partition</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> temp = A[left];</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[right] &gt; temp) right--;</span><br><span class="line">        A[left] = A[right];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[left] &lt;= temp ) left++;</span><br><span class="line">        A[right] = A[left];</span><br><span class="line">    &#125;</span><br><span class="line">    A[left] = temp;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//优化主原没有把区间[left,right]分成两个近似的子区间:随机的选择主原</span></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">randPartition</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> randNum = (round(<span class="number">1.0</span>*rand()/RAND_MAX*(right - left) + left));</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">"randNum: %d\n"</span>,randNum);</span><br><span class="line">    swap(A[randNum],A[left]);</span><br><span class="line">    <span class="keyword">int</span> temp = A[left];</span><br><span class="line">    <span class="keyword">while</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[right] &gt; temp) right--;</span><br><span class="line">        A[left] = A[right];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right &amp;&amp; A[left] &lt;= temp) left++;</span><br><span class="line">        A[right] = A[left]; </span><br><span class="line">    &#125;</span><br><span class="line">    A[left] = temp;</span><br><span class="line">    <span class="keyword">return</span> left;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">quickSort</span><span class="params">(<span class="keyword">int</span> A[],<span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="comment">//int pos = partition(A,left,right);</span></span><br><span class="line">        <span class="keyword">int</span> pos = randPartition(A,left,right);</span><br><span class="line">        quickSort(A,left,pos - <span class="number">1</span>);</span><br><span class="line">        quickSort(A,pos + <span class="number">1</span>,right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> A[] = &#123;<span class="number">35</span>,<span class="number">18</span>,<span class="number">16</span>,<span class="number">72</span>,<span class="number">24</span>,<span class="number">65</span>,<span class="number">12</span>,<span class="number">88</span>,<span class="number">46</span>,<span class="number">28</span>,<span class="number">100</span>,<span class="number">66</span>,<span class="number">866</span>&#125;;</span><br><span class="line">    quickSort(A,<span class="number">0</span>,<span class="number">9</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i++)&#123;</span><br><span class="line">        <span class="built_in">printf</span>(<span class="string">"%d\n"</span>,A[i]);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-能干嘛"><a href="#2-能干嘛" class="headerlink" title="2. 能干嘛"></a>2. 能干嘛</h3><ul>
+<li>内存存储和持久化：redis支持异步将内存中的数据写到硬盘上，同时不影响继续服务。</li>
+<li>取最新N个数据的操作，如：可以将最新的10条评论的ID放在Redis的List集合里面</li>
+<li>模拟类似于HttpSession这种需要设定过期时间的功能。</li>
+<li>发布、订阅消息系统</li>
+<li>定时器、计数器</li>
+</ul>
+<h3 id="3-去哪下"><a href="#3-去哪下" class="headerlink" title="3. 去哪下"></a>3. 去哪下</h3><p><a href="http://redis.io/" target="_blank" rel="noopener">http://redis.io/</a><br><a href="http://www.redis.cn/" target="_blank" rel="noopener">http://www.redis.cn/</a></p>
+<h3 id="4、怎么玩"><a href="#4、怎么玩" class="headerlink" title="4、怎么玩"></a>4、怎么玩</h3><p>数据类型、基本操作和配置、持久化和复制，RDB/AOF、事务的控制、复制………</p>
+<h3 id="5、Redis的安装"><a href="#5、Redis的安装" class="headerlink" title="5、Redis的安装"></a>5、Redis的安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">下载获得redis-3.0.4.tar.gz后将它放入我们的Linux目录/root</span><br><span class="line">/opt目录下，解压命令：tar -zxvf redis-3.0.4.tar.gz</span><br><span class="line">解压完成后出现文件夹：redis-3.0.4</span><br><span class="line">在redis-3.0.4目录下执行make命令</span><br><span class="line">	运行make命令是故意出现的错误的解析：</span><br><span class="line">		安装gcc</span><br><span class="line">			能上网：yum install gcc-c++</span><br><span class="line">			不能上网：</span><br><span class="line">		二次make</span><br><span class="line">		Jemalloc/jemalloc.h：没有那个文件目录</span><br><span class="line">			运行make distclean之后再make</span><br><span class="line">		Redis Test（可以不用执行）</span><br><span class="line">如果make完成后继续执行make install</span><br><span class="line">查看默认安装目录：usr/local/bin</span><br><span class="line">启动</span><br><span class="line">redis-server</span><br><span class="line">关闭</span><br><span class="line">ctrl+c</span><br></pre></td></tr></table></figure>
+<h3 id="6、Redis启动后杂项基础知识讲解"><a href="#6、Redis启动后杂项基础知识讲解" class="headerlink" title="6、Redis启动后杂项基础知识讲解"></a>6、Redis启动后杂项基础知识讲解</h3><p>Redis是单进程的</p>
+<ul>
+<li>单进程模型来处理客户端的请求。对读写等时间的响应是通过对epoll函数的包装来做到的。Redis的实际处理速度完全依靠主进程的执行效率。</li>
+<li>Epoll是Linux内核为处理大批量文件描述符而作了改进的epoll，是Linux下多路复用IO接口select/poll的增强版本，它能显著提高程序在大量并发连接中只有少量活跃情况下的系统CPU利用率。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">默认16个数据库，类似数组下表从零开始，初始默认使用零号库</span><br><span class="line">Select命令切换数据库</span><br><span class="line">Dbsize查看当前数据库的key的数量</span><br><span class="line">Flushdb：清空当前库</span><br><span class="line">Flushall：通杀全部库</span><br><span class="line">同一密码管理，16个库都是同样密码，要么都ok要么一个也连不上</span><br><span class="line">Redis索引都是从零开始</span><br><span class="line">默认端口是6379</span><br></pre></td></tr></table></figure>
 
                 
                 <hr>
@@ -272,12 +289,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2019/12/06/二叉树的遍历和创建/" data-toggle="tooltip" data-placement="top" title="二叉树的遍历和创建">&larr; Previous Post</a>
+                            <a href="/2020/01/14/Redis的五大数据类型/" data-toggle="tooltip" data-placement="top" title="Redis的五大数据类型">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2019/12/05/归并排序/" data-toggle="tooltip" data-placement="top" title="归并排序">Next Post &rarr;</a>
+                            <a href="/2020/01/14/NoSql概述/" data-toggle="tooltip" data-placement="top" title="NoSql入门和概述">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -379,7 +396,7 @@ const myTheme = {
 
 
 const gitment = new Gitment({
-    id: 'Thu Dec 05 2019 22:57:01 GMT+0800', // optional
+    id: 'Tue Jan 14 2020 12:12:14 GMT+0800', // optional
     owner: "chenyawei1227",
     repo: "comments",
     oauth: {
@@ -426,9 +443,9 @@ const gitment = new Gitment({
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
                         
-                          <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                          <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
                         
                     </div>
                 </section>
