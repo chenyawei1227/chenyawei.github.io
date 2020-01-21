@@ -1,11 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://bytenote.cn/2020/01/21/Redis%E7%9A%84%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/</loc>
+    <lastmod>2020-01-21</lastmod>
+  </url>  <url>
+    <loc>https://bytenote.cn/2020/01/21/Redis%E4%BA%8B%E5%8A%A1/</loc>
+    <lastmod>2020-01-21</lastmod>
+  </url>  <url>
+    <loc>https://bytenote.cn/2020/01/21/Redis%E6%8C%81%E4%B9%85%E5%8C%96/</loc>
+    <lastmod>2020-01-21</lastmod>
+  </url>  <url>
+    <loc>https://bytenote.cn/2020/01/21/Redis%E8%A7%A3%E6%9E%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6redis-conf/</loc>
+    <lastmod>2020-01-21</lastmod>
+  </url>  <url>
     <loc>https://bytenote.cn/2020/01/14/Redis%E7%9A%84%E4%BA%94%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</loc>
     <lastmod>2020-01-21</lastmod>
   </url>  <url>
     <loc>https://bytenote.cn/2020/01/14/Redis%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D/</loc>
-    <lastmod>2020-01-20</lastmod>
+    <lastmod>2020-01-21</lastmod>
   </url>  <url>
     <loc>https://bytenote.cn/2020/01/14/NoSql%E6%A6%82%E8%BF%B0/</loc>
     <lastmod>2020-01-14</lastmod>

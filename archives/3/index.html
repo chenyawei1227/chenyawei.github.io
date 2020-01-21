@@ -160,14 +160,14 @@
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
@@ -255,9 +255,158 @@
 
     
 
+    
+
 
 
 <!-- Main Content -->
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2019/12/08/try-catch-finally关键字相关问题/">
+                <h2 class="post-title">
+                    try_catch_finally关键字相关问题
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    1. 什么时候用到finally呢? finally关键词在异常处理中如何使用:不管异常会不会被捕捉或者处理都会执行的代码，某些事物（除内存外）在异常处理完后需要恢复到初始状态,如关闭IO操作, 关闭一些耗性能的资源，数据库的连接。
+某些事物（除内存外）在异常在异常处理完后需要恢复到初始状态，如开启的文件，网络的连接等。
+2. try里有return，finally还执行么？inally语句......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2019-12-08
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#java" title="java">java</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2019/12/06/二叉树的遍历和创建/">
+                <h2 class="post-title">
+                    二叉树的遍历和创建
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    1. 二叉树的遍历先序遍历、中序遍历、后序遍历，无论这三种遍历的哪一种，左子树一定先与右子树遍历；所谓的“先中后”是指访问根结点顺序在遍历中的位置。例外还有层次遍历，即广度优先遍历
+
+
+先序：根结点-&gt;&gt;左子树-&gt;&gt;右子树
+1234567void preOrder(node* root)&#123; //先序遍历    if(root == NULL)&#123;  ......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2019-12-06
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                    
+                      <a href="/tags/#c/c++" title="c/c++">c/c++</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2019/12/05/快速排序/">
+                <h2 class="post-title">
+                    快速排序
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    快速排序思路：快速排序时间最好情况下的复杂度为O(\log_2 n)，待排序序列越无序，本算法效率越高。最坏情况下的时间复杂度为O(n^2)，平均复杂度为$O(\log_2 n)$，
+
+对一个序列A[1]、A[2]、… 、A[n]，调整序列中元素的位置，一趟排序后，使得A[1]的左侧所有元素都不超过A[1]、右侧所有元素都大于A[1].
+然后，以A[1]位置分割左右两部分递归快速排序
+
+12......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2019-12-05
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                    
+                      <a href="/tags/#c/c++" title="c/c++">c/c++</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2019/12/05/归并排序/">
+                <h2 class="post-title">
+                    归并排序
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    二路归并排序思路：将原始序列看作N个只包含一个元素的有序子序列，然后每次迭代归并两个相邻的有序子序列，直到最后只剩下一个有序的序列。时间复杂度为O(\log_2 n)
+代码：
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152#include &lt;c......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2019-12-05
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                    
+                      <a href="/tags/#c/c++" title="c/c++">c/c++</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
 
     
 
@@ -481,117 +630,6 @@ upper_......
 
     
 
-    
-
-        <div class="post-preview">
-
-            <a href="/2019/11/22/Java关键字之static/">
-                <h2 class="post-title">
-                    Java关键字之static
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    一. 什么是static关键字
-我们可以基于一个类创建多个该类的对象，每个对象都拥有自己的成员，互相独立。然而在某些时候，我们更希望该类所有的对象共享同一个成员。此时就是 static 大显身手的时候了！！
-Java 中被 static修饰的成员称为静态成员或类成员。它属于整个类所有，而不是某个对象所有，即被==类的所有对象==所共享。
-方便在没有创建对象的情况下进行调用（变量或方法）。
-静......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2019-11-22
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#java" title="java">java</a>
-                    
-                      <a href="/tags/#基础理解" title="基础理解">基础理解</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
-    
-
-        <div class="post-preview">
-
-            <a href="/2019/11/22/搭建自己的Hexo博客/">
-                <h2 class="post-title">
-                    搭建自己的Hexo博客
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    1.安装node.jsHexo需用通过npm安装，而npm需要node，现在只要安装node 就自带 npm了
-1234执行命令查看是否安装成功:node -vnpm -v
-1234567安装nmp阿里的命令：npm install -g cnpm --registry=https://registry.npm.taobao.org 检查是否安装成功：cnpm -vcnpm安装软件时会比较快......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2019-11-22
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#操作记录" title="操作记录">操作记录</a>
-                    
-                      <a href="/tags/#hexo" title="hexo">hexo</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
-    
-
-        <div class="post-preview">
-
-            <a href="/2019/11/01/Hexo-Theme-Snail/">
-                <h2 class="post-title">
-                    Hexo-Theme-Snail
-                </h2>
-                <h3 class="post-subtitle">
-                    A succinct hexo theme.
-                </h3>
-                <div class="post-content-preview">
-                    hexo-theme-snailView Hexo-Theme-Snail Sources On Github &#10174; 
-View Live Super Snail Blog &#10174;
-
-Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, that can be set ......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2019-11-01
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#操作记录" title="操作记录">操作记录</a>
-                    
-                      <a href="/tags/#hexo" title="hexo">hexo</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
 
 
 <!-- Pager -->
@@ -602,6 +640,10 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
             <a href="/archives/2/">&larr; Newer Posts</a>
         </li>
     
+    
+        <li class="next">
+            <a href="/archives/4/">Older Posts &rarr;</a>
+        </li>
     
 </ul>
 
@@ -667,10 +709,6 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
             
         
             
-        
-            
-        
-            
             <a href="/tags/#数据结构和算法" title="数据结构和算法" rel="6">数据结构和算法</a>
             
         
@@ -689,11 +727,15 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
             
         
             
-            <a href="/tags/#redis" title="redis" rel="3">redis</a>
+            <a href="/tags/#redis" title="redis" rel="7">redis</a>
             
         
             
-            <a href="/tags/#中间件" title="中间件" rel="3">中间件</a>
+            <a href="/tags/#中间件" title="中间件" rel="7">中间件</a>
+            
+        
+            
+        
             
         
     </div>
@@ -778,23 +820,23 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
     <ul>
       
         <li>
+          <a href="/2020/01/21/Redis%E7%9A%84%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/">Redis的发布订阅</a>
+        </li>
+      
+        <li>
+          <a href="/2020/01/21/Redis%E4%BA%8B%E5%8A%A1/">Redis事务</a>
+        </li>
+      
+        <li>
+          <a href="/2020/01/21/Redis%E6%8C%81%E4%B9%85%E5%8C%96/">Redis持久化</a>
+        </li>
+      
+        <li>
+          <a href="/2020/01/21/Redis%E8%A7%A3%E6%9E%90%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6redis-conf/">Redis解析配置文件redis.conf</a>
+        </li>
+      
+        <li>
           <a href="/2020/01/14/Redis%E7%9A%84%E4%BA%94%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/">Redis的五大数据类型</a>
-        </li>
-      
-        <li>
-          <a href="/2020/01/14/Redis%E5%85%A5%E9%97%A8%E4%BB%8B%E7%BB%8D/">Redis入门介绍</a>
-        </li>
-      
-        <li>
-          <a href="/2020/01/14/NoSql%E6%A6%82%E8%BF%B0/">NoSql入门和概述</a>
-        </li>
-      
-        <li>
-          <a href="/2019/12/15/JUC%E5%A4%9A%E7%BA%BF%E7%A8%8B/">JUC多线程</a>
-        </li>
-      
-        <li>
-          <a href="/2019/12/15/HashMap%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E5%92%8C%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">HashMap源码解析和实现原理</a>
         </li>
       
     </ul>
@@ -823,7 +865,7 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
     </div>
 
         <hr>
@@ -832,7 +874,7 @@ Hexo-theme-snail is a succinct hexo theme. It has two colors, light and star, th
 
     <h5>categories</h5>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/%E5%AE%B9%E5%99%A8/">容器</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/">SrpingBoot</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/java/">java</a><span class="category-list-count">7</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/c-c/">c/c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/%E5%9F%BA%E7%A1%80%E7%90%86%E8%A7%A3/">基础理解</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/redis/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">3</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/">java</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/sql/">sql</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/sql/mysql/">mysql</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/hexo/">hexo</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/c-c/">c/c++</a><span class="category-list-count">6</span></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/%E5%AE%B9%E5%99%A8/">容器</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/">SrpingBoot</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/java/">java</a><span class="category-list-count">7</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/c-c/">c/c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/%E5%9F%BA%E7%A1%80%E7%90%86%E8%A7%A3/">基础理解</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/redis/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">7</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/">java</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/sql/">sql</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/sql/mysql/">mysql</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/hexo/">hexo</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/c-c/">c/c++</a><span class="category-list-count">6</span></li></ul></li></ul>
     </div>
 
         <hr>
