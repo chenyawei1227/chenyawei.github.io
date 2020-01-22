@@ -16,11 +16,11 @@
     <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
     <title>
         
-          归并排序 - Hexo-theme-snail
+          Redis的复制(MasterSlave) - Hexo-theme-snail
         
     </title>
 
-    <link rel="canonical" href="https://bytenote.cn/2019/12/05/归并排序/">
+    <link rel="canonical" href="https://bytenote.cn/2020/01/22/Redis的复制-MasterSlave/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -111,23 +111,23 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
                             
-                              <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                              <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
                             
                         </div>
-                        <h1>归并排序</h1>
+                        <h1>Redis的复制(MasterSlave)</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Chenyawei on
-                            2019-12-05
+                            2020-01-22
                         </span>
 
                         
                             <div class="blank_box"></div>
                             <span class="meta">
-                                Words <span class="post-count">310</span> and
-                                Reading Time <span class="post-count">1</span> Minutes
+                                Words <span class="post-count">1.8k</span> and
+                                Reading Time <span class="post-count">6</span> Minutes
                             </span>
                             <div class="blank_box"></div>
                             <!-- 不蒜子统计 start -->
@@ -259,9 +259,178 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <h3 id="二路归并排序思路："><a href="#二路归并排序思路：" class="headerlink" title="二路归并排序思路："></a>二路归并排序思路：</h3><p>将原始序列看作N个只包含一个元素的有序子序列，然后每次迭代归并两个相邻的有序子序列，直到最后只剩下一个有序的序列。时间复杂度为<script type="math/tex">O(\log_2 n)</script></p>
-<p>代码：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;cstdio&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="keyword">int</span> maxn = <span class="number">100</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将数组A的[L1,R1]与[L2,R2]区间合并为有序的区间</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">merge</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> L1, <span class="keyword">int</span> R1, <span class="keyword">int</span> L2, <span class="keyword">int</span> R2)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> i=L1, j=L2;</span><br><span class="line">    <span class="keyword">int</span> temp[maxn], index = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(i &lt; R1 &amp;&amp; j &lt; R2)&#123;</span><br><span class="line">        <span class="keyword">if</span>(A[i] &lt;= A[j])&#123;</span><br><span class="line">            temp[index++] = A[i++];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            temp[index++] = A[j++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> (i &lt; R1) temp[index++] = A[i++];</span><br><span class="line">    <span class="keyword">while</span> (j &lt; R2) temp[index++] = A[j++];</span><br><span class="line">    <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; index; i++)&#123;</span><br><span class="line">        A[L1 + <span class="number">1</span>] = temp[i];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2路归并归并排序: 递归实现</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mergeSort</span><span class="params">(<span class="keyword">int</span> A[], <span class="keyword">int</span> left, <span class="keyword">int</span> right)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(left &lt; right)&#123;</span><br><span class="line">        <span class="keyword">int</span> mid = (left + right) / <span class="number">2</span>;</span><br><span class="line">        mergeSort(A, left, mid);</span><br><span class="line">        mergeSort(A, mid+<span class="number">1</span>, right);</span><br><span class="line">        merge(A, left, mid, mid + <span class="number">1</span>, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> n;</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 2路归并归并排序：非递归实现</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">mergeSort</span><span class="params">(<span class="keyword">int</span> A[])</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> <span class="built_in">step</span> = <span class="number">2</span>; <span class="built_in">step</span> / <span class="number">2</span> &lt;= n; <span class="built_in">step</span> *= <span class="number">2</span>)&#123;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i += <span class="built_in">step</span>)&#123;</span><br><span class="line">            <span class="keyword">int</span> mid = i + <span class="built_in">step</span> / <span class="number">2</span> <span class="number">-1</span>;</span><br><span class="line">            <span class="keyword">if</span>(mid + <span class="number">1</span> &lt;= n)&#123;</span><br><span class="line">                merge(A, i, mid, mid + <span class="number">1</span>, <span class="built_in">min</span>(i + <span class="built_in">step</span> - <span class="number">1</span>,n));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                <h2 id="一、-主从简介"><a href="#一、-主从简介" class="headerlink" title="一、 主从简介"></a>一、 主从简介</h2><p>配置多台 Redis 服务器，以主机和备机的身份分开。主机数据更新后，根据配置和策略，自动同步到备机的master/salver 机制，<strong>Master以写为主，Slave以读为主</strong>，二者之间自动同步数据。 </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5b0rlln7j30qo0aidk4.jpg" alt="image-20200122140519988"></p>
+<ul>
+<li>目的：</li>
+</ul>
+<p><strong>读写分离</strong>提高 Redis 性能； 避免单点故障，<strong>容灾</strong>快速恢复。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4auaabqsj308x04kmxc.jpg" alt="image-20200121171335820"></p>
+<ul>
+<li>原理：</li>
+</ul>
+<p>每次从机联通后，都会给主机发送 sync 指令(sync命令用于强制吧文件系统buff的内容，写入系统磁盘)，主机立刻进行存盘操作，发送 RDB 文件，给从机 从机收到 RDB 文件后，进行全盘加载。之后每次主机的写操作，都会立刻发送给从机，从机执行相同的命令。</p>
+<ul>
+<li>官网：</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4axlo1vnj30p30gwq4o.jpg" alt="img"> </p>
+<h2 id="二、操作过程"><a href="#二、操作过程" class="headerlink" title="二、操作过程"></a>二、操作过程</h2><h3 id="1、配从-库-不配主-库"><a href="#1、配从-库-不配主-库" class="headerlink" title="1、配从(库)不配主(库)"></a>1、配从(库)不配主(库)</h3><h3 id="2、从库配置：slaveof-主库IP-主库端口"><a href="#2、从库配置：slaveof-主库IP-主库端口" class="headerlink" title="2、从库配置：slaveof 主库IP 主库端口"></a>2、从库配置：slaveof 主库IP 主库端口</h3><p>每次与master断开之后，都需要重新连接，除非你配置进redis.conf文件</p>
+<p>info replication : 查看服务的节点信息</p>
+<h3 id="3、修改配置文件细节操作"><a href="#3、修改配置文件细节操作" class="headerlink" title="3、修改配置文件细节操作"></a>3、修改配置文件细节操作</h3><p>除非是不同的主机配置不同的 Redis 服务，否则在一台机器上面跑多个 Redis 服务，需要配置多个 Redis 配置文件。</p>
+<p>（1）准备多个 Redis 配置文件，每个配置文件，需要配置以下属性 </p>
+<ul>
+<li>daemonize yes: 服务在后台运行 </li>
+<li>port：端口号 </li>
+<li>pidfile:pid 保存文件 </li>
+<li>logfile：日志文件(如果没有指定的话，就不需要) </li>
+<li>dump.rdb: RDB 备份文件的名称 </li>
+<li>appendonly 关掉，或者是更改 appendonly 文件的名称。</li>
+</ul>
+<p>（2）样本：</p>
+<ul>
+<li>include /root/redis_repilication/redis.conf </li>
+<li>port 6379 </li>
+<li>pidfile /var/run/redis_6379.pid </li>
+<li>dbfilename dump_6379.rdb</li>
+</ul>
+<p>（3） 根据多个配置文件，启动多个 Redis 服务</p>
+<p>（4）案例：</p>
+<ul>
+<li><p>拷贝多个redis.conf文件</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4azxvyalj31180eracd.jpg" alt="img"> </p>
+</li>
+<li><p>开启daemonize yes；pid文件名字；指定端口</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4b0ijt01j30jf0efmy7.jpg" alt="img"> </p>
+</li>
+<li><p>log文件名字</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4b69zct7j30j3061aaf.jpg" alt="img"> </p>
+</li>
+<li><p>dump.rdb名字</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4b4jrsmmj30ad02cjr7.jpg" alt="img"> </p>
+</li>
+</ul>
+<h3 id="4、常用3招"><a href="#4、常用3招" class="headerlink" title="4、常用3招"></a>4、常用3招</h3><p>(1) 一主二仆,</p>
+<ul>
+<li><p>临时建立</p>
+<p>原则：配从不配主。 </p>
+<p>配置：在从服务器上执行 SLAVEOF ip:port 命令； </p>
+<p>查看：执行 info replication 命令； </p>
+</li>
+<li><p>永久建立</p>
+<p>在从机的配置文件中，编写 slaveof 属性配置！</p>
+</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5e6ve0jzj30d90a0gpo.jpg" alt="image-20200122155503185"></p>
+<p>(2)、薪火相传</p>
+<ul>
+<li><p>Init 开始时都是Master</p>
+<p>redis-server redis6379.conf  启动服务端</p>
+<p>myredis redis-cli -p 6379      启动客户端</p>
+</li>
+</ul>
+<p>  <img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4bhcppfnj311j0f4adz.jpg" alt="img"> </p>
+<ul>
+<li><p>一个Master两个Slave</p>
+<p>salvoes 127.0.0.1 6379  从机1</p>
+<p>salvoes 127.0.0.1 6379  从机2</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4bhmuchhj311y0huadh.jpg" alt="img"> </p>
+</li>
+<li><p>日志查看</p>
+<p>主机日志</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4bi5qfnlj311c0ccdhx.jpg" alt="img"> </p>
+<p>备机日志</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4bihlarvj311d09wwfy.jpg" alt="img"> </p>
+<p> info replication</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb4bikgncbj310m0eqwgv.jpg" alt="img"> </p>
+</li>
+<li><p>主从问题演示</p>
+<ol>
+<li><p>切入点问题？slave1、slave2是从头开始复制还是从切入点开始复制? 比如从k4进来，那之前的123是否也可以复制</p>
+<p>答：从头开始复制</p>
+</li>
+<li><p>从机是否可以写？set可否？</p>
+<p>答：从机不可以写。写入的时候会返回如下错误。</p>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6380&gt; set k1 v1</span><br><span class="line">(error) READONLY You can&apos;t write against a read only replica.</span><br></pre></td></tr></table></figure>
+<ol>
+<li><p>主机shutdown后情况如何？从机是上位还是原地待命</p>
+<p>答：原地待命</p>
+</li>
+<li><p>主机又回来了后，主机新增记录，从机还能否顺利复制？</p>
+<p>答：可以</p>
+</li>
+<li><p>其中一台从机 down 后重启，能否重认旧主？</p>
+<p>答：不一定，看配置文件中是否配置了 slaveof</p>
+</li>
+<li><p>如果两台从机都从主机同步数据，此时主机的 IO 压力会增大，如何解决？</p>
+<p>答：按照主—-从（主）—-从模式配置！</p>
+</li>
+</ol>
+</li>
+</ul>
+<p>(3)、SLAVEOF no one  取消从机</p>
+<p>​    使当前数据库停止与其他数据库的同步，转成主数据库</p>
+<h2 id="三、复制原理"><a href="#三、复制原理" class="headerlink" title="三、复制原理"></a>三、复制原理</h2><ol>
+<li>slave启动成功连接到master后会发送一个sync命令</li>
+<li>Master接到命令启动后台的存盘进程，同时收集所有接收到的用于修改数据集命令，在后台进程执行完毕之后，master将传送整个数据文件到slave,以完成一次完全同步</li>
+<li>全量复制：而slave服务在接收到数据库文件数据后，将其存盘并加载到内存中。</li>
+<li>增量复制：Master继续将新的所有收集到的修改命令依次传给slave,完成同步</li>
+<li>但是只要是重新连接master,一次完全同步（全量复制)将被自动执行</li>
+</ol>
+<h2 id="四、哨兵模式-sentinel"><a href="#四、哨兵模式-sentinel" class="headerlink" title="四、哨兵模式(sentinel)"></a>四、哨兵模式(sentinel)</h2><h3 id="1、简介"><a href="#1、简介" class="headerlink" title="1、简介"></a>1、简介</h3><p>反客为主的自动版，能够后台监控主机是否故障，如果故障了根据投票数自动将从库转换为主库</p>
+<p><strong>作用</strong>：</p>
+<ul>
+<li>Master 状态检测</li>
+<li>如果 Master 异常，则会进行 Master-Slave 切换，将其中一个 Slave 作为 Master，将之前的 Master 作为Slave</li>
+</ul>
+<p><strong>下线</strong>：</p>
+<ul>
+<li>主观下线：Subjectively Down，简称 SDOWN，指的是当前 Sentinel 实例对某个 redis 服务器做出的下线判断。 </li>
+<li>客观下线：Objectively Down， 简称 ODOWN，指的是多个 Sentinel 实例在对 Master Server 做出SDOWN 判断，并且通过 SENTINEL is-master-down-by-addr 命令互相交流之后，得出的 Master Server 下线判断，然后开启 failover. </li>
+</ul>
+<p><strong>工作原理</strong>：</p>
+<ul>
+<li>每个 Sentinel 以每秒钟一次的频率向它所知的Master、Slave以及其他 Sentinel实例发送一个 PING 命令 ； </li>
+<li>如果一个实例（instance）距离最后一次有效回复 PING 命令的时间超过 down-after-milliseconds 选项所指定的值， 则这个实例会被 Sentinel 标记为主观下线； </li>
+<li>如果一个 Master 被标记为主观下线，则正在监视这个 Master 的所有 Sentinel 要以每秒一次的频率确认 Master 的确进入了主观下线状态； </li>
+<li>当有足够数量的 Sentinel（大于等于配置文件指定的值）在指定的时间范围内确认 Master 的确进入了主 观下线状态， 则 Master 会被标记为客观下线 ； </li>
+<li>在一般情况下， 每个 Sentinel 会以每 10 秒一次的频率向它已知的所有 Master，Slave 发送 INFO 命令 </li>
+<li>当 Master 被 Sentinel 标记为客观下线时，Sentinel 向下线的 Master 的所有 Slave 发送 INFO 命令的频率会从 10 秒一次改为每秒一次 ； </li>
+<li>若没有足够数量的 Sentinel 同意 Master 已经下线， Master 的客观下线状态就会被移除;若 Master 重新向 Sentinel 的 PING 命令返回有效回复， Master 的主观下线状态就会被移除； </li>
+</ul>
+<h3 id="2、配置步骤：哨兵模式需要配置哨兵的配置文件"><a href="#2、配置步骤：哨兵模式需要配置哨兵的配置文件" class="headerlink" title="2、配置步骤：哨兵模式需要配置哨兵的配置文件"></a>2、配置步骤：哨兵模式需要配置哨兵的配置文件</h3><ul>
+<li><p>调整结构，6379带着80、81</p>
+</li>
+<li><p>自定义的/myredis目录下新建sentinel.conf文件，<strong>名字绝不能错</strong></p>
+</li>
+<li><p>配置哨兵,填写内容</p>
+<p> sentinel monitor 被监控数据库名字(自己起名字) 127.0.0.1 6379 1</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5emhowgnj30be055t8q.jpg" alt="img"> </p>
+<p>上面最后一个数字1，表示主机挂掉后salve投票看让谁接替成为主机，得票数多少后成为主机</p>
+</li>
+<li><p>启动哨兵</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5en426qqj30ix0ecq3m.jpg" alt="img"> </p>
+<p>redis-sentinel /myredis/sentinel.conf </p>
+<p>上述目录依照各自的实际情况配置，可能目录不同</p>
+</li>
+<li><p>原有的master挂了</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5f0ev199j311y0kg40z.jpg" alt="img"> </p>
+</li>
+<li><p>投票新选</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5f1lpzdej311y0kggp2.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5fkzxyp9j30yy0u07kj.jpg" alt="image-20200122164312533"></p>
+</li>
+<li><p>重新主从继续开工,info replication查查看</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5f1y07l5j311w0f541j.jpg" alt="img"> </p>
+</li>
+<li><p>问题：如果之前的master重启回来，会不会双master冲突？</p>
+<p>答：不会冲突，master重启回来后变成了从机。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5f2ifq2dj311y0fbjtz.jpg" alt="img"> </p>
+</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb5f7epmj6j30yu0mlnbs.jpg" alt="image-20200122163009552"></p>
+<h2 id="五、一组sentinel能同时监控多个Master"><a href="#五、一组sentinel能同时监控多个Master" class="headerlink" title="五、一组sentinel能同时监控多个Master"></a>五、一组sentinel能同时监控多个Master</h2><h2 id="六、复制的缺点：-复制延时"><a href="#六、复制的缺点：-复制延时" class="headerlink" title="六、复制的缺点： 复制延时"></a>六、复制的缺点： 复制延时</h2><p>由于所有的写操作都是先在Master上操作，然后同步更新到Slave上，所以从Master同步到Slave机器有一定的延迟，当系统很繁忙的时候，延迟问题会更加严重，Slave机器数量的增加也会使这个问题更加严重。</p>
 
                 
                 <hr>
@@ -269,12 +438,12 @@
                 <ul class="pager">
                     
                         <li class="previous">
-                            <a href="/2019/12/05/快速排序/" data-toggle="tooltip" data-placement="top" title="快速排序">&larr; Previous Post</a>
+                            <a href="/2020/01/22/Redis的Java客户端Jedis/" data-toggle="tooltip" data-placement="top" title="Redis的Java客户端Jedis">&larr; Previous Post</a>
                         </li>
                     
                     
                         <li class="next">
-                            <a href="/2019/12/05/插入排序/" data-toggle="tooltip" data-placement="top" title="插入排序">Next Post &rarr;</a>
+                            <a href="/2020/01/21/Redis的发布订阅/" data-toggle="tooltip" data-placement="top" title="Redis的发布订阅">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -376,7 +545,7 @@ const myTheme = {
 
 
 const gitment = new Gitment({
-    id: 'Thu Dec 05 2019 22:56:49 GMT+0800', // optional
+    id: 'Wed Jan 22 2020 16:50:39 GMT+0800', // optional
     owner: "chenyawei1227",
     repo: "comments",
     oauth: {
@@ -423,9 +592,9 @@ const gitment = new Gitment({
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#c/c++" title="c/c++">c/c++</a>
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
                         
-                          <a class="tag" href="/tags/#数据结构和算法" title="数据结构和算法">数据结构和算法</a>
+                          <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
                         
                     </div>
                 </section>
