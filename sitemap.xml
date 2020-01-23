@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://bytenote.cn/2020/01/23/Redis-Cluster%25E9%259B%2586%25E7%25BE%25A4/</loc>
+    
+    <lastmod>2020-01-23T02:40:34.202Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://bytenote.cn/2020/01/23/Redis%25E5%25BA%2594%25E7%2594%25A8%25E6%25A1%2588%25E4%25BE%258B/</loc>
+    
+    <lastmod>2020-01-23T02:40:20.519Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://bytenote.cn/2020/01/22/Redis%25E7%259A%2584Java%25E5%25AE%25A2%25E6%2588%25B7%25E7%25AB%25AFJedis/</loc>
     
     <lastmod>2020-01-22T09:36:27.413Z</lastmod>

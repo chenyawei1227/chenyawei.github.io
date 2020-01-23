@@ -4,6 +4,64 @@
   
     
     <entry>
+      <title>Redis应用案例</title>
+      <link href="/2020/01/23/Redis%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/"/>
+      <url>/2020/01/23/Redis%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="Redis应用案例"><a href="#Redis应用案例" class="headerlink" title="Redis应用案例"></a>Redis应用案例</h2><h3 id="1、手机验证码"><a href="#1、手机验证码" class="headerlink" title="1、手机验证码"></a>1、手机验证码</h3><p>需求：</p><p>①输入手机号，点击发送后随机生成 6 位数字码，2 分钟有效 </p><p>②输入验证码，点击验证，返回成功或失败 </p><p>③每个手机号每天只能输入 3 次</p><h3 id="2、秒杀"><a href="#2、秒杀" class="headerlink" title="2、秒杀"></a>2、秒杀</h3><h4 id="2-1-实现思路"><a href="#2-1-实现思路" class="headerlink" title="2.1  实现思路"></a>2.1  实现思路</h4><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb68uujdqlj31280d1aey.jpg" alt="image-20200123093358708"></p><h4 id="2-2-数据库连接池"><a href="#2-2-数据库连接池" class="headerlink" title="2.2 数据库连接池"></a>2.2 数据库连接池</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JedisPoolUtil</span> </span>&#123; </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">volatile</span> JedisPool jedisPool = <span class="keyword">null</span>;</span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="title">JedisPoolUtil</span><span class="params">()</span> </span>&#123; </span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> JedisPool <span class="title">getJedisPoolInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">null</span> == jedisPool) &#123; </span><br><span class="line">      <span class="keyword">synchronized</span> (JedisPoolUtil<span class="class">.<span class="keyword">class</span>) </span>&#123; </span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">null</span> == jedisPool) &#123; </span><br><span class="line">          JedisPoolConfig poolConfig = <span class="keyword">new</span> JedisPoolConfig(); </span><br><span class="line">          poolConfig.setMaxTotal(<span class="number">200</span>);<span class="comment">//最大连接数 </span></span><br><span class="line">          poolConfig.setMaxIdle(<span class="number">32</span>);<span class="comment">//最大空闲连接数 </span></span><br><span class="line">          <span class="comment">//获取连接时的最大等待毫秒数,如果超时就抛异常,默认-1 </span></span><br><span class="line">          poolConfig.setMaxWaitMillis(<span class="number">100</span>*<span class="number">1000</span>); </span><br><span class="line">          <span class="comment">//连接耗尽时是否阻塞, false报异常,ture阻塞直到超时, 默认true</span></span><br><span class="line">          poolConfig.setBlockWhenExhausted(<span class="keyword">true</span>); </span><br><span class="line">          <span class="comment">//在获取连接的时候检查有效性, 默认false </span></span><br><span class="line">          poolConfig.setTestOnBorrow(<span class="keyword">true</span>); </span><br><span class="line">          jedisPool = <span class="keyword">new</span> JedisPool(poolConfig, <span class="string">"192.168.162.128"</span>, <span class="number">6379</span>, <span class="number">60000</span> ); </span><br><span class="line">        &#125; </span><br><span class="line">      &#125; </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> jedisPool; </span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h4 id="2-3-使用-ab-进行压力测试"><a href="#2-3-使用-ab-进行压力测试" class="headerlink" title="2.3.使用 ab 进行压力测试"></a>2.3.使用 ab 进行压力测试</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -c 10 -n 100 -p /root/postarg -T application/x-www-form-urlencoded http://192.168.107.1:8080/seckill/doseckill</span><br></pre></td></tr></table></figure><p>参数含义：</p><p>-c:模拟多少个客户端 </p><p>-n:测试几次 </p><p>-T:内容类型 </p><p>-P:参数文件（注意参数文件的参数要以&amp;符号结尾，注意携带绝对路径）</p><p>postarg 文件：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">prodid=1001&amp;</span><br></pre></td></tr></table></figure><h4 id="2-4-超卖问题"><a href="#2-4-超卖问题" class="headerlink" title="2.4 超卖问题"></a>2.4 超卖问题</h4><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb693rov4uj30ox0133ys.jpg" alt="image-20200123094438280"></p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6949tokzj30xt0sfwnq.jpg" alt="image-20200123094505039"></p><p>解决：使用乐观锁解决超卖！</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6957b10hj311k0nbtif.jpg" alt="image-20200123094559450"></p><h3 id="2-5-秒杀富余问题"><a href="#2-5-秒杀富余问题" class="headerlink" title="2.5 秒杀富余问题"></a>2.5 秒杀富余问题</h3><h4 id="2-5-1-压测脚本"><a href="#2-5-1-压测脚本" class="headerlink" title="2.5.1 压测脚本"></a>2.5.1 压测脚本</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ab -c 200 -n 2000 -p /root/postarg -T application/x-www-form-urlencoded http://192.168.107.1:8080/seckill/doseckill</span><br></pre></td></tr></table></figure><h4 id="2-5-2-使用-lua-脚本解决"><a href="#2-5-2-使用-lua-脚本解决" class="headerlink" title="2.5.2 使用 lua 脚本解决!"></a>2.5.2 使用 lua 脚本解决!</h4><p>Lua 是一个小巧的脚本语言，Lua 脚本可以很容易的被 C/C++ 代码调用，也可以反过来调用 C/C++的函数，Lua 并没有提供强大的库，一个完整的 Lua 解释器不过 200k，所以 Lua 不适合作为开发独立应用程序的语言，而是作为嵌入式脚本语言</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb69cl97msj307k074wfw.jpg" alt="image-20200123095306932"></p><p>很多应用程序、游戏使用 LUA 作为自己的嵌入式脚本语言，以此来实现可配置性、可扩展性。这其中包括魔兽争霸地图、魔兽世界、博德之门、愤怒的小鸟等众多游戏插件或外挂。</p><p>LUA 脚本在 Redis 中的优势: </p><p>将复杂的或者多步的 redis 操作，写为一个脚本，一次提交给 redis 执行，减少反复连接 redis 的次数。提升性能。</p><p>LUA 脚本是类似 redis 事务，有一定的原子性，不会被其他命令插队，可以完成一些 redis 事务性的操作。但是注意 redis 的 lua 脚本功能，只有在 2.6 以上的版本才可以使用。</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb69gsdnisj312p0i7gvv.jpg" alt="image-20200123095708758"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> redis </category>
+          
+          <category> 中间件 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> redis </tag>
+            
+            <tag> 中间件 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Redis Cluster集群</title>
+      <link href="/2020/01/23/Redis-Cluster%E9%9B%86%E7%BE%A4/"/>
+      <url>/2020/01/23/Redis-Cluster%E9%9B%86%E7%BE%A4/</url>
+      
+        <content type="html"><![CDATA[<h2 id="1、Redis-Cluster简介"><a href="#1、Redis-Cluster简介" class="headerlink" title="1、Redis Cluster简介"></a>1、Redis Cluster简介</h2><p>Redis cluster是Redis的分布式解决方案。分布式环境下，不会还使用单点的redis，做到高可用和容灾，起码也是redis主从。redis的单线程工作，一台物理机只运行一个redis实例太过浪费，redis单机显然是存在单点故障的隐患。内存资源往往受限，纵向不停扩展内存并不是很实际，因此横向可伸缩扩展，需要多台主机协同提供服务，即分布式下多个Redis实例协同运行。</p><h3 id="Redis-Cluster目标"><a href="#Redis-Cluster目标" class="headerlink" title="Redis Cluster目标"></a>Redis Cluster目标</h3><ol><li>高性能</li><li>线性扩容</li><li>高可用</li></ol><h3 id="引入集群"><a href="#引入集群" class="headerlink" title="引入集群"></a>引入集群</h3><p>问题：</p><ul><li><p>容量不够，redis 如何进行扩容？ </p></li><li><p>并发写操作， redis 如何分摊？ </p></li><li><p>什么是集群： </p><p>Redis 集群实现了对 Redis 的水平扩容，即启动 N 个 redis 节点，将整个数据库分布存储在这 N 个节点中，每个节点存储总数据的 1/N。 </p><p>Redis 集群通过分区（partition）来提供一定程度的可用性（availability）： 即使集群中有一部分节点失效或者无法进行通讯， 集群也可以继续处理命令请求。</p></li></ul><h2 id="2、创建集群"><a href="#2、创建集群" class="headerlink" title="2、创建集群"></a>2、创建集群</h2><h3 id="2-1-安装Ruby环境"><a href="#2-1-安装Ruby环境" class="headerlink" title="2.1 安装Ruby环境"></a>2.1 安装Ruby环境</h3><p>本身 redis 集群的安装是很麻烦了，通过 ruby 工具，可以非常方便的将一系列命令打包为一个脚本！ </p><p>（1）无网环境（CentOS6） </p><p><strong>依次执行</strong>在安装光盘下的 Package 目录(/media/CentOS_6.8_Final/Packages)下的 rpm 包：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh compat-readline5-5.2-17.1.el6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-libs-1.8.7.374-4.el6_6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-1.8.7.374-4.el6_6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-irb-1.8.7.374-4.el6_6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-rdoc-1.8.7.374-4.el6_6.x86_64.rpm</span><br><span class="line">rpm -ivh rubygems-1.3.7-5.el6.noarch.rpm</span><br></pre></td></tr></table></figure><p>（2）无网环境（CentOS7）</p><p>进入 Package 目录(/run/media/root/CentOS 7 x86_64/Packages)，拷贝如下安装包到独立目录 rpmruby</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb69vas1pkj308f08htcd.jpg" alt="image-20200123101101076"></p><p>进入此目录运行如下命令，按照依赖安装</p><p>rpm -Uvh *.rpm —nodeps —force</p><p>（3）联网环境 </p><p>在联网状态下，执行 yum 安装，执行 yum -y install ruby; </p><p>之后安装 rubygem,rubygem 是 ruby 的包管理框架。yum -y install rubygems</p><h3 id="2-2-安装-redis-gem"><a href="#2-2-安装-redis-gem" class="headerlink" title="2.2 安装 redis gem"></a>2.2 安装 redis gem</h3><p>redis-3.2.0.gem 是一个通过 ruby 操作 redis 的插件！ </p><p>拷贝 redis-3.2.0.gem 到/opt 目录下，在 opt 目录下执行 gem install —local redis-3.2.0.gem；</p><h3 id="2-3-制作6个redis-配置文件"><a href="#2-3-制作6个redis-配置文件" class="headerlink" title="2.3 制作6个redis 配置文件"></a>2.3 制作6个redis 配置文件</h3><p>端口号分别是：6379,6380,6381,6389,6390,6391 </p><p>注意：每个配置文件中需要指定</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">daemonize yes: 服务在后台运行 </span><br><span class="line">port：端口号 </span><br><span class="line">pidfile:pid 保存文件 </span><br><span class="line">logfile：日志文件(如果没有指定的话，就不需要) </span><br><span class="line">dump.rdb: RDB 备份文件的名称 </span><br><span class="line">appendonly 关掉，或者是更改 appendonly 文件的名称。 </span><br><span class="line">cluster-enabled yes 打开集群模式 </span><br><span class="line">cluster-config-file nodes-6379.conf 设定节点配置文件名 </span><br><span class="line">cluster-node-timeout 15000 设定节点失联时间，超过该时间（毫秒），集群自动进行主从切换。</span><br></pre></td></tr></table></figure><p>样例：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">include /usr/local/myredis/rediscluster/redis_base.conf </span><br><span class="line">pidfile &quot;/var/run/redis_6379.pid&quot; </span><br><span class="line">port 6379 </span><br><span class="line">dbfilename &quot;dump_6379.rdb&quot; </span><br><span class="line">cluster-enabled yes </span><br><span class="line">cluster-config-file nodes-6379.conf </span><br><span class="line">cluster-node-timeout 15000</span><br></pre></td></tr></table></figure><p>注意在创建集群的时候，初始化的时候，把所有节点的 dump 文件全部删掉。</p><h3 id="2-4-开启集群"><a href="#2-4-开启集群" class="headerlink" title="2.4 开启集群"></a>2.4 开启集群</h3><ul><li>首先依次启动 6 个节点，启动后，会在当前文件夹生成 nodes-xxxx.conf 文件 </li></ul><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a1hm326j30bv02lwg4.jpg" alt="image-20200123101702935"></p><ul><li><p>配置集群</p><p>在/opt/redis-3.2.5/src 目录下，执行命令：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./redis-trib.rb create --replicas 1 192.168.31.211:6379 192.168.31.211:6380 192.168.31.211:6381 192.168.31.211:6389 192.168.31.211:6390 192.168.31.211:6391</span><br></pre></td></tr></table></figure><p>注意，此处不要用 127.0.0.1，请用真实 IP 地址！</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a34nxs6j30lp02a3zu.jpg" alt="image-20200123101837045"></p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a3a4aikj30kk032dia.jpg" alt="image-20200123101845271"></p></li><li><p>之后登录到客户端，通过 cluster nodes 命令查看集群信息</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a3z3n4gj30r2033jw5.jpg" alt="image-20200123101925666"></p></li><li><p>6 个节点，为什么是三主三从？</p><p>配置机器，至少需要 6 个节点，否则会报错： </p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a4q2u1ej30mh02mwgm.jpg" alt="image-20200123102009597"></p><p>命令 create,代表创建一个集群。参数—replicas 1 表示我们希望为集群中的每个主节点创建一个从节点。一个集群至少要有<strong>三个主节点</strong>，分配原则尽量保证每个主数据库运行在不同的 IP 地址，每个从库和主库不在一个 IP 地 址上。</p></li></ul><h3 id="2-5-slot-插槽"><a href="#2-5-slot-插槽" class="headerlink" title="2.5 slot 插槽"></a>2.5 slot 插槽</h3><p>进入集群后，如果我们，直接写入数据，可能会看到报错信息： </p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a610jlnj30eh02n3z9.jpg" alt="image-20200123102124264"></p><p>这是因为，集群中多了 slot(插槽)的设计。一个 Redis 集群包含 16384 个插槽（hash slot）， 数据库中的每个 键都属于这 16384 个插槽的其中一个， 集群使用公式 CRC16(key) % 16384 来计算键 key 属于哪个槽， 其中 CRC16(key) 语句用于计算键 key 的 CRC16 校验和 。 </p><p>集群中的每个节点负责处理一部分插槽。 举个例子， 如果一个集群可以有主节点， 其中： </p><ul><li>节点 A 负责处理 0 号至 5500 号插槽。 </li><li>节点 B 负责处理 5501 号至 11000 号插槽。 </li><li>节点 C 负责处理 11001 号至 16383 号插槽。</li></ul><h3 id="2-6-集群中写入数据"><a href="#2-6-集群中写入数据" class="headerlink" title="2.6 集群中写入数据"></a>2.6 集群中写入数据</h3><h4 id="2-6-1-客户端重定向"><a href="#2-6-1-客户端重定向" class="headerlink" title="2.6.1 客户端重定向"></a>2.6.1 客户端重定向</h4><ul><li><p>在 redis-cli 每次录入、查询键值，redis 都会计算出该 key 应该送往的插槽，如果不是该客户端对应服务器插槽redis 会报错，并告知应前往的 redis 实例地址和端口。 </p></li><li><p>redis-cli 客户端提供了 –c 参数实现自动重定向。如 redis-cli -c –p 6379 登入后，再录入、查询键值对可以自动重定向。 </p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6aa5icp0j30i801u3z6.jpg" alt="image-20200123102522197"></p></li><li><p>每个 slot 可以存储一批键值对。</p></li></ul><h4 id="2-6-2-如何多键操作"><a href="#2-6-2-如何多键操作" class="headerlink" title="2.6.2 如何多键操作"></a>2.6.2 如何多键操作</h4><p>采用哈希算法后，会自动地分配 slot，而不在一个 slot 下的键值，是不能使用 mget,mset 等多键操作。</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ab13p77j30h000xt9c.jpg" alt="image-20200123102613541"></p><p>如果有需求，需要将一批业务数据一起插入呢？ </p><p>解决：可以通过{}来定义组的概念，从而使 key 中{}内相同内容的键值对放到一个 slot 中去。</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ac0ssfuj30il019gmg.jpg" alt="image-20200123102710350"></p><h3 id="2-7-集群中读取数据"><a href="#2-7-集群中读取数据" class="headerlink" title="2.7 集群中读取数据"></a>2.7 集群中读取数据</h3><ul><li><p>CLUSTER KEYSLOT <key> 计算键 key 应该被放置在哪个槽上 </p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6afi7n2jj30c400yaa9.jpg" alt="image-20200123103031392"></p></li><li><p>CLUSTER COUNTKEYSINSLOT <slot> 返回槽 slot 目前包含的键值对数量 </p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6afci8pgj30de00wglv.jpg" alt="image-20200123103022753"></p></li><li><p>CLUSTER KEYSLOT <key>:计算 key 应该放在哪个槽</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6af87otvj30d400u74h.jpg" alt="image-20200123103015499"></p></li><li><p>CLUSTER GETKEYSINSLOT <slot> <count> 返回 count 个 slot 槽中的键。</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6af3qmf6j30cp01saai.jpg" alt="image-20200123103007786"></p></li></ul><h3 id="2-8-集群中故障恢复"><a href="#2-8-集群中故障恢复" class="headerlink" title="2.8 集群中故障恢复"></a>2.8 集群中故障恢复</h3><p>问题 1：如果主节点下线？从节点能否自动升为主节点？ </p><p>答：主节点下线，从节点自动升为主节点。</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6agxu21mj30gl00h0sx.jpg" alt="image-20200123103153385"></p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ah3u8drj30se030dkn.jpg" alt="image-20200123103203503"></p><p>问题 2：主节点恢复后，主从关系会如何？ </p><p>主节点恢复后，主节点变为从节点！</p><p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ahkdrupj30sj031q7u.jpg" alt="image-20200123103230091"></p><p>问题 3：如果所有某一段插槽的主从节点都宕掉，redis 服务是否还能继续? </p><p>答：服务是否继续，可以通过 redis.conf 中的 cluster-require-full-coverage 参数进行控制。 </p><p>​        主从都宕掉，意味着有一片数据，会变成真空，没法再访问了！ </p><p>​        如果无法访问的数据，是连续的业务数据，我们需要停止集群，避免缺少此部分数据，造成整个业务的异常。此时可以通过配置 cluster-require-full-coverage 为 yes. </p><p>​        如果无法访问的数据，是相对独立的，对于其他业务的访问，并不影响，那么可以继续开启集群体提供服务。此时，可以配置 cluster-require-full-coverage 为 no。</p><h3 id="2-9-集群的Jedis开发"><a href="#2-9-集群的Jedis开发" class="headerlink" title="2.9 集群的Jedis开发"></a>2.9 集群的Jedis开发</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCluster</span><span class="params">()</span></span>&#123; </span><br><span class="line">  Set&lt;HostAndPort&gt; jedisClusterNodes = <span class="keyword">new</span> HashSet&lt;HostAndPort&gt;(); </span><br><span class="line">  <span class="comment">//Jedis Cluster will attempt to discover cluster nodes automatically </span></span><br><span class="line">  jedisClusterNodes.add(<span class="keyword">new</span> HostAndPort(<span class="string">"192.168.4.128"</span>, <span class="number">6379</span>)); </span><br><span class="line">  JedisCluster jc = <span class="keyword">new</span> JedisCluster(jedisClusterNodes); </span><br><span class="line">  jc.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>); String value = jc.get(<span class="string">"foo"</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><h3 id="2-10-集群的优缺点"><a href="#2-10-集群的优缺点" class="headerlink" title="2.10 集群的优缺点"></a>2.10 集群的优缺点</h3><p>优点： </p><ul><li>实现扩容 </li><li>分摊压力 </li><li>无中心配置相对简单 </li></ul><p>缺点： </p><ul><li>多键操作是不被支持的 </li><li>多键的 Redis 事务是不被支持的。lua 脚本不被支持。 </li><li>由于集群方案出现较晚，很多公司已经采用了其他的集群方案，而代理或者客户端分片的方案想要迁移至 redis cluster，需要整体迁移而不是逐步过渡，复杂度较大。</li></ul>]]></content>
+      
+      
+      <categories>
+          
+          <category> redis </category>
+          
+          <category> 中间件 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> redis </tag>
+            
+            <tag> 中间件 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redis的Java客户端Jedis</title>
       <link href="/2020/01/22/Redis%E7%9A%84Java%E5%AE%A2%E6%88%B7%E7%AB%AFJedis/"/>
       <url>/2020/01/22/Redis%E7%9A%84Java%E5%AE%A2%E6%88%B7%E7%AB%AFJedis/</url>
@@ -681,9 +739,9 @@
       
         <tags>
             
-            <tag> c/c++ </tag>
-            
             <tag> 数据结构和算法 </tag>
+            
+            <tag> c/c++ </tag>
             
         </tags>
       
@@ -710,9 +768,9 @@
       
         <tags>
             
-            <tag> c/c++ </tag>
-            
             <tag> 数据结构和算法 </tag>
+            
+            <tag> c/c++ </tag>
             
         </tags>
       
@@ -739,9 +797,9 @@
       
         <tags>
             
-            <tag> c/c++ </tag>
-            
             <tag> 数据结构和算法 </tag>
+            
+            <tag> c/c++ </tag>
             
         </tags>
       
@@ -768,9 +826,9 @@
       
         <tags>
             
-            <tag> c/c++ </tag>
-            
             <tag> 数据结构和算法 </tag>
+            
+            <tag> c/c++ </tag>
             
         </tags>
       
@@ -797,9 +855,9 @@
       
         <tags>
             
-            <tag> c/c++ </tag>
-            
             <tag> 数据结构和算法 </tag>
+            
+            <tag> c/c++ </tag>
             
         </tags>
       
@@ -851,9 +909,9 @@
       
         <tags>
             
-            <tag> c/c++ </tag>
-            
             <tag> 数据结构和算法 </tag>
+            
+            <tag> c/c++ </tag>
             
         </tags>
       
