@@ -4,6 +4,60 @@
   
     
     <entry>
+      <title>前段架构设计与技术选型</title>
+      <link href="/2020/03/16/%E5%89%8D%E6%AE%B5%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/"/>
+      <url>/2020/03/16/%E5%89%8D%E6%AE%B5%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</url>
+      
+        <content type="html"><![CDATA[<p>一、架构设计</p><p>1、分层架构</p><p>定义：把功能相似，抽象级别相近的实现进行分层隔离</p><p>优势：松散耦合，易维护、易复用、易扩展。</p><p>常见的分层方式：MVC、MVVM</p><p>2、模块化</p><p>定义：解决一个复杂的问题，自顶向下逐层把系统分成若干模块的过程。</p><p>意义：解耦合，可并行开发。</p><p>模块化方案：AMD、CMD、commonJS、ES6</p><p>3、架构设计</p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvoxkouyej31g40u0kjl.jpg" alt="image-20200316131142621"></p><p>二、技术选型</p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvoz11esej31mr0u0khv.jpg" alt="image-20200316131307082"></p><p>1、软件过程选择—敏捷开发</p><ul><li>定义：以用户的需求进化为核心，采用迭代、循序渐进的方法进行软件开发</li><li>是一种迭代的意识和方法，而不是概念和工具</li><li>优点：能够满足不断变化的需求</li><li>不足：对团队成员的能力需求比较高</li></ul><p>2、前后端分离方式—不分离</p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp6kf00oj31k20u0k9v.jpg" alt="image-20200316131729235"></p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp6moygnj31jo0u0h92.jpg" alt="image-20200316131747784"></p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp6t50jyj31r00rg4ki.jpg" alt="image-20200316131804311"></p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp6xf1dhj31f60u04mm.jpg" alt="image-20200316131819807"></p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp72y5q2j31b20u01kx.jpg" alt="image-20200316131842898"></p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp74j0e8j31io0u01kx.jpg" alt="image-20200316131901980"></p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp77ts4qj31c70u0kjb.jpg" alt="image-20200316131918559"></p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvp7cxcasj31h70u04qp.jpg" alt="image-20200316131939853"></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> 前端 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 前端 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>Maven环境隔离</title>
+      <link href="/2020/03/16/Maven%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB/"/>
+      <url>/2020/03/16/Maven%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB/</url>
+      
+        <content type="html"><![CDATA[<ol><li><p>解决的实际问题</p><p>避免人工修改的弊端，即容易犯错；</p><p>轻松分环境编译、打包、部署；</p></li><li><p>配置及原理</p><p>pom.xml 中build节点内增加resources节点</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--build中添加Maven环境隔离配置--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">resources</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources.$&#123;deploy.type&#125;<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">excludes</span>&gt;</span></span><br><span class="line">                    <span class="tag">&lt;<span class="name">exclude</span>&gt;</span>*.jsp<span class="tag">&lt;/<span class="name">exclude</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;/<span class="name">excludes</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">resource</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">directory</span>&gt;</span>src/main/resources<span class="tag">&lt;/<span class="name">directory</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">resource</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">resources</span>&gt;</span></span><br></pre></td></tr></table></figure><p>pom.xml 中增加profiles节点</p><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--Maven环境隔离配置，与build节点同级的节点--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--默认激活的节点--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deploy.type</span>&gt;</span>dev<span class="tag">&lt;/<span class="name">deploy.type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>beta<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deploy.type</span>&gt;</span>beta<span class="tag">&lt;/<span class="name">deploy.type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">id</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">deploy.type</span>&gt;</span>prod<span class="tag">&lt;/<span class="name">deploy.type</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br></pre></td></tr></table></figure></li><li><p>Maven环境隔离编译打包命令</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">mvn clean package -Dmaven.test.skip=true -Pdev</span><br><span class="line">mvn clean package -Dmaven.test.skip=true -Pbeta</span><br><span class="line">mvn clean package -Dmaven.test.skip=true -Pprod</span><br></pre></td></tr></table></figure></li><li><p>新建对应的文件夹，并把要隔离的文件分开，公共的留下</p><p><img src="https://tva1.sinaimg.cn/large/00831rSTgy1gcvnxrmgi8j30na0q876j.jpg" style="zoom:45%;" /></p></li></ol>]]></content>
+      
+      
+      <categories>
+          
+          <category> Maven </category>
+          
+          <category> 中间件 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 中间件 </tag>
+            
+            <tag> Maven </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Redis应用案例</title>
       <link href="/2020/01/23/Redis%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/"/>
       <url>/2020/01/23/Redis%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/</url>

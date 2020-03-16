@@ -265,6 +265,94 @@
 
         <div class="post-preview">
 
+            <a href="/2020/03/16/前段架构设计与技术选型/">
+                <h2 class="post-title">
+                    前段架构设计与技术选型
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    一、架构设计
+1、分层架构
+定义：把功能相似，抽象级别相近的实现进行分层隔离
+优势：松散耦合，易维护、易复用、易扩展。
+常见的分层方式：MVC、MVVM
+2、模块化
+定义：解决一个复杂的问题，自顶向下逐层把系统分成若干模块的过程。
+意义：解耦合，可并行开发。
+模块化方案：AMD、CMD、commonJS、ES6
+3、架构设计
+
+二、技术选型
+
+1、软件过程选择—敏捷开发
+
+定义：以用户的需求......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2020-03-16
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#前端" title="前端">前端</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2020/03/16/Maven环境隔离/">
+                <h2 class="post-title">
+                    Maven环境隔离
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    
+解决的实际问题
+避免人工修改的弊端，即容易犯错；
+轻松分环境编译、打包、部署；
+
+配置及原理
+pom.xml 中build节点内增加resources节点
+123456789101112&lt;!--build中添加Maven环境隔离配置--&gt;        &lt;resources&gt;            &lt;resource&gt;                &l......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2020-03-16
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#中间件" title="中间件">中间件</a>
+                    
+                      <a href="/tags/#Maven" title="Maven">Maven</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
             <a href="/2020/01/23/Redis应用案例/">
                 <h2 class="post-title">
                     Redis应用案例
@@ -583,83 +671,6 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
 
     
 
-    
-
-        <div class="post-preview">
-
-            <a href="/2020/01/14/Redis的五大数据类型/">
-                <h2 class="post-title">
-                    Redis的五大数据类型
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    一、Redis的五大数据类型
-String（字符串）
-string是redis最基本的类型，可以理解为Memcached一样的类型，一个key对应一个value。
-string类型是二进制安全的，意思是redis的string可以包含任何数据。比如ipg图片或者序列化的对象。
-string类型是Redis最基本的数据结构，一个redis中字符串value最多可以是512M。
-
-Hash（哈希......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2020-01-14
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#redis" title="redis">redis</a>
-                    
-                      <a href="/tags/#中间件" title="中间件">中间件</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
-    
-
-        <div class="post-preview">
-
-            <a href="/2020/01/14/Redis入门介绍/">
-                <h2 class="post-title">
-                    Redis入门介绍
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    Redis入门介绍Redis入门介绍1. 是什么Redis：REmote DIctionary Server（远程字典服务器），是完全开源免费的，用C语言编写的，遵守BSD协议，是一个高性能的（key/value）分布式内存数据库，基于内存运行并支持持久化的NoSQL数据库，被称为数据结构数据库。
-Redis与其他key-value缓存产品有一下三个特点：
-
-Redis支持数据的持久化，可以......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2020-01-14
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#redis" title="redis">redis</a>
-                    
-                      <a href="/tags/#中间件" title="中间件">中间件</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
 
 
 <!-- Pager -->
@@ -725,17 +736,17 @@ Redis支持数据的持久化，可以......
             
         
             
+        
+            
+        
+            
+        
+            
             <a href="/tags/#java" title="java" rel="14">java</a>
             
         
             
             <a href="/tags/#基础理解" title="基础理解" rel="5">基础理解</a>
-            
-        
-            
-        
-            
-        
             
         
             
@@ -761,7 +772,11 @@ Redis支持数据的持久化，可以......
             
         
             
-            <a href="/tags/#中间件" title="中间件" rel="11">中间件</a>
+            <a href="/tags/#中间件" title="中间件" rel="12">中间件</a>
+            
+        
+            
+        
             
         
     </div>
@@ -846,6 +861,14 @@ Redis支持数据的持久化，可以......
     <ul>
       
         <li>
+          <a href="/2020/03/16/%E5%89%8D%E6%AE%B5%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/">前段架构设计与技术选型</a>
+        </li>
+      
+        <li>
+          <a href="/2020/03/16/Maven%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB/">Maven环境隔离</a>
+        </li>
+      
+        <li>
           <a href="/2020/01/23/Redis%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/">Redis应用案例</a>
         </li>
       
@@ -855,14 +878,6 @@ Redis支持数据的持久化，可以......
       
         <li>
           <a href="/2020/01/22/Redis%E7%9A%84Java%E5%AE%A2%E6%88%B7%E7%AB%AFJedis/">Redis的Java客户端Jedis</a>
-        </li>
-      
-        <li>
-          <a href="/2020/01/22/Redis%E7%9A%84%E5%A4%8D%E5%88%B6-MasterSlave/">Redis的复制(MasterSlave)</a>
-        </li>
-      
-        <li>
-          <a href="/2020/01/21/Redis%E7%9A%84%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85/">Redis的发布订阅</a>
         </li>
       
     </ul>
@@ -891,7 +906,7 @@ Redis支持数据的持久化，可以......
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
     </div>
 
         <hr>
@@ -900,7 +915,7 @@ Redis支持数据的持久化，可以......
 
     <h5>categories</h5>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/%E5%AE%B9%E5%99%A8/">容器</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/">SrpingBoot</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/java/">java</a><span class="category-list-count">7</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/c-c/">c/c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/%E5%9F%BA%E7%A1%80%E7%90%86%E8%A7%A3/">基础理解</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">11</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/redis/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/">java</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/sql/">sql</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/sql/mysql/">mysql</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/hexo/">hexo</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/c-c/">c/c++</a><span class="category-list-count">6</span></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/%E5%AE%B9%E5%99%A8/">容器</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/">Maven</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/">SrpingBoot</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/java/">java</a><span class="category-list-count">7</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/c-c/">c/c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/%E5%9F%BA%E7%A1%80%E7%90%86%E8%A7%A3/">基础理解</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">11</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/redis/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/">java</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/sql/">sql</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/sql/mysql/">mysql</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/hexo/">hexo</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/c-c/">c/c++</a><span class="category-list-count">6</span></li></ul></li></ul>
     </div>
 
         <hr>
