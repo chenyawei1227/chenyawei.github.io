@@ -15,12 +15,3 @@ if (toc != null) {
 		 }
 	}
 }
-
-
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?2bfe7c1eb421b06edaabc733a86893df";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
