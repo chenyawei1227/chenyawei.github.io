@@ -4,14 +4,21 @@
 
     <url>
         <loc>https://bytenote.cn/tags/object-Object/</loc>
-        <lastmod>2020-04-27T10:09:52.006Z</lastmod>
+        <lastmod>2020-04-27T14:59:06.864Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
 
     <url>
         <loc>https://bytenote.cn/tags/redis/</loc>
-        <lastmod>2020-04-27T10:09:52.006Z</lastmod>
+        <lastmod>2020-04-27T14:59:06.864Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://bytenote.cn/tags/spring/</loc>
+        <lastmod>2020-04-27T14:58:12.632Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
@@ -117,13 +124,6 @@
     <url>
         <loc>https://bytenote.cn/tags/hexo/</loc>
         <lastmod>2019-12-10T18:09:31.670Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://bytenote.cn/tags/spring/</loc>
-        <lastmod>2019-12-10T17:35:06.606Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
