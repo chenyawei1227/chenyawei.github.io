@@ -160,14 +160,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -260,6 +260,164 @@
 
 
 <!-- Main Content -->
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2020/04/27/Redis分布式算法原理/">
+                <h2 class="post-title">
+                    Redis分布式算法原理
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    传统分布式算法传统的分布式算法通常是采用hash取模的方式来处理数据与服务器节点的映射关系。
+举个栗子
+假设有个图片为test.jpg，现在有3个服务器，我们称之为0服务器、1服务器、2服务器。首先我们对这张图片进行hash，可以拿到一个散列值，用散列值对3进行取模，取模结果为0或者1或者2。如果结果是0则将图片存入0服务器节点上，如果是1则存入1服务器节点，如果是2则存入2服务器节点。
+
+......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2020-04-27
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#redis" title="redis">redis</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2020/04/27/Redis分布式Java实现/">
+                <h2 class="post-title">
+                    Redis分布式Java实现
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    Redis分布式Java实现
+一、单点登录Redis存储Session和Cookie问题说明与集群实战
+1、解决Cookie问题读写sessionId问题：封装CookieUtil处理对Cookie的读写操作，COOKIE_DOMAIN参数用限定读写范围，bytenote.cn的二级域名下如mmall.byte.cn都可以读取到Cookie。
+123456789101112131415161......
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2020-04-27
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#redis" title="redis">redis</a>
+                    
+                      <a href="/tags/#[object Object]" title="[object Object]">[object Object]</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2020/04/27/Nginx-Tomcat服务集群/">
+                <h2 class="post-title">
+                    Nginx+Tomcat服务集群
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    ...
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2020-04-27
+                </p>
+                <div class="tags">
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
+
+    
+
+        <div class="post-preview">
+
+            <a href="/2020/04/27/网络基础知识讲解/">
+                <h2 class="post-title">
+                    网络基础知识讲解
+                </h2>
+                <h3 class="post-subtitle">
+                    
+                </h3>
+                <div class="post-content-preview">
+                    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+...
+                </div>
+            </a>
+            
+                <p class="post-meta" style="margin: 10px 0;">
+                    Posted by Chenyawei on
+                    2020-04-27
+                </p>
+                <div class="tags">
+                    
+                      <a href="/tags/#网络" title="网络">网络</a>
+                    
+                </div>
+            
+
+        </div>
+        <hr>
+
+    
 
     
 
@@ -495,178 +653,6 @@ jedis-2.1.0.jar
 
     
 
-    
-
-        <div class="post-preview">
-
-            <a href="/2020/01/22/Redis的复制-MasterSlave/">
-                <h2 class="post-title">
-                    Redis的复制(MasterSlave)
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    一、 主从简介配置多台 Redis 服务器，以主机和备机的身份分开。主机数据更新后，根据配置和策略，自动同步到备机的master/salver 机制，Master以写为主，Slave以读为主，二者之间自动同步数据。 
-
-
-目的：
-
-读写分离提高 Redis 性能； 避免单点故障，容灾快速恢复。
-
-
-原理：
-
-每次从机联通后，都会给主机发送 sync 指令(sync命令用于强制吧文件系统buf......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2020-01-22
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#redis" title="redis">redis</a>
-                    
-                      <a href="/tags/#中间件" title="中间件">中间件</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
-    
-
-        <div class="post-preview">
-
-            <a href="/2020/01/21/Redis的发布订阅/">
-                <h2 class="post-title">
-                    Redis的发布订阅
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    1、什么是发布订阅进程间的一种消息通信模式：发送者(pub)发送消息，订阅者(sub)接收消息。
-订阅/发布消息图：
-
-2、命令 
-3、案列先订阅后发布后才能收到消息，
-1 可以一次性订阅多个，SUBSCRIBE c1 c2 c3
-2 消息发布，PUBLISH c2 hello-redis
-3 订阅多个，通配符， PSUBSCRIBE new
-4 收取消息， PUBLISH new1 red......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2020-01-21
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#redis" title="redis">redis</a>
-                    
-                      <a href="/tags/#中间件" title="中间件">中间件</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
-    
-
-        <div class="post-preview">
-
-            <a href="/2020/01/21/Redis事务/">
-                <h2 class="post-title">
-                    Redis事务
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    一、 事务简介可以一次执行多个命令，本质是一组命令的集合。一个事务中的所有命令都会序列化，按顺序地串行化执行而不会被其它命令插入，不许加塞。
-官网：
- 
-二、能干嘛一个队列中，一次性、顺序性、排他性的执行一系列命令
-三、事务常用命令
-
-
-
-MULTI
-标记一个事务块的开始
-
-
-
-
-EXEC
-执行事务中所有在排队等待的指令并将链接状态恢复到正常当使用WATCH 时，只有当被监视的键没有被修改，......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2020-01-21
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#redis" title="redis">redis</a>
-                    
-                      <a href="/tags/#中间件" title="中间件">中间件</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
-    
-
-        <div class="post-preview">
-
-            <a href="/2020/01/21/Redis持久化/">
-                <h2 class="post-title">
-                    Redis持久化
-                </h2>
-                <h3 class="post-subtitle">
-                    
-                </h3>
-                <div class="post-content-preview">
-                    一、总体介绍 
-二、RDB（Redis DataBase）1、官网介绍 
-2、是什么：在指定的时间间隔内将内存中的数据集快照写入磁盘，也就是行话讲的Snapshot快照，它恢复时是将快照文件直接读到内存里。
-Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。整个过程中，主进程是不进行任何IO操......
-                </div>
-            </a>
-            
-                <p class="post-meta" style="margin: 10px 0;">
-                    Posted by Chenyawei on
-                    2020-01-21
-                </p>
-                <div class="tags">
-                    
-                      <a href="/tags/#redis" title="redis">redis</a>
-                    
-                      <a href="/tags/#中间件" title="中间件">中间件</a>
-                    
-                </div>
-            
-
-        </div>
-        <hr>
-
-    
-
 
 
 <!-- Pager -->
@@ -732,12 +718,6 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
             
         
             
-            <a href="/tags/#java" title="java" rel="14">java</a>
-            
-        
-            
-            <a href="/tags/#基础理解" title="基础理解" rel="5">基础理解</a>
-            
         
             
         
@@ -752,6 +732,12 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
             
         
             
+            <a href="/tags/#java" title="java" rel="14">java</a>
+            
+        
+            
+            <a href="/tags/#基础理解" title="基础理解" rel="5">基础理解</a>
+            
         
             
         
@@ -764,11 +750,15 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
             
         
             
-            <a href="/tags/#redis" title="redis" rel="11">redis</a>
+            <a href="/tags/#redis" title="redis" rel="13">redis</a>
             
         
             
             <a href="/tags/#中间件" title="中间件" rel="12">中间件</a>
+            
+        
+            
+        
             
         
             
@@ -859,23 +849,23 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
     <ul>
       
         <li>
+          <a href="/2020/04/27/Redis%E5%88%86%E5%B8%83%E5%BC%8F%E7%AE%97%E6%B3%95%E5%8E%9F%E7%90%86/">Redis分布式算法原理</a>
+        </li>
+      
+        <li>
+          <a href="/2020/04/27/Redis%E5%88%86%E5%B8%83%E5%BC%8FJava%E5%AE%9E%E7%8E%B0/">Redis分布式Java实现</a>
+        </li>
+      
+        <li>
+          <a href="/2020/04/27/Nginx-Tomcat%E6%9C%8D%E5%8A%A1%E9%9B%86%E7%BE%A4/">Nginx+Tomcat服务集群</a>
+        </li>
+      
+        <li>
+          <a href="/2020/04/27/%E7%BD%91%E7%BB%9C%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E8%AE%B2%E8%A7%A3/">网络基础知识讲解</a>
+        </li>
+      
+        <li>
           <a href="/2020/04/15/socket%E7%9B%B8%E5%85%B3/">socket相关</a>
-        </li>
-      
-        <li>
-          <a href="/2020/03/16/%E5%89%8D%E6%AE%B5%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1%E4%B8%8E%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/">前段架构设计与技术选型</a>
-        </li>
-      
-        <li>
-          <a href="/2020/03/16/Maven%E7%8E%AF%E5%A2%83%E9%9A%94%E7%A6%BB/">Maven环境隔离</a>
-        </li>
-      
-        <li>
-          <a href="/2020/01/23/Redis%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B/">Redis应用案例</a>
-        </li>
-      
-        <li>
-          <a href="/2020/01/23/Redis-Cluster%E9%9B%86%E7%BE%A4/">Redis Cluster集群</a>
         </li>
       
     </ul>
@@ -904,7 +894,7 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">April 2020</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/03/">March 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/01/">January 2020</a><span class="archive-list-count">11</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">December 2019</a><span class="archive-list-count">21</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/11/">November 2019</a><span class="archive-list-count">5</span></li></ul>
     </div>
 
         <hr>
@@ -913,7 +903,7 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
 
     <h5>categories</h5>
     <div class="widget">
-      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/%E5%AE%B9%E5%99%A8/">容器</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/">Maven</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/">SrpingBoot</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/java/">java</a><span class="category-list-count">7</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/c-c/">c/c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/%E5%9F%BA%E7%A1%80%E7%90%86%E8%A7%A3/">基础理解</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">11</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/redis/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/">java</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/sql/">sql</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/sql/mysql/">mysql</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/hexo/">hexo</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/c-c/">c/c++</a><span class="category-list-count">6</span></li></ul></li></ul>
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/">Docker</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Docker/%E5%AE%B9%E5%99%A8/">容器</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/">Maven</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/Maven/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/">SrpingBoot</a><span class="category-list-count">7</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/SrpingBoot/java/">java</a><span class="category-list-count">7</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/c-c/">c/c++</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/java/">java</a><span class="category-list-count">5</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/java/%E5%9F%BA%E7%A1%80%E7%90%86%E8%A7%A3/">基础理解</a><span class="category-list-count">4</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/redis/">redis</a><span class="category-list-count">12</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/redis/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/socket/">socket</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/spring/">spring</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/">java</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/spring/java/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">1</span></li></ul></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/sql/">sql</a><span class="category-list-count">1</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/sql/mysql/">mysql</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/">操作记录</a><span class="category-list-count">3</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/hexo/">hexo</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%93%8D%E4%BD%9C%E8%AE%B0%E5%BD%95/linux/">linux</a><span class="category-list-count">1</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/">数据结构和算法</a><span class="category-list-count">6</span><ul class="category-list-child"><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%92%8C%E7%AE%97%E6%B3%95/c-c/">c/c++</a><span class="category-list-count">6</span></li></ul></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BD%91%E7%BB%9C/">网络</a><span class="category-list-count">1</span></li></ul>
     </div>
 
         <hr>
@@ -1100,29 +1090,12 @@ Redis会单独创建（fork）一个子进程来进行持久化，会先将数�
         
 
         
-            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&#34;🌱&#34;,&#34;just do it&#34;,&#34;🌾&#34;,&#34;🍀&#34;,&#34;don&#39;t give up&#34;,&#34;🍂&#34;,&#34;🌻&#34;,&#34;try it again&#34;,&#34;🍃&#34;,&#34;never say die&#34;,&#34;🌵&#34;,&#34;🌿&#34;,&#34;🌴&#34;]' color='[&#34;rgb(121,93,179)&#34; ,&#34;rgb(76,180,231)&#34; ,&#34;rgb(184,90,154)&#34; ,&#34;rgb(157,211,250)&#34; ,&#34;rgb(255,0,0)&#34; ,&#34;rgb(242,153,29)&#34; ,&#34;rgb(23,204,16)&#34; ,&#34;rgb(222,0,0)&#34; ,&#34;rgb(22,36,92)&#34; ,&#34;rgb(127,24,116)&#34; ,&#34;rgb(119,195,79)&#34; ,&#34;rgb(4,77,34)&#34; ,&#34;rgb(122,2,60)&#34;]'></script>
         
 
         <!-- background effects end -->
     
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
- -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 
 </html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          Redis分布式Java实现 - chenyawei-blog
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2020/04/27/Redis分布式Java实现/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    
+      <link rel="stylesheet" href="/css/dusign-light.css">
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    
+      <link rel="stylesheet" href="/css/toc.css">
+    
+
+    <link rel="stylesheet" href="/css/dusign-common.css">
+    <link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      <link rel="stylesheet" href="/css/font-awesome.css">
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                            
+                              <a class="tag" href="/tags/#[object Object]" title="[object Object]">[object Object]</a>
+                            
+                        </div>
+                        <h1>Redis分布式Java实现</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2020-04-27
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">2k</span> and
+                                Reading Time <span class="post-count">11</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <p>Redis分布式Java实现</p>
+<p>一、单点登录Redis存储Session和Cookie问题说明与集群实战</p>
+<h4 id="1、解决Cookie问题读写sessionId问题："><a href="#1、解决Cookie问题读写sessionId问题：" class="headerlink" title="1、解决Cookie问题读写sessionId问题："></a>1、解决Cookie问题读写sessionId问题：</h4><p>封装CookieUtil处理对Cookie的读写操作，COOKIE_DOMAIN参数用限定读写范围，bytenote.cn的二级域名下如mmall.byte.cn都可以读取到Cookie。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">package com.mmall.util;</span><br><span class="line"></span><br><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.apache.commons.lang.StringUtils;</span><br><span class="line">import javax.servlet.http.Cookie;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import javax.servlet.http.HttpServletResponse;</span><br><span class="line">/**</span><br><span class="line"> * Created by chenyawei on 2019/4/21.</span><br><span class="line"> */</span><br><span class="line">@Slf4j</span><br><span class="line">public class CookieUtil &#123;</span><br><span class="line">    private final static String COOKIE_DOMAIN = &quot;bytenote.cn&quot;; // &quot;localhost&quot;; //&quot;.happymmall.com&quot;;</span><br><span class="line">    private final static String COOKIE_NAME = &quot;mmall_login_token&quot;;//客户端种到服务端的Cookie名字</span><br><span class="line"></span><br><span class="line">    public static String readLoginToken(HttpServletRequest request) &#123;</span><br><span class="line">        Cookie[] cks = request.getCookies();</span><br><span class="line">        if (cks != null) &#123;</span><br><span class="line">            for (Cookie ck : cks) &#123;</span><br><span class="line">                log.info(&quot;read cookieName:&#123;&#125;,cookieValue:&#123;&#125;&quot;, ck.getName(), ck.getValue());</span><br><span class="line">                if (StringUtils.equals(ck.getName(), COOKIE_NAME)) &#123;</span><br><span class="line">                    log.info(&quot;return cookieName:&#123;&#125;,cookieValue:&#123;&#125;&quot;, ck.getName(), ck.getValue());</span><br><span class="line">                    return ck.getValue();</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //X:domain=&quot;.happymmall.com&quot;</span><br><span class="line">    //a:A.happymmall.com            cookie:domain=A.happymmall.com;path=&quot;/&quot;</span><br><span class="line">    //b:B.happymmall.com            cookie:domain=B.happymmall.com;path=&quot;/&quot;</span><br><span class="line">    //c:A.happymmall.com/test/cc    cookie:domain=A.happymmall.com;path=&quot;/test/cc&quot;</span><br><span class="line">    //d:A.happymmall.com/test/dd    cookie:domain=A.happymmall.com;path=&quot;/test/dd&quot;</span><br><span class="line">    //e:A.happymmall.com/test       cookie:domain=A.happymmall.com;path=&quot;/test&quot;</span><br><span class="line">    public static void writeLoginToken(HttpServletResponse response, String token) &#123;</span><br><span class="line">        Cookie ck = new Cookie(COOKIE_NAME, token);</span><br><span class="line">        ck.setDomain(COOKIE_DOMAIN);</span><br><span class="line">        ck.setPath(&quot;/&quot;);//代表设置在根目录</span><br><span class="line">        ck.setHttpOnly(true);</span><br><span class="line">        //单位是秒。</span><br><span class="line">        //如果这个maxage不设置的话，cookie就不会写入硬盘，而是写在内存。只在当前页面有效。</span><br><span class="line">        ck.setMaxAge(60 * 60 * 24 * 365);//如果是-1，代表永久</span><br><span class="line">        log.info(&quot;write cookieName:&#123;&#125;,cookieValue:&#123;&#125;&quot;, ck.getName(), ck.getValue());</span><br><span class="line">        response.addCookie(ck);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void delLoginToken(HttpServletRequest request, HttpServletResponse response) &#123;</span><br><span class="line">        Cookie[] cks = request.getCookies();</span><br><span class="line">        if (cks != null) &#123;</span><br><span class="line">            for (Cookie ck : cks) &#123;</span><br><span class="line">                if (StringUtils.equals(ck.getName(), COOKIE_NAME)) &#123;</span><br><span class="line">                    ck.setDomain(COOKIE_DOMAIN);</span><br><span class="line">                    ck.setPath(&quot;/&quot;);</span><br><span class="line">                    ck.setMaxAge(0);//设置成0，代表删除此cookie。</span><br><span class="line">                    log.info(&quot;del cookieName:&#123;&#125;,cookieValue:&#123;&#125;&quot;, ck.getName(), ck.getValue());</span><br><span class="line">                    response.addCookie(ck);</span><br><span class="line">                    return;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>写操作：<strong>CookieUtil.writeLoginToken</strong>(httpServletResponse, session.getId());//保存redis的key值</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value = &quot;login.do&quot;, method = RequestMethod.POST)</span><br><span class="line">@ResponseBody</span><br><span class="line">public ServerResponse&lt;User&gt; login(String username, String password, HttpSession session, HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest) &#123;</span><br><span class="line">    ServerResponse&lt;User&gt; response = iUserService.login(username, password);</span><br><span class="line">    if (response.isSuccess()) &#123;</span><br><span class="line"></span><br><span class="line">        //session.setAttribute(Const.CURRENT_USER,response.getData());</span><br><span class="line">        CookieUtil.writeLoginToken(httpServletResponse, session.getId());//保存redis的key值</span><br><span class="line">        RedisShardedPoolUtil.setEx(session.getId(), JsonUtil.obj2String(response.getData()), Const.RedisCacheExtime.REDIS_SESSION_EXTIME);</span><br><span class="line">    &#125;</span><br><span class="line">    return response;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>读操作：String loginToken = <strong>CookieUtil.readLoginToken</strong>(httpServletRequest);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">@RequestMapping(value = &quot;get_user_info.do&quot;,method = RequestMethod.POST)</span><br><span class="line">@ResponseBody</span><br><span class="line">public ServerResponse&lt;User&gt; getUserInfo(HttpServletRequest httpServletRequest)&#123;</span><br><span class="line"></span><br><span class="line">    String loginToken = CookieUtil.readLoginToken(httpServletRequest);</span><br><span class="line">    if(StringUtils.isEmpty(loginToken))&#123;</span><br><span class="line">        return ServerResponse.createByErrorMessage(&quot;用户未登录,无法获取当前用户的信息&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">    String userJsonStr = RedisShardedPoolUtil.get(loginToken);</span><br><span class="line">    User user = JsonUtil.string2Obj(userJsonStr,User.class);</span><br><span class="line"></span><br><span class="line">    if(user != null)&#123;</span><br><span class="line">        return ServerResponse.createBySuccess(user);</span><br><span class="line">    &#125;</span><br><span class="line">    return ServerResponse.createByErrorMessage(&quot;用户未登录,无法获取当前用户的信息&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2、单点登录之SessionExpireFilter重置session有效期："><a href="#2、单点登录之SessionExpireFilter重置session有效期：" class="headerlink" title="2、单点登录之SessionExpireFilter重置session有效期："></a>2、单点登录之SessionExpireFilter重置session有效期：</h4><p>//如果user不为空，则重置session的时间，即调用expire命令<br>RedisShardedPoolUtil.expire(loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">package com.mmall.controller.common;</span><br><span class="line"></span><br><span class="line">import com.mmall.common.Const;</span><br><span class="line">import com.mmall.pojo.User;</span><br><span class="line">import com.mmall.util.CookieUtil;</span><br><span class="line">import com.mmall.util.JsonUtil;</span><br><span class="line">import com.mmall.util.RedisShardedPoolUtil;</span><br><span class="line">import org.apache.commons.lang.StringUtils;</span><br><span class="line">import javax.servlet.*;</span><br><span class="line">import javax.servlet.http.HttpServletRequest;</span><br><span class="line">import java.io.IOException;</span><br><span class="line">/**</span><br><span class="line"> * @Author: chenyawei</span><br><span class="line"> * @Date: 2020-04-20  11:56</span><br><span class="line"> * @Description:</span><br><span class="line"> */</span><br><span class="line">public class SessionExpireFilter implements Filter &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void init(FilterConfig filterConfig) throws ServletException &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        HttpServletRequest httpServletRequest = (HttpServletRequest)servletRequest;</span><br><span class="line"></span><br><span class="line">        String loginToken = CookieUtil.readLoginToken(httpServletRequest);</span><br><span class="line">        if(StringUtils.isNotEmpty(loginToken))&#123;</span><br><span class="line">            //判断logintoken是否为空或者&quot;&quot;；</span><br><span class="line">            //如果不为空的话，符合条件，继续拿user信息</span><br><span class="line"></span><br><span class="line">            String userJsonStr = RedisShardedPoolUtil.get(loginToken);</span><br><span class="line">            User user = JsonUtil.string2Obj(userJsonStr,User.class);</span><br><span class="line">            if(user != null)&#123;</span><br><span class="line">                //如果user不为空，则重置session的时间，即调用expire命令</span><br><span class="line">                RedisShardedPoolUtil.expire(loginToken, Const.RedisCacheExtime.REDIS_SESSION_EXTIME);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void destroy() &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在web.xml中添加配置：凡是以*.do结尾的就重置session结束时间(即重置redis时间)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- 二期新增重置session时间的filter --&gt;</span><br><span class="line">  &lt;filter&gt;</span><br><span class="line">      &lt;filter-name&gt;sessionExpireFilter&lt;/filter-name&gt;</span><br><span class="line">      &lt;filter-class&gt;com.mmall.controller.common.SessionExpireFilter&lt;/filter-class&gt;</span><br><span class="line">  &lt;/filter&gt;</span><br><span class="line">  &lt;filter-mapping&gt;</span><br><span class="line">      &lt;filter-name&gt;sessionExpireFilter&lt;/filter-name&gt;</span><br><span class="line">      &lt;url-pattern&gt;*.do&lt;/url-pattern&gt;</span><br><span class="line">  &lt;/filter-mapping&gt;</span><br></pre></td></tr></table></figure>
+<p>2、Redis分布式缓存环境搭建</p>
+<p>封装分布式连接池RedisShardedPool</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line">package com.mmall.common;</span><br><span class="line"></span><br><span class="line">import com.mmall.util.PropertiesUtil;</span><br><span class="line">import redis.clients.jedis.JedisPoolConfig;</span><br><span class="line">import redis.clients.jedis.JedisShardInfo;</span><br><span class="line">import redis.clients.jedis.ShardedJedis;</span><br><span class="line">import redis.clients.jedis.ShardedJedisPool;</span><br><span class="line">import redis.clients.util.Hashing;</span><br><span class="line">import redis.clients.util.Sharded;</span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by chenyawei on 2019/3/10.</span><br><span class="line"> * redis分布式连接池</span><br><span class="line"> */</span><br><span class="line">public class RedisShardedPool &#123;</span><br><span class="line"></span><br><span class="line">    private static ShardedJedisPool pool;//sharded jedis连接池</span><br><span class="line">    private static Integer maxTotal = Integer.parseInt(PropertiesUtil.getProperty(&quot;redis.max.total&quot;, &quot;20&quot;)); //最大连接数</span><br><span class="line">    private static Integer maxIdle = Integer.parseInt(PropertiesUtil.getProperty(&quot;redis.max.idle&quot;, &quot;20&quot;));//在jedispool中最大的idle状态(空闲的)的jedis实例的个数</span><br><span class="line">    private static Integer minIdle = Integer.parseInt(PropertiesUtil.getProperty(&quot;redis.min.idle&quot;, &quot;20&quot;));//在jedispool中最小的idle状态(空闲的)的jedis实例的个数</span><br><span class="line">    private static Boolean testOnBorrow = Boolean.parseBoolean(PropertiesUtil.getProperty(&quot;redis.test.borrow&quot;, &quot;true&quot;));//在borrow一个jedis实例的时候，是否要进行验证操作，如果赋值true。则得到的jedis实例肯定是可以用的。</span><br><span class="line">    private static Boolean testOnReturn = Boolean.parseBoolean(PropertiesUtil.getProperty(&quot;redis.test.return&quot;, &quot;true&quot;));//在return一个jedis实例的时候，是否要进行验证操作，如果赋值true。则放回jedispool的jedis实例肯定是可以用的。</span><br><span class="line"></span><br><span class="line">    private static String redis1Ip = PropertiesUtil.getProperty(&quot;redis1.ip&quot;);</span><br><span class="line">    private static Integer redis1Port = Integer.parseInt(PropertiesUtil.getProperty(&quot;redis1.port&quot;));</span><br><span class="line">    private static String redis2Ip = PropertiesUtil.getProperty(&quot;redis2.ip&quot;);</span><br><span class="line">    private static Integer redis2Port = Integer.parseInt(PropertiesUtil.getProperty(&quot;redis2.port&quot;));</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    private static void initPool() &#123;</span><br><span class="line">        JedisPoolConfig config = new JedisPoolConfig();</span><br><span class="line"></span><br><span class="line">        config.setMaxTotal(maxTotal);</span><br><span class="line">        config.setMaxIdle(maxIdle);</span><br><span class="line">        config.setMinIdle(minIdle);</span><br><span class="line"></span><br><span class="line">        config.setTestOnBorrow(testOnBorrow);</span><br><span class="line">        config.setTestOnReturn(testOnReturn);</span><br><span class="line"></span><br><span class="line">        config.setBlockWhenExhausted(true);//连接耗尽的时候，是否阻塞，false会抛出异常，true阻塞直到超时。默认为true。</span><br><span class="line"></span><br><span class="line">        JedisShardInfo info1 = new JedisShardInfo(redis1Ip, redis1Port, 1000 * 2);</span><br><span class="line"></span><br><span class="line">        JedisShardInfo info2 = new JedisShardInfo(redis2Ip, redis2Port, 1000 * 2);</span><br><span class="line"></span><br><span class="line">        List&lt;JedisShardInfo&gt; jedisShardInfoList = new ArrayList&lt;JedisShardInfo&gt;(2);</span><br><span class="line"></span><br><span class="line">        jedisShardInfoList.add(info1);</span><br><span class="line">        jedisShardInfoList.add(info2);</span><br><span class="line"></span><br><span class="line">        pool = new ShardedJedisPool(config, jedisShardInfoList, Hashing.MURMUR_HASH, Sharded.DEFAULT_KEY_TAG_PATTERN);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        initPool();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static ShardedJedis getJedis() &#123;</span><br><span class="line">        return pool.getResource();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void returnBrokenResource(ShardedJedis jedis) &#123;</span><br><span class="line">        pool.returnBrokenResource(jedis);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void returnResource(ShardedJedis jedis) &#123;</span><br><span class="line">        pool.returnResource(jedis);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ShardedJedis jedis = pool.getResource();</span><br><span class="line">        for (int i = 0; i &lt; 10; i++) &#123;</span><br><span class="line">            jedis.set(&quot;key&quot; + i, &quot;value&quot; + i);</span><br><span class="line">        &#125;</span><br><span class="line">        returnResource(jedis);</span><br><span class="line">//      pool.destroy();//临时调用，销毁连接池中的所有连接</span><br><span class="line">        System.out.println(&quot;program is end&quot;);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>封装Redis分布式读写工具RedisShardedPoolUtil：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br></pre></td><td class="code"><pre><span class="line">package com.mmall.util;</span><br><span class="line"></span><br><span class="line">import com.mmall.common.RedisPool;</span><br><span class="line">import com.mmall.common.RedisShardedPool;</span><br><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import redis.clients.jedis.Jedis;</span><br><span class="line">import redis.clients.jedis.ShardedJedis;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * Created by chenyawei on 2019/3/10.</span><br><span class="line"> */</span><br><span class="line">@Slf4j</span><br><span class="line">public class RedisShardedPoolUtil &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 设置key的有效期，单位是秒</span><br><span class="line">     * @param key</span><br><span class="line">     * @param exTime</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public static Long expire(String key,int exTime)&#123;</span><br><span class="line">        ShardedJedis jedis = null;</span><br><span class="line">        Long result = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            jedis = RedisShardedPool.getJedis();</span><br><span class="line">            result = jedis.expire(key,exTime);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;expire key:&#123;&#125; error&quot;,key,e);</span><br><span class="line">            RedisShardedPool.returnBrokenResource(jedis);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        RedisShardedPool.returnResource(jedis);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //exTime的单位是秒</span><br><span class="line">    public static String setEx(String key,String value,int exTime)&#123;</span><br><span class="line">        ShardedJedis jedis = null;</span><br><span class="line">        String result = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            jedis = RedisShardedPool.getJedis();</span><br><span class="line">            result = jedis.setex(key,exTime,value);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;setex key:&#123;&#125; value:&#123;&#125; error&quot;,key,value,e);</span><br><span class="line">            RedisShardedPool.returnBrokenResource(jedis);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        RedisShardedPool.returnResource(jedis);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static String set(String key,String value)&#123;</span><br><span class="line">        ShardedJedis jedis = null;</span><br><span class="line">        String result = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            jedis = RedisShardedPool.getJedis();</span><br><span class="line">            result = jedis.set(key,value);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;set key:&#123;&#125; value:&#123;&#125; error&quot;,key,value,e);</span><br><span class="line">            RedisShardedPool.returnBrokenResource(jedis);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        RedisShardedPool.returnResource(jedis);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static String getSet(String key,String value)&#123;</span><br><span class="line">        ShardedJedis jedis = null;</span><br><span class="line">        String result = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            jedis = RedisShardedPool.getJedis();</span><br><span class="line">            result = jedis.getSet(key,value);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;getset key:&#123;&#125; value:&#123;&#125; error&quot;,key,value,e);</span><br><span class="line">            RedisShardedPool.returnBrokenResource(jedis);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        RedisShardedPool.returnResource(jedis);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static String get(String key)&#123;</span><br><span class="line">        ShardedJedis jedis = null;</span><br><span class="line">        String result = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            jedis = RedisShardedPool.getJedis();</span><br><span class="line">            result = jedis.get(key);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;get key:&#123;&#125; error&quot;,key,e);</span><br><span class="line">            RedisShardedPool.returnBrokenResource(jedis);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        RedisShardedPool.returnResource(jedis);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Long del(String key)&#123;</span><br><span class="line">        ShardedJedis jedis = null;</span><br><span class="line">        Long result = null;</span><br><span class="line">        try &#123;</span><br><span class="line">            jedis = RedisShardedPool.getJedis();</span><br><span class="line">            result = jedis.del(key);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;del key:&#123;&#125; error&quot;,key,e);</span><br><span class="line">            RedisShardedPool.returnBrokenResource(jedis);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        RedisShardedPool.returnResource(jedis);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static Long setnx(String key,String value)&#123;</span><br><span class="line">        ShardedJedis jedis = null;</span><br><span class="line">        Long result = null;</span><br><span class="line"></span><br><span class="line">        try &#123;</span><br><span class="line">            jedis = RedisShardedPool.getJedis();</span><br><span class="line">            result = jedis.setnx(key,value);</span><br><span class="line">        &#125; catch (Exception e) &#123;</span><br><span class="line">            log.error(&quot;setnx key:&#123;&#125; value:&#123;&#125; error&quot;,key,value,e);</span><br><span class="line">            RedisShardedPool.returnBrokenResource(jedis);</span><br><span class="line">            return result;</span><br><span class="line">        &#125;</span><br><span class="line">        RedisShardedPool.returnResource(jedis);</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ShardedJedis shardedJedis = RedisShardedPool.getJedis();</span><br><span class="line"></span><br><span class="line">        RedisShardedPoolUtil.set(&quot;keyTest&quot;,&quot;value&quot;);</span><br><span class="line"></span><br><span class="line">        String value = RedisShardedPoolUtil.get(&quot;keyTest&quot;);</span><br><span class="line"></span><br><span class="line">        RedisShardedPoolUtil.setEx(&quot;keyex&quot;,&quot;valueex&quot;,60*10);</span><br><span class="line"></span><br><span class="line">        RedisShardedPoolUtil.expire(&quot;keyTest&quot;,60*20);</span><br><span class="line"></span><br><span class="line">        RedisShardedPoolUtil.del(&quot;keyTest&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        String aaa = RedisShardedPoolUtil.get(null);</span><br><span class="line">        System.out.println(aaa);</span><br><span class="line"></span><br><span class="line">        System.out.println(&quot;end&quot;);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2020/04/27/Redis分布式算法原理/" data-toggle="tooltip" data-placement="top" title="Redis分布式算法原理">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2020/04/27/Nginx-Tomcat服务集群/" data-toggle="tooltip" data-placement="top" title="Nginx+Tomcat服务集群">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id=""
+                    data-server=""
+                    data-type=""
+                    data-fixed="" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Mon Apr 27 2020 18:06:47 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                        
+                          <a class="tag" href="/tags/#[object Object]" title="[object Object]">[object Object]</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<!-- Search -->
+<script src="/js/search.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&#34;🌱&#34;,&#34;just do it&#34;,&#34;🌾&#34;,&#34;🍀&#34;,&#34;don&#39;t give up&#34;,&#34;🍂&#34;,&#34;🌻&#34;,&#34;try it again&#34;,&#34;🍃&#34;,&#34;never say die&#34;,&#34;🌵&#34;,&#34;🌿&#34;,&#34;🌴&#34;]' color='[&#34;rgb(121,93,179)&#34; ,&#34;rgb(76,180,231)&#34; ,&#34;rgb(184,90,154)&#34; ,&#34;rgb(157,211,250)&#34; ,&#34;rgb(255,0,0)&#34; ,&#34;rgb(242,153,29)&#34; ,&#34;rgb(23,204,16)&#34; ,&#34;rgb(222,0,0)&#34; ,&#34;rgb(22,36,92)&#34; ,&#34;rgb(127,24,116)&#34; ,&#34;rgb(119,195,79)&#34; ,&#34;rgb(4,77,34)&#34; ,&#34;rgb(122,2,60)&#34;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+</body>
+
+</html>

@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          Redis分布式算法原理 - chenyawei-blog
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2020/04/27/Redis分布式算法原理/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    
+      <link rel="stylesheet" href="/css/dusign-light.css">
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    
+      <link rel="stylesheet" href="/css/toc.css">
+    
+
+    <link rel="stylesheet" href="/css/dusign-common.css">
+    <link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      <link rel="stylesheet" href="/css/font-awesome.css">
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                            
+                        </div>
+                        <h1>Redis分布式算法原理</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2020-04-27
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">2.3k</span> and
+                                Reading Time <span class="post-count">8</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="传统分布式算法"><a href="#传统分布式算法" class="headerlink" title="传统分布式算法"></a>传统分布式算法</h1><p>传统的分布式算法通常是采用hash取模的方式来处理数据与服务器节点的映射关系。</p>
+<p>举个栗子</p>
+<p>假设有个图片为test.jpg，现在有3个服务器，我们称之为0服务器、1服务器、2服务器。首先我们对这张图片进行hash，可以拿到一个散列值，用散列值对3进行取模，取模结果为0或者1或者2。如果结果是0则将图片存入0服务器节点上，如果是1则存入1服务器节点，如果是2则存入2服务器节点。</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/77263a6fe59a4156acb635bea5ae1c7e" alt="Redis分布式算法原理"></p>
+<p>按照上述的方式，此时假设我们有4个redis节点，分别是redis0、redis1、redis2、redis3。有20个数据，这20个数据的hash结果分别为1-20。然后对4进行取模，取模的结果就是对应数据存储的redis节点。最终数据的分配情况如图所示。</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/cfc2ab0bcb344f4785591f8ac072202b" alt="Redis分布式算法原理"></p>
+<p>项目运行时我们发现redis节点不够用了，所以新增了一个节点，或者是说发现redis集群负载非常低，我们可以删除一个节点来节省资源。现在的场景是增加了一个节点，我们重新将这20个数据进行取模放置到5个redis节点中。</p>
+<p>如图，其中1、2、3、20这四个数据在4个redis节点和5个redis节点中存储的服务器是一样的。所以新增了一个redis节点之后还能获取到这4个数据，因为存储位置没有发生变化。</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/3528b4b0361f4ddd92d7c6d23eded478" alt="Redis分布式算法原理"></p>
+<h1 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h1><p>20个数据在新增了一个服务器节点后只有4个数据命中，命中率是：4/20 = 20%。</p>
+<p>当然这里只是举例，实际生成环境数据量可能是百万级、千万级，在实际的生产环境中可能对cache节点会有所调整，比如删除一个cache节点，增加一个cache节点。那么使用传统的hash算法取模的方式将会对后台服务器造成巨大的冲击。很多缓存都没有命中，如果你的业务代码是穿透型的，那就会穿过cache直击db，很容易把数据库搞垮。接下来就看一下Consistent hashing一致性算法的精髓所在。</p>
+<h1 id="Consistent-hashing"><a href="#Consistent-hashing" class="headerlink" title="Consistent hashing"></a>Consistent hashing</h1><p>一致性hash算法，Consistent hashing算法早在1997年就在论文《Consistent hashing and random trees》提出。</p>
+<p>设计目标是为了解决因特网中的热点(Hot spot)问题，现在一致性hash算法在分布式系统中也得到了广泛应用。</p>
+<p>环形hash空间</p>
+<p>通常hash算法都是将value映射在一个32位的key值当中。而一致性哈希则将整个哈希值空间组织成一个虚拟的圆环，取值范围是从0-2^32-1(即哈希值是一个32位无符号整形)。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/4e376eff354a46a0bac6a2b1f8e50bc0" alt="Redis分布式算法原理"></p>
+<p>把对象映射到hash空间</p>
+<p>这里的对象就是我们真实存储的数据，以4个为例，分别为object1～object4。通过hash函数计算出hash值，分别为key1～key4，这四个值肯定会落在环形hash空间上。</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/77d8998419c949c6b394b93319181638" alt="Redis分布式算法原理"></p>
+<p>把cache映射到hash空间</p>
+<p>基本思想就是将对象和cache都映射到同一个hash数值空间中，并且使用相同的hash算法。即hash(cache A)=key A;</p>
+<p>cache就是实际的缓存服务器节点，以3个为例，对cache的hash计算一般的方法可以使用cache的机器的IP地址或者机器名作为hash输入，也可以引入更多的因子，比如端口号等。最终cache通过同一个hash算法也落在对象所在的相同的环形hash空间上。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/9eaf259bea774ef88d24a3ae4c0caaa8" alt="Redis分布式算法原理"></p>
+<p>把对象映射到cache</p>
+<p>接下来就是要考虑如何把对象映射到cache上，具体的做法就是找到对象所在环形空间的位置，顺时针出发，碰到的第一个cache节点就作为该对象的存储节点。因为对象的hash和cache的hash都是固定的，因此某个对象存储的cache必然是唯一并且确定的。这样就找到了数据映射到cache的一个方案(如图虚线箭头所示)。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/15184dd52ab0450bbe4f683330d00f1d" alt="Redis分布式算法原理"></p>
+<p>移除Cache</p>
+<p>在实际的生产环境中通常对cache节点会有所调整，我们来看下一致性哈希算法是如何处理的。</p>
+<p>比如我们移除cache B，此时只有object4无法命中，但是还是可以通过这个算法继续找到新的cache节点cache C，object4就会存储到cache C上。所以对于移除cache B来说，它影响的范围仅仅是它和逆时针到达的第一个cahce节点即cache A之间的数据(如图所示的透明区域)，对于环形的其他数据节点都不会影响，影响范围是非常小的。</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/3c8b3b6fba8d49dbbf362ae0c4188e6c" alt="Redis分布式算法原理"></p>
+<p>添加Cache</p>
+<p>比如我们在cache B和cache C之间新增了一个cache D，相应的object2就得更换存储的cache节点，连接到了新的cache D上。对于添加的cache D其影响的范围是它和逆时针到达的第一个cahce节点即cache B之间的数据(如图所示的透明区域)。</p>
+<p>所以对于cache变动，无论是添加cache节点还是删除cache节点，它影响的范围都是很小的。当然这里还有优化的空间。</p>
+<p><img src="http://p3.pstatp.com/large/pgc-image/e5283deee7c4404a95912c30211cc2ef" alt="Redis分布式算法原理"></p>
+<p>理想与现实</p>
+<p>理想非常丰满，现实非常骨感。左图就是理想中的情况，A、B、C节点分布的非常均匀。而现实呢有可能是右图这样，显然大量的数据都会落在A节点上，B和C节点存储的数据会较少，如果考虑随机性而言的话。这样会导致A节点服务器很忙，负载很高，而B、C比较清闲。这是由于hash的倾斜性导致的。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/07af49263577407fbc217d3bb14af59a" alt="Redis分布式算法原理"></p>
+<p>Hash倾斜性</p>
+<p>假设有6个数据，它们是随机均匀分布在环形hash空间上，而cache的分布则比较紧密。那么根据这个算法规则数据1、2、3、4、6则都是存储在A节点上，5存储在B节点上，C节点没有数据。这就是hash倾斜性。hash倾斜性导致了A、B、C这三个节点负载、性能都不均匀。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/c494664fad3d414f993c29bed31ab4b6" alt="Redis分布式算法原理"></p>
+<p>虚拟节点</p>
+<p>为了解决hash倾斜性带来的问题，在这个算法中就引入了虚拟节点。来看一下虚拟节点的算法原理。</p>
+<p>假设有两个数据object1和object2，对它们进行hash，我们增加了6个虚拟节点分别为v1～v6，两个对象hash之后分别落到了v2和v5虚拟节点上，然后对虚拟节点进行rehash，此时v1、v2映射到了N1这个真实节点上，v3、v4映射到了N2节点上，v5、v6映射到了N3节点上。通过虚拟节点把真实的服务器节点进行放大，最终object1存储到了N1节点上，object2存在了N3节点上。</p>
+<p>其工作原理就是将一个物理节点拆分为多个虚拟节点，并且同一个物理节点的虚拟节点尽量均匀分布在Hash环上。通过虚拟节点就解决了服务节点少时数据倾斜的问题。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/74d611a1fdbd4d98a3dba5095759d090" alt="Redis分布式算法原理"></p>
+<p>解决hash倾斜性</p>
+<p>引入了虚拟节点后，对hash倾斜性的解决方案是怎样的呢？</p>
+<p>比如我们增加了6个虚拟节点，这6个虚拟节点最终映射到了3台真实的cache节点，如图所示。我们对数据进行hash后落在了环形空间上，通过算法规则最终1、3数据落在A上，4、5落在B上，2、6落在C节点上。 相对均匀了一些。</p>
+<p>但是虚拟节点在rehash时也存在hash倾斜性，我们可以通过调整虚拟节点的数量，把真实节点和虚拟节点分配一个良好的比例，可以想像真实节点和真实节点间都存在大量的虚拟节点，随着节点越来越多，数据越来越多，那么分布会越来越均匀。并且在添加节点和删除节点时影响也会降到最低。</p>
+<p><img src="http://p1.pstatp.com/large/pgc-image/853613571d79414595160f0e76fbb85c" alt="Redis分布式算法原理"></p>
+<p>命中率计算</p>
+<p>命中率计算公式：(1-n/(n + m)) * 100%</p>
+<p>n：服务器台数</p>
+<p>m：服务器变动台数</p>
+<p>可以看出当变动的服务器台数越大，命中率就会越大。所以影响就会越来越小。随着分布式集群不断扩大时，这个算法的优点就会很自然的迸发出来。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>一致性哈希算法首先将整个哈希值空间(0-2^32-1)组织成一个虚拟的圆环，然后将存储对象进行hash，得到的值映射到圆环空间上。然后使用相同的hash算法对cache服务器节点进行hash，并映射到相同的圆环上。然后从数据映射到的位置开始顺时针查找，将数据保存到找到的第一个服务器节点上。</p>
+<p>Consistent hashing已经最大限度的抑制了键的重新分布，而且还可以采用虚拟节点的思想让每个实际节点都配置100-500个虚拟节点，这样就能抑制分布不均匀了。同时这个算法已经最大限度的减小了服务器增减时的缓存重新分布。</p>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2020/04/27/Redis分布式Java实现/" data-toggle="tooltip" data-placement="top" title="Redis分布式Java实现">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id=""
+                    data-server=""
+                    data-type=""
+                    data-fixed="" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Mon Apr 27 2020 18:06:58 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<!-- Search -->
+<script src="/js/search.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&#34;🌱&#34;,&#34;just do it&#34;,&#34;🌾&#34;,&#34;🍀&#34;,&#34;don&#39;t give up&#34;,&#34;🍂&#34;,&#34;🌻&#34;,&#34;try it again&#34;,&#34;🍃&#34;,&#34;never say die&#34;,&#34;🌵&#34;,&#34;🌿&#34;,&#34;🌴&#34;]' color='[&#34;rgb(121,93,179)&#34; ,&#34;rgb(76,180,231)&#34; ,&#34;rgb(184,90,154)&#34; ,&#34;rgb(157,211,250)&#34; ,&#34;rgb(255,0,0)&#34; ,&#34;rgb(242,153,29)&#34; ,&#34;rgb(23,204,16)&#34; ,&#34;rgb(222,0,0)&#34; ,&#34;rgb(22,36,92)&#34; ,&#34;rgb(127,24,116)&#34; ,&#34;rgb(119,195,79)&#34; ,&#34;rgb(4,77,34)&#34; ,&#34;rgb(122,2,60)&#34;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+</body>
+
+</html>
