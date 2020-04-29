@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          @Transactional Kotlin Example 事务 - chenyawei-blog
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2020/04/29/Transactional-Kotlin-Example-事务/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    
+      <link rel="stylesheet" href="/css/dusign-light.css">
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    
+      <link rel="stylesheet" href="/css/toc.css">
+    
+
+    <link rel="stylesheet" href="/css/dusign-common.css">
+    <link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      <link rel="stylesheet" href="/css/font-awesome.css">
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#spring" title="spring">spring</a>
+                            
+                        </div>
+                        <h1>@Transactional Kotlin Example 事务</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2020-04-29
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">1.8k</span> and
+                                Reading Time <span class="post-count">9</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h1 id="Transactional-Kotlin-Example-事务"><a href="#Transactional-Kotlin-Example-事务" class="headerlink" title="@Transactional Kotlin Example 事务"></a>@Transactional Kotlin Example 事务</h1><p>How to make transactional failed? How to use @Transactional<br>怎么做会使事务失败？ 怎么用事务注解</p>
+<h2 id="1-Transactional"><a href="#1-Transactional" class="headerlink" title="1. @Transactional"></a>1. @Transactional</h2><p>事务注解会让一个方法在执行完之后，要么提交所有的改变，要么什么都不改变。ACID 原则</p>
+<h3 id="1-1-Mysql-engine-use-InnoDB-数据库引擎必须支持事务"><a href="#1-1-Mysql-engine-use-InnoDB-数据库引擎必须支持事务" class="headerlink" title="1.1 Mysql engine: use InnoDB 数据库引擎必须支持事务"></a>1.1 Mysql engine: use InnoDB 数据库引擎必须支持事务</h3><p>MyISAM: Transactions NO Before MySQL 5.5.5, MyISAM is the default storage engine. (The default was changed to InnoDB in MySQL 5.5.5.) MyISAM is based on the older (and no longer available) ISAM storage engine but has many useful extensions.</p>
+<p>如果 MySQL 数据库的引擎是 MyISAM，那它根本不支持事务</p>
+<p><a href="https://dev.mysql.com/doc/refman/5.5/en/myisam-storage-engine.html" target="_blank" rel="noopener">More detail for MyISAM</a></p>
+<h3 id="1-2-Make-sure-the-class-will-be-instance-as-a-Bean-Service-类必须实例化成-Spring-的-Bean"><a href="#1-2-Make-sure-the-class-will-be-instance-as-a-Bean-Service-类必须实例化成-Spring-的-Bean" class="headerlink" title="1.2 Make sure the class will be instance as a Bean: @Service 类必须实例化成 Spring 的 Bean"></a>1.2 Make sure the class will be instance as a Bean: @Service 类必须实例化成 Spring 的 Bean</h3><h3 id="1-3-Function-must-be-public-方法必须是-public-的"><a href="#1-3-Function-must-be-public-方法必须是-public-的" class="headerlink" title="1.3 Function must be public 方法必须是 public 的"></a>1.3 Function must be public 方法必须是 <em>public</em> 的</h3><p>Method visibility and @Transactional<br>When using proxies, you should apply the @Transactional annotation only to methods with public visibility. If you do annotate protected, private or package-visible methods with the @Transactional annotation, no error is raised, but the annotated method does not exhibit the configured transactional settings. Consider the use of AspectJ (see below) if you need to annotate non-public methods.</p>
+<h3 id="1-4-Self-invocation-自我调用问题"><a href="#1-4-Self-invocation-自我调用问题" class="headerlink" title="1.4 Self-invocation 自我调用问题"></a>1.4 Self-invocation 自我调用问题</h3><p>在同一个 Bean 中 一个正常的方法叫一个带事务注解的方法，事物是不会奏效的<br><code>testSelfInvocation</code>叫<code>save</code>方法，虽然最后有 Runtime 的异常，但数据依然插入了<br>我们可以通过延迟注入一个相同类型的 Bean 来解决这个问题</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">ManService</span>(</span></span><br><span class="line">    private val manRepository: ManRepository,</span><br><span class="line">    <span class="meta">@Lazy</span></span><br><span class="line">    <span class="keyword">private</span> val self: ManService</span><br><span class="line">) &#123;</span><br><span class="line">    <span class="comment">// NO INSERT</span></span><br><span class="line">    <span class="function">fun <span class="title">notSelfInvocation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">        self.save(man)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// NO INSERT</span></span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    <span class="function">fun <span class="title">save</span><span class="params">(man: Man)</span>: Man </span>&#123;</span><br><span class="line">        val result = manRepository.save(man)</span><br><span class="line">        <span class="keyword">throw</span> RuntimeException(<span class="string">"test"</span>)</span><br><span class="line">        <span class="keyword">return</span> result</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    In proxy mode (which is the default), only external method calls coming in through the proxy</span></span><br><span class="line"><span class="comment">    are intercepted. This means that self-invocation, in effect, a method within the target object</span></span><br><span class="line"><span class="comment">    calling another method of the target object, will not lead to an actual transaction at runtime</span></span><br><span class="line"><span class="comment">    even if the invoked method is marked with @Transactional. Also, the proxy must be fully</span></span><br><span class="line"><span class="comment">    initialized to provide the expected behaviour so you should not rely on this feature in your</span></span><br><span class="line"><span class="comment">    initialization code, i.e. @PostConstruct.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    Hibernate: insert into woman (reference, id) values (?, ?)</span></span><br><span class="line"><span class="comment">    Hibernate: insert into man (reference, woman_id, id) values (?, ?, ?)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function">fun <span class="title">testSelfInvocation</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">        <span class="keyword">this</span>.save(man)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="1-5-catch-custom-exception-but-do-not-throw-it-insert-won’t-be-rollback-只抓不抛异常是不会让事务回滚的"><a href="#1-5-catch-custom-exception-but-do-not-throw-it-insert-won’t-be-rollback-只抓不抛异常是不会让事务回滚的" class="headerlink" title="1.5 catch custom exception but do not throw it, insert won’t be rollback 只抓不抛异常是不会让事务回滚的"></a>1.5 catch custom exception but do not throw it, insert won’t be rollback 只抓不抛异常是不会让事务回滚的</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">class MyException(m: String) : Exception(m)</span><br><span class="line"></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function">fun <span class="title">catchException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">        manRepository.save(man)</span><br><span class="line">        <span class="keyword">throw</span> MyException(<span class="string">"custom exception"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e: Exception) &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Hibernate: <span class="function">insert into <span class="title">woman</span> <span class="params">(reference, id)</span> <span class="title">values</span> <span class="params">(?, ?)</span></span></span><br><span class="line"><span class="function">Hibernate: insert into <span class="title">man</span> <span class="params">(reference, woman_id, id)</span> <span class="title">values</span> <span class="params">(?, ?, ?)</span></span></span><br></pre></td></tr></table></figure>
+<h3 id="1-6-Throws-exception-but-do-not-rollback-抛出自定义异常是不会让事务回滚的"><a href="#1-6-Throws-exception-but-do-not-rollback-抛出自定义异常是不会让事务回滚的" class="headerlink" title="1.6 Throws exception but do not rollback 抛出自定义异常是不会让事务回滚的"></a>1.6 Throws exception but do not rollback 抛出自定义异常是不会让事务回滚的</h3><p><img src="https://magiciendecode.fr/static/4ccfc733594f10ad094f9d0eb6cdc333/5a190/exception.png" alt="exception">By default, a transaction will be rolling back on RuntimeException and Error but not on checked exceptions (business exceptions).<br>事务默认只会回滚<code>RuntimeException</code> <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html" target="_blank" rel="noopener">Spring @Transactional</a></p>
+<ul>
+<li>Not Runtime Exception, so transaction won’t be rollback 不是 Runtime 的异常不行</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="meta">@Throws</span>(MyException::<span class="class"><span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">fun</span> <span class="title">catchThrowsException</span>() </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">        manRepository.save(man)</span><br><span class="line">        <span class="keyword">throw</span> MyException(<span class="string">"custom exception"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e: MyException) &#123;</span><br><span class="line">        <span class="keyword">throw</span> e</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Hibernate: <span class="function">insert into <span class="title">woman</span> <span class="params">(reference, id)</span> <span class="title">values</span> <span class="params">(?, ?)</span></span></span><br><span class="line"><span class="function">Hibernate: insert into <span class="title">man</span> <span class="params">(reference, woman_id, id)</span> <span class="title">values</span> <span class="params">(?, ?, ?)</span></span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>Declare rollbackFor 声明需要为哪些异常回滚</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">@Transactional(rollbackFor = [MyException::class])</span><br><span class="line"><span class="meta">@Throws</span>(MyException::<span class="class"><span class="keyword">class</span>)</span></span><br><span class="line"><span class="class"><span class="title">fun</span> <span class="title">catchThrowsExceptionWithTransactional</span>() </span>&#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">        manRepository.save(man)</span><br><span class="line">        <span class="keyword">throw</span> MyException(<span class="string">"custom exception"</span>)</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e: MyException) &#123;</span><br><span class="line">        <span class="keyword">throw</span> e</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// NO INSERT</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>RuntimeException 默认的回滚异常</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function">fun <span class="title">runtimeException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">    manRepository.save(man)</span><br><span class="line">    <span class="keyword">throw</span> RuntimeException(<span class="string">"custom exception"</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// NO INSERT</span></span><br></pre></td></tr></table></figure>
+<h2 id="2-Propagation-事务的传播模式"><a href="#2-Propagation-事务的传播模式" class="headerlink" title="2. Propagation 事务的传播模式"></a>2. Propagation 事务的传播模式</h2><h3 id="2-1-REQUIRED-amp-REQUIRED-NEW"><a href="#2-1-REQUIRED-amp-REQUIRED-NEW" class="headerlink" title="2.1 REQUIRED &amp; REQUIRED_NEW"></a>2.1 REQUIRED &amp; REQUIRED_NEW</h3><ul>
+<li>REQUIRED<ul>
+<li>如果没有就创建一个，如果有，就用当前的</li>
+</ul>
+</li>
+<li>REQUIRED_NEW<ul>
+<li>每次都会创建一个新的，如果当前就有一个，那么会把当前的挂起</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Support a current transaction, create a new one if none exists.</span></span><br><span class="line"><span class="comment"> * Analogous to EJB transaction attribute of the same name.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;This is the default setting of a transaction annotation.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">REQUIRED(TransactionDefinition.PROPAGATION_REQUIRED),</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Create a new transaction, and suspend the current transaction if one exists.</span></span><br><span class="line"><span class="comment"> * Analogous to the EJB transaction attribute of the same name.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;&lt;b&gt;<span class="doctag">NOTE:</span>&lt;/b&gt; Actual transaction suspension will not work out-of-the-box</span></span><br><span class="line"><span class="comment"> * on all transaction managers. This in particular applies to</span></span><br><span class="line"><span class="comment"> * &#123;<span class="doctag">@link</span> org.springframework.transaction.jta.JtaTransactionManager&#125;,</span></span><br><span class="line"><span class="comment"> * which requires the &#123;<span class="doctag">@code</span> javax.transaction.TransactionManager&#125; to be</span></span><br><span class="line"><span class="comment"> * made available to it (which is server-specific in standard Java EE).</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.transaction.jta.JtaTransactionManager#setTransactionManager</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">REQUIRED_NEW(TransactionDefinition.PROPAGATION_REQUIRED_NEW),</span><br></pre></td></tr></table></figure>
+<ul>
+<li>REQUIRED 如果两个方法共享一个实务，一个需要回滚，一个需要提交，就会出现<code>UnexpectedRollbackException</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NO INSERT TO DB</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function">fun <span class="title">runtimeException</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">    manRepository.save(man)</span><br><span class="line">    <span class="keyword">throw</span> RuntimeException(<span class="string">"custom exception"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// org.springframework.transaction.UnexpectedRollbackException:</span></span><br><span class="line"><span class="comment">// Transaction silently rolled back because it has been marked as rollback-only</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function">fun <span class="title">callAnotherTransactionalThrowRuntimeException</span><span class="params">()</span></span>&#123;</span><br><span class="line">    val woman = Woman(<span class="string">"1"</span>)</span><br><span class="line">    womanRepository.save(woman)</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        manService.runtimeException()</span><br><span class="line">    &#125;<span class="keyword">catch</span> (e:RuntimeException)&#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>REQUIRED_NEW 两个方法都有自己的事务，所以不会互相影响。</p>
+<p><a href="https://magiciendecode.fr/static/a98b3299767024dc22680f9e8c3d3cc2/b5bda/propagation_required_new.png" target="_blank" rel="noopener"><img src="https://magiciendecode.fr/static/a98b3299767024dc22680f9e8c3d3cc2/b5bda/propagation_required_new.png" alt="propagation required new"></a>These two functions are in the same transaction. When function <code>runtimeException</code> throws an exception, it will mark current transaction should be rollback. But <code>callAnotherTransactional</code> <code>ThrowRuntimeException</code> catch it, so current transaction think it should commit. That’s why it throws UnexpectedRollbackException . Another example with @Transactional(propagation = Propagation.REQUIRED_NEW)</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// NO INSERT TO DB</span></span><br><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED_NEW)</span><br><span class="line"><span class="function">fun <span class="title">runtimeExceptionWithPropagationRequiredNew</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">    manRepository.save(man)</span><br><span class="line">    <span class="keyword">throw</span> RuntimeException(<span class="string">"custom exception"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">Hibernate: select woman0_.id as id1_1_0_, woman0_.created_at as created_2_1_0_, woman0_.reference as ...</span></span><br><span class="line"><span class="comment">Hibernate: select man0_.id as id1_0_1_, man0_.created_at as created_2_0_1_, ...</span></span><br><span class="line"><span class="comment">Hibernate: select woman0_.id as id1_1_0_, woman0_.created_at as created_2_1_0_, ...</span></span><br><span class="line"><span class="comment">Hibernate: insert into woman (reference, id) values (?, ?)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    <span class="function">fun <span class="title">callAnotherTransactional</span><span class="params">()</span></span>&#123;</span><br><span class="line">        val woman = Woman(<span class="string">"1"</span>)</span><br><span class="line">        womanRepository.save(woman)</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            manService.runtimeExceptionWithPropagationRequiredNew()</span><br><span class="line">        &#125;<span class="keyword">catch</span> (e:RuntimeException)&#123;&#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p><code>runtimeExceptionWithPropagationRequiredNew</code> will rollback, but <code>callAnotherTransactional</code> will commit.</p>
+<h3 id="2-2-SUPPORTS-如果当前有事务就用，如果没有就不用事务的"><a href="#2-2-SUPPORTS-如果当前有事务就用，如果没有就不用事务的" class="headerlink" title="2.2 SUPPORTS 如果当前有事务就用，如果没有就不用事务的"></a>2.2 SUPPORTS 如果当前有事务就用，如果没有就不用事务的</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Support a current transaction, execute non-transactionally if none exists.</span><br><span class="line"> * Analogous to EJB transaction attribute of the same name.</span><br><span class="line"> * &lt;p&gt;Note: For transaction managers with transaction synchronization,</span><br><span class="line"> * &#123;@code SUPPORTS&#125; is slightly different from no transaction at all,</span><br><span class="line"> * as it defines a transaction scope that synchronization will apply for.</span><br><span class="line"> * As a consequence, the same resources (JDBC Connection, Hibernate Session, etc)</span><br><span class="line"> * will be shared for the entire specified scope. Note that this depends on</span><br><span class="line"> * the actual synchronization configuration of the transaction manager.</span><br><span class="line"> * @see org.springframework.transaction.support.AbstractPlatformTransactionManager#setTransactionSynchronization</span><br><span class="line"> */</span><br><span class="line">SUPPORTS(TransactionDefinition.PROPAGATION_SUPPORTS)</span><br></pre></td></tr></table></figure>
+<p>See example below</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional</span>(propagation = Propagation.SUPPORTS)</span><br><span class="line"><span class="function">fun <span class="title">propagationSupport</span><span class="params">()</span></span>&#123;</span><br><span class="line">    val man = Man(<span class="string">"1"</span>, Woman(<span class="string">"1"</span>))</span><br><span class="line">    manRepository.save(man)</span><br><span class="line">    <span class="keyword">throw</span> RuntimeException(<span class="string">"custom exception"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">Hibernate: insert into woman (reference, id) values (?, ?)</span></span><br><span class="line"><span class="comment">Hibernate: insert into man (reference, woman_id, id) values (?, ?, ?)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function">fun <span class="title">nonTransactionalCallSupport</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    manService.propagationSupport()</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// NO INSERT</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="function">fun <span class="title">transactionalCallSupport</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    manService.propagationSupport()</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-3-NESTED-不建议使用，和-JDBC-版本有关"><a href="#2-3-NESTED-不建议使用，和-JDBC-版本有关" class="headerlink" title="2.3 NESTED 不建议使用，和 JDBC 版本有关"></a>2.3 NESTED 不建议使用，和 JDBC 版本有关</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Execute within a nested transaction if a current transaction exists,</span></span><br><span class="line"><span class="comment"> * behave like &#123;<span class="doctag">@code</span> REQUIRED&#125; otherwise. There is no analogous feature in EJB.</span></span><br><span class="line"><span class="comment"> * &lt;p&gt;Note: Actual creation of a nested transaction will only work on specific</span></span><br><span class="line"><span class="comment"> * transaction managers. Out of the box, this only applies to the JDBC</span></span><br><span class="line"><span class="comment"> * DataSourceTransactionManager. Some JTA providers might support nested</span></span><br><span class="line"><span class="comment"> * transactions as well.</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> org.springframework.jdbc.datasource.DataSourceTransactionManager</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">NESTED(TransactionDefinition.PROPAGATION_NESTED)</span><br></pre></td></tr></table></figure>
+<p>As I have</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.transaction.NestedTransactionNotSupportedException:</span><br><span class="line">JpaDialect does not support savepoints - check your JPA provider<span class="string">'s capabilities</span></span><br></pre></td></tr></table></figure>
+<p>there is no test.<br>I see somewhere says that DataSourceTransactionManager only available for JdbcTemplate and ibatis, need JDBC3.0</p>
+<h2 id="3-Isolation-事务的隔离"><a href="#3-Isolation-事务的隔离" class="headerlink" title="3. Isolation 事务的隔离"></a>3. Isolation 事务的隔离</h2><ul>
+<li>Dirty read 脏读: read the uncommitted change of a concurrent transaction.<ul>
+<li>A 事务在读取某一行数据的时候，能够读到 B 事务还未提交的、对同一行数据的修改。</li>
+</ul>
+</li>
+<li>Non-repeatable read 不可重复: get different value on re-read of a row if a concurrent transaction updates the same row and commits. * 在同一个事务里，在 T1 时间读取到的某一行的数据，在 T2 时间再次读取同一行数据时，发生了变化。后者变化可能是被更新了、消失了。</li>
+<li>Phantom read 幻读: get different rows after re-execution of a range query if another transaction adds or removes some rows in the range and commits. * 在同一个事务里，用条件 A，在 T1 时间查询到的数据是 10 行，但是在 T2 时间查询到的数据多于 10 行。需要注意的是， 和 Nonrepeatable read 不同，Phantom read 在 T1 时读到的数据在 T2 时不会发生变化。注意，为何只说比 10 行多， 那么比 10 行少就不是 Phantom read 了吗？因为 Nonrepeatable read 包含了数据消失的情况。</li>
+</ul>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Isolation level</th>
+<th>Dirty read</th>
+<th>Non-repeatable read</th>
+<th>Phantom read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>READ_UNCOMMITTED</td>
+<td>may occur</td>
+<td>may occur</td>
+<td>may occur</td>
+</tr>
+<tr>
+<td>READ_COMMITTED</td>
+<td></td>
+<td>may occur</td>
+<td>may occur</td>
+</tr>
+<tr>
+<td>REPEATABLE_READ</td>
+<td></td>
+<td></td>
+<td>may occur</td>
+</tr>
+<tr>
+<td>SERIALIZABLE</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2020/04/29/Redis实现分布式锁/" data-toggle="tooltip" data-placement="top" title="Redis实现分布式锁">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="undefined"
+                    data-server="undefined"
+                    data-type="undefined"
+                    data-fixed="undefined" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Wed Apr 29 2020 11:27:16 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#spring" title="spring">spring</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<!-- Search -->
+<script src="/js/search.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>
