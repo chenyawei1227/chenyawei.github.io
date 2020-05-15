@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>ActiveMQ入门</title>
+      <link href="/2020/05/15/ActiveMQ%E5%85%A5%E9%97%A8/"/>
+      <url>/2020/05/15/ActiveMQ%E5%85%A5%E9%97%A8/</url>
+      
+        <content type="html"><![CDATA[<h3 id="一、在何种场景下需要使用消息中间件？为什么要在系统里引入消息中间件？"><a href="#一、在何种场景下需要使用消息中间件？为什么要在系统里引入消息中间件？" class="headerlink" title="一、在何种场景下需要使用消息中间件？为什么要在系统里引入消息中间件？"></a>一、在何种场景下需要使用消息中间件？为什么要在系统里引入消息中间件？</h3><p>mq作用：解耦、消峰、异步</p><h4 id="1、系统之间接口耦合比较严重"><a href="#1、系统之间接口耦合比较严重" class="headerlink" title="1、系统之间接口耦合比较严重"></a>1、系统之间接口耦合比较严重</h4><p>每新增一个下游功能，都要对上游的相关接口进行改造；</p><p>举个例子：如果系统A要发送数据给系统B和系统C，发送给每个系统的数据可能有差异，因此系统A对要发送给每个系统的数据进行了组装，然后逐一发送；</p><p>当代码上线后又新增了一个需求：</p><p>把数据也发送给D，新上了一个D系统也要接受A系统的数据，此时就需要修改A系统，让他感知到D系统的存在，同时把数据处理好再给D。在这个过程你会看到，每接入一个下游系统，都要对系统A进行代码改造，开发联调的效率很低。其整体架构如下图</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gesyzz96uwj317x0ietcf.jpg" alt="img">  </p><h4 id="2、面对大流量并发时，容易被冲垮"><a href="#2、面对大流量并发时，容易被冲垮" class="headerlink" title="2、面对大流量并发时，容易被冲垮"></a>2、面对大流量并发时，容易被冲垮</h4><p>每个接口模块的吞吐能力是有限的，这个上限能力如果是堤坝，当大流量（洪水）来临时，容易被冲垮。</p><p>举个例子秒杀业务：上游系统发起下单购买操作，我就是下单一个操作</p><p>下游系统完成秒杀业务逻辑：（读取订单，库存检查，库存冻结，余额检查，余额冻结，订单生产，余额扣减，库存减少，生成流水，余额解冻，库存解冻）</p><h4 id="3、等待同步存在性能问题"><a href="#3、等待同步存在性能问题" class="headerlink" title="3、等待同步存在性能问题"></a>3、等待同步存在性能问题</h4><p>RPC接口上基本都是同步调用，整体的服务性能遵循“木桶理论”，即整体系统的耗时取决于链路中最慢的那个接口。</p><p>比如A调用B/C/D都是50ms，但此时B又调用了B1，花费2000ms，那么直接就拖累了整个服务性能。</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gesz0kti4hj31bd0qfahm.jpg" alt="img"> </p><h4 id="4、需要有一种东东能摆平上述情况"><a href="#4、需要有一种东东能摆平上述情况" class="headerlink" title="4、需要有一种东东能摆平上述情况"></a>4、需要有一种东东能摆平上述情况</h4><p>根据上述的几个问题，在设计系统时可以明确要达到的目标：</p><ol><li>要做到系统解耦，当新的模块接进来时，可以做到代码改动最小；能够解耦</li><li>设置流量缓冲池，可以让后端系统按照自身吞吐能力进行消费，不被冲垮；能削峰</li><li>强弱依赖梳理能将非关键调用链路的操作异步化并提升整体系统的吞吐能力；能够异步</li></ol><h3 id="二、MQ的定义"><a href="#二、MQ的定义" class="headerlink" title="二、MQ的定义"></a>二、MQ的定义</h3><p>面向消息的中间件（message-oriented middleware）MOM能够很好的解决以上问题，是指<strong>利用高效可靠的消息传递机制与平台无关的数据交流</strong>，并基于数据通信来进行分布式系统的集成。</p><p>通过提供消息传递和消息排队模型在分布式环境下提供应用解耦，弹性伸缩，冗余存储、流量削峰，异步通信，数据同步等功能。</p><p>大致的过程是这样的：</p><p>发送者把消息发送给消息服务器，消息服务器将消息存放在若干<strong>队列/主题topic</strong>中，在合适的时候，消息服务器回将消息转发给接受者。在这个过程中，发送和接收是异步的，也就是发送无需等待，而且发送者和接受者的生命周期也没有必然的关系；</p><p>尤其在发布pub/订阅sub模式下，也可以完成一对多的通信，即让一个消息有多个接受者。</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gesz1or8ijj31fw0jswsa.jpg" alt="img"> </p><h3 id="三、特点"><a href="#三、特点" class="headerlink" title="三、特点"></a>三、特点</h3><h4 id="1、采用异步处理模式"><a href="#1、采用异步处理模式" class="headerlink" title="1、采用异步处理模式"></a>1、采用异步处理模式</h4><p>消息发送者可以发送一个消息而无须等待响应。消息发送者将消息发送到一条虚拟的通道（主题或者队列）上；</p><p>消息接收者则订阅或者监听该爱通道。一条消息可能最终转发给一个或者多个消息接收者，这些消息接收者都无需对消息发送者做出同步回应。整个过程都是异步的。</p><p>案例：</p><p>也就是说，一个系统跟另一个系统之间进行通信的时候，假如系统A希望发送一个消息给系统B，让他去处理。但是系统A不关注系统B到底怎么处理或者有没有处理好，所以系统A把消息发送给MQ，然后就不管这条消息的“死活了”，接着系统B从MQ里面消费出来处理即可。至于怎么处理，是否处理完毕，什么时候处理，都是系统B的事儿，与系统A无关。</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1geszca2nacj31460gl42g.jpg" alt="img"> </p><p>这样的一种通信方式，就是所谓的“异步”通信方式，对于系统A来说，只需要把消息发送给MQ，然后系统B就会异步的去进行处理了，系统A不需要“同步”的等待系统B处理完成。这样的好处是什么呢？两个字：解耦</p><h4 id="2、应用系统之间解耦合"><a href="#2、应用系统之间解耦合" class="headerlink" title="2、应用系统之间解耦合"></a>2、应用系统之间解耦合</h4><p>发送者和接受者不必了解对方，只需要确认消息；发送者和接受者不必同时在线</p><h4 id="3、整体架构"><a href="#3、整体架构" class="headerlink" title="3、整体架构"></a>3、整体架构</h4><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1gesx6us1n6j30x20gs79g.jpg" alt="image-20200511173532314"></p><h3 id="四、怎么玩"><a href="#四、怎么玩" class="headerlink" title="四、怎么玩"></a>四、怎么玩</h3><p><a href="http://activemq.apache.org/" target="_blank" rel="noopener">http://activemq.apache.org/</a> 官网地址</p><ul><li>最重要的功能：实现高可用，高性能，可伸缩，易用和安全的企业级面向消息服务的系统</li><li>异步消息的消费和处理</li><li>控制消息的消费顺序</li><li>可以和Spring或者SpringBoot整合简化代码</li><li>配置集群容错的MQ集群</li></ul><p>查看activeMq启动进程的3种方法：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ps -ef|grep activemq|grep -v grep</span><br><span class="line">netstat -anp|grep 61616</span><br><span class="line">lsof -i:61616</span><br></pre></td></tr></table></figure><h4 id="1、默认端口为61616"><a href="#1、默认端口为61616" class="headerlink" title="1、默认端口为61616"></a>1、默认端口为61616</h4><p>普通登录：</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1geszdf3nkoj312h0h47cd.jpg" alt="img"> </p><p>普通关闭：</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1geszeu9n8fj312t0m3qg9.jpg" alt="img"> </p><p>带日志启动：</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1geszerqikfj30rt03o0tg.jpg" alt="img"> </p><h4 id="2、Apache-ActiveMQ控制台"><a href="#2、Apache-ActiveMQ控制台" class="headerlink" title="2、Apache ActiveMQ控制台"></a>2、Apache ActiveMQ控制台</h4><p><a href="http://127.0.0.1:8161/admin" target="_blank" rel="noopener">http://127.0.0.1:8161/admin</a> ；  默认的用户名和密码是admin/admin</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlgy1geszeq17v6j31nb0szdjc.jpg" alt="img"> </p><p>备注：ActiveMQ采用61616端口提供JMS服务；ActiveMQ采用8161端口提供管理控制台服务</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> MQ </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> MQ </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>@Transactional Kotlin Example 事务</title>
       <link href="/2020/04/29/Transactional-Kotlin-Example-%E4%BA%8B%E5%8A%A1/"/>
       <url>/2020/04/29/Transactional-Kotlin-Example-%E4%BA%8B%E5%8A%A1/</url>
