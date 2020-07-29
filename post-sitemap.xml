@@ -8,8 +8,8 @@
     </url>
 
     <url>
-        <loc>https://bytenote.cn/2020/07/24/ES6%E7%89%B9%E6%80%A7/</loc>
-        <lastmod>2020-07-24T09:40:31.263Z</lastmod>
+        <loc>https://bytenote.cn/2020/05/15/ActiveMQ%E5%85%A5%E9%97%A8/</loc>
+        <lastmod>2020-07-29T06:53:03.846Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -17,15 +17,23 @@
 
     <url>
         <loc>https://bytenote.cn/2020/05/18/Java%E7%BC%96%E7%A0%81%E5%AE%9E%E7%8E%B0ActiveMQ%E9%80%9A%E8%AE%AF/</loc>
-        <lastmod>2020-05-18T03:50:35.435Z</lastmod>
+        <lastmod>2020-07-29T06:52:28.961Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>https://bytenote.cn/2020/05/15/ActiveMQ%E5%85%A5%E9%97%A8/</loc>
-        <lastmod>2020-05-15T03:41:13.707Z</lastmod>
+        <loc>https://bytenote.cn/2020/07/24/ES6%E7%89%B9%E6%80%A7/</loc>
+        <lastmod>2020-07-29T06:51:13.834Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://bytenote.cn/2020/07/29/3-JMS%E8%A7%84%E8%8C%83%E5%92%8C%E8%90%BD%E5%9C%B0%E4%BA%A7%E5%93%81/</loc>
+        <lastmod>2020-07-29T06:51:01.245Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
