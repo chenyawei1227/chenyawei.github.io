@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>sql 四大排名函数---（ROW_NUMBER、RANK、DENSE_RANK、NTILE）简介</title>
+      <link href="/2020/10/10/sql-%E5%9B%9B%E5%A4%A7%E6%8E%92%E5%90%8D%E5%87%BD%E6%95%B0-%EF%BC%88ROW-NUMBER%E3%80%81RANK%E3%80%81DENSE-RANK%E3%80%81NTILE%EF%BC%89%E7%AE%80%E4%BB%8B/"/>
+      <url>/2020/10/10/sql-%E5%9B%9B%E5%A4%A7%E6%8E%92%E5%90%8D%E5%87%BD%E6%95%B0-%EF%BC%88ROW-NUMBER%E3%80%81RANK%E3%80%81DENSE-RANK%E3%80%81NTILE%EF%BC%89%E7%AE%80%E4%BB%8B/</url>
+      
+        <content type="html"><![CDATA[<h2 id="sql-四大排名函数—-（ROW-NUMBER、RANK、DENSE-RANK、NTILE）简介"><a href="#sql-四大排名函数—-（ROW-NUMBER、RANK、DENSE-RANK、NTILE）简介" class="headerlink" title="sql 四大排名函数—-（ROW_NUMBER、RANK、DENSE_RANK、NTILE）简介"></a>sql 四大排名函数—-（ROW_NUMBER、RANK、DENSE_RANK、NTILE）简介</h2><p><strong>1.ROW_NUMBER()</strong></p><p><strong>定义</strong>：ROW_NUMBER()函数作用就是将select查询到的数据进行排序，每一条数据加一个序号，他不能用做于学生成绩的排名，一般多用于分页查询，<br>比如查询前10个 查询10-100个学生。</p><p><strong>实例</strong>：</p><p>1.1对学生成绩排序</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjk2b1aiakj30g805cmx6.jpg" alt="这里写图片描述"><br>这里number就是每个学生的序号 根据studentScore(分数)进行desc倒序</p><p>1.2获取第二个同学的成绩信息</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjk2b45uf4j30g005rjre.jpg" alt="这里写图片描述"><br>这里用到的思想就是 分页查询的思想 在原sql外再套一层select<br>where t.number&gt;=1 and t.number&lt;=10 是不是就是获取前十个学生的成绩信息纳。</p><p><strong>2.RANK()</strong></p><p><strong>定义</strong>：RANK()函数，顾名思义排名函数，可以对某一个字段进行排名，这里为什么和ROW_NUMBER()不一样那，ROW_NUMBER()是排序，当存在相同成绩的学生时，ROW_NUMBER()会依次进行排序，他们序号不相同，而Rank()则不一样出现相同的，他们的排名是一样的。下面看例子:</p><p>2.1对学生成绩进行排名</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjk2bbe4kej30f508pjrk.jpg" alt="这里写图片描述"></p><p>这里发现 ROW_NUMBER()和RANK()怎么一样？因为学生成绩都不一样所以排名和排序一样，下面改一下就会发现区别。</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjk2begy4ej30gx08wq36.jpg" alt="这里写图片描述"></p><p>当出现两个学生成绩相同是里面出现变化。RANK()是 1 2 2，而ROW_NUMBER()则还是1 2 3，这就是RANK()和ROW_NUMBER()的区别了</p><p><strong>3.DENSE_RANK()</strong></p><p><strong>定义</strong>：DENSE_RANK()函数也是排名函数，和RANK()功能相似，也是对字段进行排名，那它和RANK()到底有什么不同那？看例子：</p><p><strong>实例</strong>：</p><p><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjk2bfv2rcj30g608i0sx.jpg" alt="这里写图片描述"></p><p>DENSE_RANK()密集的排名他和RANK()区别在于，排名的连续性，DENSE_RANK()排名是连续的，RANK()是跳跃的排名，所以一般情况下用的排名函数就是RANK()。</p><p><strong>4.NTILE()</strong></p><p><strong>定义</strong>：NTILE()函数是将有序分区中的行分发到指定数目的组中，各个组有编号，编号从1开始，就像我们说的’分区’一样 ，分为几个区，一个区会有多少个。</p><p><strong>实例</strong>：<br><img src="https://tva1.sinaimg.cn/large/007S8ZIlly1gjk2bjlpvfj30ii0as0t6.jpg" alt="这里写图片描述"></p><p>这里查询了3次,第一次分为1个’区’ ,所以查询结果number全是1，第二次分为2个区，查询结果为 1 1 2，意思就是 第一个 ‘区’ 为 1 1 两个编号的数据 ，第二个’区’只有2这个数据。</p><p>原创：<a href="https://blog.csdn.net/shaiguchun9503/article/details/82349050" target="_blank" rel="noopener">https://blog.csdn.net/shaiguchun9503/article/details/82349050</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> SQL </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> SQL </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>3-JMS规范和落地产品</title>
       <link href="/2020/07/29/3-JMS%E8%A7%84%E8%8C%83%E5%92%8C%E8%90%BD%E5%9C%B0%E4%BA%A7%E5%93%81/"/>
       <url>/2020/07/29/3-JMS%E8%A7%84%E8%8C%83%E5%92%8C%E8%90%BD%E5%9C%B0%E4%BA%A7%E5%93%81/</url>

@@ -8,6 +8,13 @@
     </url>
 
     <url>
+        <loc>https://bytenote.cn/categories/SQL/</loc>
+        <lastmod>2020-10-10T08:56:40.845Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://bytenote.cn/categories/MQ/</loc>
         <lastmod>2020-07-29T06:53:03.846Z</lastmod>
         <changefreq>weekly</changefreq>
