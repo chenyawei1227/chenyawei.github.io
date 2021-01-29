@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://bytenote.cn/2021/01/29/WebFlux%E5%93%8D%E5%BA%94%E5%BC%8F%E7%BC%96%E7%A8%8B/</loc>
+    <lastmod>2021-01-29</lastmod>
+  </url>  <url>
     <loc>https://bytenote.cn/2020/10/10/sql-%E5%9B%9B%E5%A4%A7%E6%8E%92%E5%90%8D%E5%87%BD%E6%95%B0-%EF%BC%88ROW-NUMBER%E3%80%81RANK%E3%80%81DENSE-RANK%E3%80%81NTILE%EF%BC%89%E7%AE%80%E4%BB%8B/</loc>
     <lastmod>2020-10-10</lastmod>
   </url>  <url>
