@@ -8,6 +8,20 @@
     </url>
 
     <url>
+        <loc>https://bytenote.cn/categories/%25E5%2589%258D%25E7%25AB%25AF/javascript/</loc>
+        <lastmod>2021-04-16T02:08:08.115Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://bytenote.cn/categories/%25E5%2589%258D%25E7%25AB%25AF/</loc>
+        <lastmod>2021-04-16T02:08:08.115Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
         <loc>https://bytenote.cn/categories/java/%25E5%259F%25BA%25E7%25A1%2580%25E7%2590%2586%25E8%25A7%25A3/</loc>
         <lastmod>2021-02-04T13:15:34.284Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -66,13 +80,6 @@
     <url>
         <loc>https://bytenote.cn/categories/socket/</loc>
         <lastmod>2020-04-15T03:48:29.551Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>https://bytenote.cn/categories/%25E5%2589%258D%25E7%25AB%25AF/</loc>
-        <lastmod>2020-03-16T05:25:16.877Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
