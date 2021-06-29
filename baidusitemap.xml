@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://bytenote.cn/2021/06/29/Elasticsearch/</loc>
+    <lastmod>2021-06-29</lastmod>
+  </url>  <url>
+    <loc>https://bytenote.cn/2021/06/29/Lucene/</loc>
+    <lastmod>2021-06-29</lastmod>
+  </url>  <url>
     <loc>https://bytenote.cn/2021/04/20/RPC%E6%A1%86%E6%9E%B6%E6%A6%82%E5%BF%B5%E7%90%86%E8%A7%A3/</loc>
     <lastmod>2021-04-20</lastmod>
   </url>  <url>

@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          Lucene - chenyawei-blog
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2021/06/29/Lucene/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS --> 
+    
+      <link rel="stylesheet" href="/css/dusign-light.css">
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    <link rel="stylesheet" href="/css/highlight.css">
+
+    <link rel="stylesheet" href="/css/widget.css">
+
+    <link rel="stylesheet" href="/css/rocket.css">
+
+    <link rel="stylesheet" href="/css/signature.css">
+
+    
+      <link rel="stylesheet" href="/css/toc.css">
+    
+
+    <link rel="stylesheet" href="/css/dusign-common.css">
+    <link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      <link rel="stylesheet" href="/css/font-awesome.css">
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#Elasticsearch" title="Elasticsearch">Elasticsearch</a>
+                            
+                        </div>
+                        <h1>Lucene</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2021-06-29
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">3.6k</span> and
+                                Reading Time <span class="post-count">14</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="一、什么是Lucene"><a href="#一、什么是Lucene" class="headerlink" title="一、什么是Lucene"></a>一、什么是Lucene</h3><p>Lucene是apache下的一个开源的全文检索引擎工具包。它为软件开发人员提供一个简单易用的工具包（类库），以方便的在目标系统中实现全文检索的功能。</p>
+<h3 id="二、全文检索的应用场景"><a href="#二、全文检索的应用场景" class="headerlink" title="二、全文检索的应用场景"></a>二、全文检索的应用场景</h3><p>2.1搜索引擎</p>
+<p>2.2站内搜索</p>
+<p>2.3文件系统的搜索</p>
+<p>总结：Lucene和搜索引擎是不同的，Lucene是一套用java或其它语言写的全文检索的工具包。它为应用程序提供了很多个api接口去调用，可以简单理解为是一套实现全文检索的类库。搜索引擎是一个全文检索系统，它是一个单独运行的软件系统。</p>
+<h3 id="三、全文检索的定义"><a href="#三、全文检索的定义" class="headerlink" title="三、全文检索的定义"></a>三、全文检索的定义</h3><p>全文检索首先将要查询的目标文档中的词提取出来，组成索引，通过查询索引达到搜索目标文档的目的。这种先建立索引，再对索引进行搜索的过程就叫全文检索（Full-text Search）。</p>
+<h3 id="四、Lucene实现全文检索的流程"><a href="#四、Lucene实现全文检索的流程" class="headerlink" title="四、Lucene实现全文检索的流程"></a>四、Lucene实现全文检索的流程</h3><p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhmsbwyxj30k30hrgq5.jpg" alt="image-20210629220625290"></p>
+<p>全文检索的流程分为两大部分：索引流程、搜索流程：</p>
+<ul>
+<li>索引流程：即采集数据—&gt;构建文档对象—&gt;分析文档（分词）—&gt;创建索引。</li>
+<li>搜索流程：即用户通过搜索界面—&gt;创建查询—&gt;执行搜索，搜索器从索引库搜索—&gt;渲染搜索结果。</li>
+</ul>
+<p>Lucene本身不能进行视图渲染。</p>
+<h3 id="五、入门程序"><a href="#五、入门程序" class="headerlink" title="五、入门程序"></a>五、入门程序</h3><h4 id="5-1需求"><a href="#5-1需求" class="headerlink" title="5.1需求"></a>5.1需求</h4><p>使用lucene完成对数据库中图书信息的索引和搜索功能。</p>
+<h4 id="5-2环境"><a href="#5-2环境" class="headerlink" title="5.2环境"></a>5.2环境</h4><ul>
+<li>Jdk：1.7及以上</li>
+<li>Lucene：4.10（从4.8版本以后，必须使用jdk1.7及以上）</li>
+<li>Ide：indigo</li>
+<li>数据库：mysql</li>
+</ul>
+<h4 id="5-3数据库脚本"><a href="#5-3数据库脚本" class="headerlink" title="5.3数据库脚本"></a>5.3数据库脚本</h4><p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhoeko1tj30nn03un0z.jpg" alt="image-20210629220758666"></p>
+<h4 id="5-4Lucene下载"><a href="#5-4Lucene下载" class="headerlink" title="5.4Lucene下载"></a>5.4Lucene下载</h4><p>Lucene是开发全文检索功能的工具包，使用时从官方网站下载，并解压。</p>
+<p>官方网站：<a href="https://link.jianshu.com?t=http://lucene.apache.org/" target="_blank" rel="noopener">http://lucene.apache.org/</a><br> 目前最新版本：5.4.0</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">下载地址：http:<span class="comment">//archive.apache.org/dist/lucene/java/</span></span><br><span class="line">下载版本：<span class="number">4.10</span><span class="number">.3</span></span><br><span class="line">JDK要求：<span class="number">1.7</span>以上（从版本<span class="number">4.8</span>开始，不支持<span class="number">1.7</span>以下）</span><br></pre></td></tr></table></figure>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhq23h1bj30h50fe0z0.jpg" alt="image-20210629220928312"></p>
+<p>1.png</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhqly12xj30if06s762.jpg" alt="image-20210629221000971"></p>
+<p>2.png</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhqvyloxj30fm05djsi.jpg" alt="image-20210629221022041"></p>
+<p>3.png</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhr9ot5sj30jc04x75t.jpg" alt="image-20210629221044996"></p>
+<p>4.png</p>
+<h4 id="5-5工程搭建"><a href="#5-5工程搭建" class="headerlink" title="5.5工程搭建"></a>5.5工程搭建</h4><p>所需要的jar包：</p>
+<ul>
+<li>mysql5.1驱动包：mysql-connector-java-5.1.7-bin.jar</li>
+<li>核心包：lucene-core-4.10.3.jar</li>
+<li>分析器通用包：lucene-analyzers-common-4.10.3.jar</li>
+<li>查询解析器包：lucene-queryparser-4.10.3.jar</li>
+<li>junit包：junit-4.9.jar（非必须）</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhrrfwe1j3088076gne.jpg" alt="image-20210629221113070"></p>
+<p>工程.PNG</p>
+<h4 id="5-6实现全文检索"><a href="#5-6实现全文检索" class="headerlink" title="5.6实现全文检索"></a>5.6实现全文检索</h4><h5 id="第一步：索引流程"><a href="#第一步：索引流程" class="headerlink" title="第一步：索引流程"></a>第一步：索引流程</h5><p>对文档索引的过程，就是将用户要搜索的文档内容进行索引，然后把索引存储在索引库（index）中。</p>
+<p>1.为什么要采集数据</p>
+<p>全文检索搜索的内容的格式是多种多样的，比如：视频、mp3、图片、文档等等。对于这种格式不同的数据，需要先将他们采集到本地，然后统一封装到lucene的文档对象中，也就是说需要将存储的内容进行统一才能对它进行查询。</p>
+<p>2.采集数据的方式</p>
+<ul>
+<li>对于互联网中的数据，使用爬虫工具（http工具）将网页爬取到本地</li>
+<li>对于数据库中的数据，使用jdbc程序进行数据采集</li>
+<li>对于文件系统的数据，使用io流采集</li>
+</ul>
+<p>因为目前搜索引擎主要搜索数据的来源是互联网，搜索引擎使用一种爬虫程序抓取网页（ 通过http抓取html网页信息），以下是一些爬虫项目：</p>
+<ul>
+<li>Solr（<a href="https://link.jianshu.com?t=http://lucene.apache.org/solr" target="_blank" rel="noopener">http://lucene.apache.org/solr</a>） ，solr是apache的一个子项目，支持从关系数据库、xml文档中提取原始数据。</li>
+<li>Nutch（<a href="https://link.jianshu.com?t=http://lucene.apache.org/nutch" target="_blank" rel="noopener">http://lucene.apache.org/nutch</a>）, Nutch是apache的一个子项目，包括大规模爬虫工具，能够抓取和分辨web网站数据。</li>
+<li>jsoup（<a href="https://link.jianshu.com?t=http://jsoup.org/" target="_blank" rel="noopener">http://jsoup.org/</a> ），jsoup 是一款Java 的HTML解析器，可直接解析某个URL地址、HTML文本内容。它提供了一套非常省力的API，可通过DOM，CSS以及类似于jQuery的操作方法来取出和操作数据。</li>
+<li>heritrix（<a href="https://link.jianshu.com?t=http://sourceforge.net/projects/archive-crawler/files/" target="_blank" rel="noopener">http://sourceforge.net/projects/archive-crawler/files/</a>），Heritrix 是一个由 java 开发的、开源的网络爬虫，用户可以使用它来从网上抓取想要的资源。其最出色之处在于它良好的可扩展性，方便用户实现自己的抓取逻辑。</li>
+</ul>
+<p>3.索引文件的逻辑结构</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzhzrljqgj30kb0fuqa9.jpg" alt="image-20210629221854999"></p>
+<p>索引文件的逻辑结构.PNG</p>
+<p>文档域：</p>
+<blockquote>
+<p>文档域存储的信息就是采集到的信息，通过Document对象来存储，具体说是通过Document对象中field域来存储数据。</p>
+</blockquote>
+<p>比如：数据库中一条记录会存储一个一个Document对象，数据库中一列会存储成Document中一个field域。</p>
+<blockquote>
+<p>文档域中，Document对象之间是没有关系的。而且每个Document中的field域也不一定一样。</p>
+</blockquote>
+<p>索引域:</p>
+<blockquote>
+<p>索引域主要是为了搜索使用的。索引域内容是经过lucene分词之后存储的。</p>
+</blockquote>
+<p>倒排索引表</p>
+<p>传统方法是先找到文件，如何在文件中找内容，在文件内容中匹配搜索关键字，这种方法是顺序扫描方法，数据量大就搜索慢。<br> 倒排索引结构是根据内容（词语）找文档，倒排索引结构也叫反向索引结构，包括索引和文档两部分，索引即词汇表，它是在索引中匹配搜索关键字，由于索引内容量有限并且采用固定优化算法搜索速度很快，找到了索引中的词汇，词汇与文档关联，从而最终找到了文档。</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi0adg4vj30ha01xmx7.jpg" alt="image-20210629221923462"></p>
+<p>倒排索引表.PNG</p>
+<p><strong>4.索引</strong></p>
+<p>4.1 采集数据</p>
+<p>Book:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Book</span> &#123;</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">private</span> Integer id;</span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line">    <span class="keyword">private</span> Float price;</span><br><span class="line">    <span class="keyword">private</span> String pic;</span><br><span class="line">    <span class="keyword">private</span> String description;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Integer <span class="title">getId</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setId</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.id = id;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Float <span class="title">getPrice</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> price;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPrice</span><span class="params">(Float price)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.price = price;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getPic</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> pic;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setPic</span><span class="params">(String pic)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.pic = pic;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> description;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setDescription</span><span class="params">(String description)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.description = description;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>BookDao:</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title">BookDao</span> &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Book&gt; <span class="title">queryBooks</span>(<span class="params"></span>)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>BookDaoImpl:</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">public <span class="class"><span class="keyword">class</span> <span class="title">BookDaoImpl</span> <span class="keyword">implements</span> <span class="title">BookDao</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    public <span class="built_in">List</span>&lt;Book&gt; queryBooks() &#123;</span><br><span class="line">        <span class="comment">// 数据库链接</span></span><br><span class="line">        Connection connection = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 预编译statement</span></span><br><span class="line">        PreparedStatement preparedStatement = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 结果集</span></span><br><span class="line">        ResultSet resultSet = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 图书列表</span></span><br><span class="line">        <span class="built_in">List</span>&lt;Book&gt; list = <span class="keyword">new</span> ArrayList&lt;Book&gt;();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 加载数据库驱动</span></span><br><span class="line">            Class.forName(<span class="string">"com.mysql.jdbc.Driver"</span>);</span><br><span class="line">            <span class="comment">// 连接数据库</span></span><br><span class="line">            connection = DriverManager.getConnection(</span><br><span class="line">                    <span class="string">"jdbc:mysql://localhost:3306/solr"</span>, <span class="string">"root"</span>, <span class="string">"root"</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// SQL语句</span></span><br><span class="line">            <span class="built_in">String</span> sql = <span class="string">"SELECT * FROM book"</span>;</span><br><span class="line">            <span class="comment">// 创建preparedStatement</span></span><br><span class="line">            preparedStatement = connection.prepareStatement(sql);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 获取结果集</span></span><br><span class="line">            resultSet = preparedStatement.executeQuery();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 结果集解析</span></span><br><span class="line">            <span class="keyword">while</span> (resultSet.next()) &#123;</span><br><span class="line">                Book book = <span class="keyword">new</span> Book();</span><br><span class="line">                book.setId(resultSet.getInt(<span class="string">"id"</span>));</span><br><span class="line">                book.setName(resultSet.getString(<span class="string">"name"</span>));</span><br><span class="line">                book.setPrice(resultSet.getFloat(<span class="string">"price"</span>));</span><br><span class="line">                book.setPic(resultSet.getString(<span class="string">"pic"</span>));</span><br><span class="line">                book.setDescription(resultSet.getString(<span class="string">"description"</span>));</span><br><span class="line">                list.add(book);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4.2 创建索引</p>
+<p>创建索引流程：</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi0wr5hej30ac09rq3i.jpg" alt="image-20210629222000040"></p>
+<p>创建索引流程.PNG</p>
+<blockquote>
+<p>IndexWriter是索引过程的核心组件，通过IndexWriter可以创建新索引、更新索引、删除索引操作。IndexWriter需要通过Directory对索引进行存储操作。</p>
+</blockquote>
+<p>Directory描述了索引的存储位置，底层封装了I/O操作，负责对索引进行存储。它是一个抽象类，它的子类常用的包括FSDirectory（在文件系统存储索引）、RAMDirectory（在内存存储索引）。</p>
+<p>代码：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line">public <span class="keyword">void</span> createIndex() throws Exception &#123;</span><br><span class="line">    <span class="comment">// 采集数据</span></span><br><span class="line">    BookDao dao = <span class="keyword">new</span> BookDaoImpl();</span><br><span class="line">    <span class="built_in">List</span>&lt;Book&gt; list = dao.queryBooks();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将采集到的数据封装到Document对象中</span></span><br><span class="line">    <span class="built_in">List</span>&lt;Document&gt; docList = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    Document <span class="built_in">document</span>;</span><br><span class="line">    <span class="keyword">for</span> (Book book : list) &#123;</span><br><span class="line">        <span class="built_in">document</span> = <span class="keyword">new</span> Document();</span><br><span class="line">        <span class="comment">// store:如果是yes，则说明存储到文档域中</span></span><br><span class="line">        <span class="comment">// 图书ID</span></span><br><span class="line">        <span class="comment">// 不分词、索引、存储 StringField</span></span><br><span class="line">        Field id = <span class="keyword">new</span> StringField(<span class="string">"id"</span>, book.getId().toString(), Store.YES);</span><br><span class="line">        <span class="comment">// 图书名称</span></span><br><span class="line">        <span class="comment">// 分词、索引、存储 TextField</span></span><br><span class="line">        Field name = <span class="keyword">new</span> TextField(<span class="string">"name"</span>, book.getName(), Store.YES);</span><br><span class="line">        <span class="comment">// 图书价格</span></span><br><span class="line">        <span class="comment">// 分词、索引、存储 但是是数字类型，所以使用FloatField</span></span><br><span class="line">        Field price = <span class="keyword">new</span> FloatField(<span class="string">"price"</span>, book.getPrice(), Store.YES);</span><br><span class="line">        <span class="comment">// 图书图片地址</span></span><br><span class="line">        <span class="comment">// 不分词、不索引、存储 StoredField</span></span><br><span class="line">        Field pic = <span class="keyword">new</span> StoredField(<span class="string">"pic"</span>, book.getPic());</span><br><span class="line">        <span class="comment">// 图书描述</span></span><br><span class="line">        <span class="comment">// 分词、索引、不存储 TextField</span></span><br><span class="line">        Field description = <span class="keyword">new</span> TextField(<span class="string">"description"</span>,</span><br><span class="line">                book.getDescription(), Store.NO);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置boost值</span></span><br><span class="line">        <span class="keyword">if</span> (book.getId() == <span class="number">4</span>)</span><br><span class="line">            description.setBoost(<span class="number">100</span>f);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 将field域设置到Document对象中</span></span><br><span class="line">        <span class="built_in">document</span>.add(id);</span><br><span class="line">        <span class="built_in">document</span>.add(name);</span><br><span class="line">        <span class="built_in">document</span>.add(price);</span><br><span class="line">        <span class="built_in">document</span>.add(pic);</span><br><span class="line">        <span class="built_in">document</span>.add(description);</span><br><span class="line"></span><br><span class="line">        docList.add(<span class="built_in">document</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建分词器，标准分词器</span></span><br><span class="line">    <span class="comment">// Analyzer analyzer = new StandardAnalyzer();</span></span><br><span class="line">    <span class="comment">// 使用ikanalyzer</span></span><br><span class="line">    Analyzer analyzer = <span class="keyword">new</span> IKAnalyzer();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IndexWriter</span></span><br><span class="line">    IndexWriterConfig cfg = <span class="keyword">new</span> IndexWriterConfig(Version.LUCENE_4_10_3,</span><br><span class="line">            analyzer);</span><br><span class="line">    <span class="comment">// 指定索引库的地址</span></span><br><span class="line">    File indexFile = <span class="keyword">new</span> File(<span class="string">"E:\\11-index\\hcx\\"</span>);</span><br><span class="line">    Directory directory = FSDirectory.open(indexFile);</span><br><span class="line">    IndexWriter writer = <span class="keyword">new</span> IndexWriter(directory, cfg);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过IndexWriter对象将Document写入到索引库中</span></span><br><span class="line">    <span class="keyword">for</span> (Document doc : docList) &#123;</span><br><span class="line">        writer.addDocument(doc);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 关闭writer</span></span><br><span class="line">    writer.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>4.3 分词</p>
+<p>在对Docuemnt中的内容索引之前需要使用分词器进行分词 ，主要过程就是分词、过虑两步。</p>
+<ul>
+<li>分词：将采集到的文档内容切分成一个一个的词，具体应该说是将Document中Field的value值切分成一个一个的词。</li>
+<li>过滤：将分好的词进行过滤，包括去除标点符号、去除停用词（的、是、a、an、the等）、大写转小写、词的形还原（复数形式转成单数形参、过去式转成现在式。。。）等。</li>
+</ul>
+<p>什么是停用词？</p>
+<blockquote>
+<p>停用词是为节省存储空间和提高搜索效率，搜索引擎在索引页面或处理搜索请求时会自动忽略某些字或词，这些字或词即被称为Stop Words(停用词)。比如语气助词、副词、介词、连接词等，通常自身并无明确的意义，只有将其放入一个完整的句子中才有一定作用，如常见的“的”、“在”、“是”、“啊”等。</p>
+</blockquote>
+<p>Lucene作为了一个工具包提供不同国家的分词器，如下图：</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi297lu7j308z08agn6.jpg" alt="image-20210629222118394"></p>
+<p>工具包.png</p>
+<p>注意由于语言不同分析器的切分规则也不同，本例子使用StandardAnalyzer，它可以对用英文进行分词。</p>
+<p>如下是org.apache.lucene.analysis.standard.standardAnalyzer的部分源码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">protected</span> TokenStreamComponents <span class="title">createComponents</span><span class="params">(<span class="keyword">final</span> String fieldName, <span class="keyword">final</span> Reader reader)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> StandardTokenizer src = <span class="keyword">new</span> StandardTokenizer(getVersion(), reader);</span><br><span class="line">    src.setMaxTokenLength(maxTokenLength);</span><br><span class="line">    TokenStream tok = <span class="keyword">new</span> StandardFilter(getVersion(), src);</span><br><span class="line">    tok = <span class="keyword">new</span> LowerCaseFilter(getVersion(), tok);</span><br><span class="line">    tok = <span class="keyword">new</span> StopFilter(getVersion(), tok, stopwords);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> TokenStreamComponents(src, tok) &#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setReader</span><span class="params">(<span class="keyword">final</span> Reader reader)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line">        src.setMaxTokenLength(StandardAnalyzer.<span class="keyword">this</span>.maxTokenLength);</span><br><span class="line">        <span class="keyword">super</span>.setReader(reader);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>Tokenizer是分词器，负责将reader转换为语汇单元即进行分词，Lucene提供了很多的分词器，也可以使用第三方的分词，比如IKAnalyzer一个中文分词器。</li>
+<li>tokenFilter是分词过滤器，负责对语汇单元进行过滤，tokenFilter可以是一个过滤器链儿，Lucene提供了很多的分词器过滤器，比如大小写转换、去除停用词等。</li>
+</ul>
+<p>如下图是语汇单元的生成过程：</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi2j1f2yj30h802wmxt.jpg" alt="image-20210629222134227"></p>
+<p>语汇单元的生成过程.png</p>
+<p>从一个Reader字符流开始，创建一个基于Reader的Tokenizer分词器，经过三个TokenFilter生成语汇单元Token。</p>
+<p>比如下边的文档经过分析器分析如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">原文档内容：</span><br><span class="line">Lucene <span class="keyword">is</span> a Java full-text search engine.  </span><br><span class="line"></span><br><span class="line">分析后得到的语汇单元：</span><br><span class="line">lucene、java、full、text、search、engine</span><br></pre></td></tr></table></figure>
+<p>同一个域中相同的语汇单元（Token）对应同一个Term（词），它记录了语汇单元的内容及所在域的域名等，还包括该token出现的频率及位置。</p>
+<ul>
+<li>不同的域中拆分出来的相同的单词对应不同的term。</li>
+<li>相同的域中拆分出来的相同的单词对应相同的term。</li>
+</ul>
+<p>例如：图书信息里面，图书名称中的java和图书描述中的java对应不同的term</p>
+<p>4.4 使用luke工具查看索引</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi2tw1qpj30bd08ydh0.jpg" alt="image-20210629222151796"></p>
+<p>luke工具.png</p>
+<p>Luke作为Lucene工具包中的一个工具（<a href="https://link.jianshu.com?t=http://www.getopt.org/luke/" target="_blank" rel="noopener">http://www.getopt.org/luke/</a>），可以通过界面来进行索引文件的查询、修改。</p>
+<p>打开Luke方法：</p>
+<ul>
+<li>命令运行：cmd运行：java  -jar lukeall-4.10.3.jar</li>
+<li>手动执行：双击lukeall-4.10.3.jar</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi3ejg44j30na0hwahc.jpg" alt="image-20210629222224913"></p>
+<p>luke1.png</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi3rrnh6j30nd0iq7gy.jpg" alt="image-20210629222245371"></p>
+<p>luke2.png</p>
+<h5 id="第二步：搜索流程"><a href="#第二步：搜索流程" class="headerlink" title="第二步：搜索流程"></a>第二步：搜索流程</h5><p>搜索过程：</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi42qeqnj30e50a7gmc.jpg" alt="image-20210629222301626"></p>
+<p>搜索过程.PNG</p>
+<ol>
+<li>用户定义查询语句，用户确定查询什么内容（输入什么关键字）<br> 指定查询语法，相当于sql语句。</li>
+<li>IndexSearcher索引搜索对象，定义了很多搜索方法，程序员调用此方法搜索。</li>
+<li>IndexReader索引读取对象，它对应的索引维护对象IndexWriter，IndexSearcher通过IndexReader读取索引目录中的索引文件</li>
+<li>Directory索引流对象，IndexReader需要Directory读取索引库，使用FSDirectory文件系统流对象</li>
+<li>IndexSearcher搜索完成，返回一个TopDocs（匹配度高的前边的一些记录）</li>
+</ol>
+<p>1.输入查询语句：</p>
+<p>同数据库的sql一样，lucene全文检索也有固定的语法：<br> 最基本的有比如：AND, OR, NOT 等</p>
+<p>举个例子，用户想找一个description中包括java关键字和lucene关键字的文档。<br> 它对应的查询语句：description:java AND lucene<br> 如下是使用luke搜索的例子：</p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNly1grzi4d7qjmj30nh0btgs8.jpg" alt="image-20210629222319734"></p>
+<p>使用luke搜索.png</p>
+<p>2.搜索分词</p>
+<p>和索引过程的分词一样，这里要对用户输入的关键字进行分词，一般情况索引和搜索使用的分词器一致。</p>
+<p>比如：输入搜索关键字“java学习”，分词后为java和学习两个词，与java和学习有关的内容都搜索出来了</p>
+<p>代码：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">@Test</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">indexSearch</span>(<span class="params"></span>) throws Exception</span> &#123;</span><br><span class="line">    <span class="comment">// 创建query对象</span></span><br><span class="line">    <span class="comment">// 使用QueryParser搜索时，需要指定分词器，搜索时的分词器要和索引时的分词器一致</span></span><br><span class="line">    <span class="comment">// 第一个参数：默认搜索的域的名称</span></span><br><span class="line">    QueryParser parser = <span class="keyword">new</span> QueryParser(<span class="string">"description"</span>,</span><br><span class="line">            <span class="keyword">new</span> StandardAnalyzer());</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过queryparser来创建query对象</span></span><br><span class="line">    <span class="comment">// 参数：输入的lucene的查询语句(关键字一定要大写)</span></span><br><span class="line">    Query query = parser.parse(<span class="string">"description:java AND lucene"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建IndexSearcher</span></span><br><span class="line">    <span class="comment">// 指定索引库的地址</span></span><br><span class="line">    File indexFile = <span class="keyword">new</span> File(<span class="string">"E:\\11-index\\hcx\\"</span>);</span><br><span class="line">    Directory directory = FSDirectory.open(indexFile);</span><br><span class="line">    IndexReader reader = DirectoryReader.open(directory);</span><br><span class="line">    IndexSearcher searcher = <span class="keyword">new</span> IndexSearcher(reader);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过searcher来搜索索引库</span></span><br><span class="line">    <span class="comment">// 第二个参数：指定需要显示的顶部记录的N条</span></span><br><span class="line">    TopDocs topDocs = searcher.search(query, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据查询条件匹配出的记录总数</span></span><br><span class="line">    <span class="keyword">int</span> count = topDocs.totalHits;</span><br><span class="line">    System.<span class="keyword">out</span>.println(<span class="string">"匹配出的记录总数:"</span> + count);</span><br><span class="line">    <span class="comment">// 根据查询条件匹配出的记录</span></span><br><span class="line">    ScoreDoc[] scoreDocs = topDocs.scoreDocs;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (ScoreDoc scoreDoc : scoreDocs) &#123;</span><br><span class="line">        <span class="comment">// 获取文档的ID</span></span><br><span class="line">        <span class="keyword">int</span> docId = scoreDoc.doc;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 通过ID获取文档</span></span><br><span class="line">        Document doc = searcher.doc(docId);</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"商品ID："</span> + doc.<span class="keyword">get</span>(<span class="string">"id"</span>));</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"商品名称："</span> + doc.<span class="keyword">get</span>(<span class="string">"name"</span>));</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"商品价格："</span> + doc.<span class="keyword">get</span>(<span class="string">"price"</span>));</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"商品图片地址："</span> + doc.<span class="keyword">get</span>(<span class="string">"pic"</span>));</span><br><span class="line">        System.<span class="keyword">out</span>.println(<span class="string">"=========================="</span>);</span><br><span class="line">        <span class="comment">// System.out.println("商品描述：" + doc.get("description"));</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 关闭资源</span></span><br><span class="line">    reader.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2021/06/29/Elasticsearch/" data-toggle="tooltip" data-placement="top" title="Elasticsearch">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="undefined"
+                    data-server="undefined"
+                    data-type="undefined"
+                    data-fixed="undefined" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Tue Jun 29 2021 22:32:59 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#Elasticsearch" title="Elasticsearch">Elasticsearch</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js"></script>
+
+<!-- Search -->
+<script src="/js/search.js"></script>
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>
