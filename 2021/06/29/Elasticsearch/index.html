@@ -395,11 +395,11 @@
 </li>
 </ul>
 <h3 id="5、删除文档-amp-索引"><a href="#5、删除文档-amp-索引" class="headerlink" title="5、删除文档&amp;索引"></a>5、删除文档&amp;索引</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE customer/external/1DELETE customer</span><br></pre></td></tr></table></figure>
-<h3 id="6、bulk批量API"><a href="#6、bulk批量API" class="headerlink" title="6、bulk批量API"></a>6、bulk批量API</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">POST customer/external/_bulk &#123;"index":&#123;"_id":"1"&#125;&#125; &#123;"name": "John Doe" &#125; &#123;"index":&#123;"_id":"2"&#125;&#125; &#123;"name": "Jane Doe" &#125; 语法格式： &#123; action: &#123; metadata &#125;&#125; &#123; request body &#125; &#123; action: &#123; metadata &#125;&#125;&#123; request body &#125;复杂实例： POST /_bulk &#123; "delete": &#123; "_index": "website", "_type": "blog", "_id": "123" &#125;&#125; &#123; "create": &#123; "_index": "website", "_type": "blog", "_id": "123" &#125;&#125;&#123; "title": "My first blog post" &#125; &#123; "index": &#123; "_index": "website", "_type": "blog" &#125;&#125; &#123; "title": "My second blog post" &#125; &#123; "update": &#123; "_index": "website", "_type": "blog", "_id": "123", "_retry_on_conflict" : 3&#125; &#125; &#123; "doc" : &#123;"title" : "My updated blog post"&#125; &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="6、bulk批量API"><a href="#6、bulk批量API" class="headerlink" title="6、bulk批量API"></a>6、bulk批量API</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">POST customer/external/_bulk &#123;"index":&#123;"_id":"1"&#125;&#125; &#123;"name": "John Doe" &#125; &#123;"index":&#123;"_id":"2"&#125;&#125; &#123;"name": "Jane Doe" &#125; 语法格式： &#123; action: &#123; metadata &#125;&#125; &#123; request body &#125; &#123; action: &#123; metadata &#125;&#125;&#123; request body &#125;复杂实例： POST /_bulk &#123; "delete": &#123; "_index": "website", "_type": "blog", "_id": "123" &#125;&#125; &#123; "create": &#123; "_index": "website", "_type": "blog", "_id": "123" &#125;&#125;&#123; "title": "My first blog post" &#125; &#123; "index": &#123; "_index": "website", "_type": "blog" &#125;&#125; &#123; "title": "My second blog post" &#125; &#123; "update": &#123; "_index": "website", "_type": "blog", "_id": "123", "_retry_on_conflict" : 3&#125; &#125; &#123; "doc" : &#123;"title" : "My updated blog post"&#125; &#125;</span><br></pre></td></tr></table></figure>
 <p>bulk API 以此按顺序执行所有的 action（动作）。如果一个单个的动作因任何原因而失败， 它将继续处理它后面剩余的动作。当 bulk API 返回时，它将提供每个动作的状态（与发送的顺序相同），所以您可以检查是否一个指定的动作是不是失败了。</p>
 <h3 id="7、样本测试数据"><a href="#7、样本测试数据" class="headerlink" title="7、样本测试数据"></a>7、样本测试数据</h3><p>一份顾客银行账户信息的虚构的 JSON 文档样本。每个文档都有下列的 schema ;</p>
 <p>（模式）: </p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;    <span class="attr">"account_number"</span>: <span class="number">0</span>,    <span class="attr">"balance"</span>: <span class="number">16623</span>,    <span class="attr">"firstname"</span>: <span class="string">"Bradshaw"</span>,    <span class="attr">"lastname"</span>: <span class="string">"Mckenzie"</span>,    <span class="attr">"age"</span>: <span class="number">29</span>,    <span class="attr">"gender"</span>: <span class="string">"F"</span>,    <span class="attr">"address"</span>: <span class="string">"244 Columbus Place"</span>,    <span class="attr">"employer"</span>: <span class="string">"Euron"</span>,    <span class="attr">"email"</span>: <span class="string">"bradshawmckenzie@euron.com"</span>,    <span class="attr">"city"</span>: <span class="string">"Hobucken"</span>,    <span class="attr">"state"</span>: <span class="string">"CO"</span>&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;    &quot;account_number&quot;: 0,    &quot;balance&quot;: 16623,    &quot;firstname&quot;: &quot;Bradshaw&quot;,    &quot;lastname&quot;: &quot;Mckenzie&quot;,    &quot;age&quot;: 29,    &quot;gender&quot;: &quot;F&quot;,    &quot;address&quot;: &quot;244 Columbus Place&quot;,    &quot;employer&quot;: &quot;Euron&quot;,    &quot;email&quot;: &quot;bradshawmckenzie@euron.com&quot;,    &quot;city&quot;: &quot;Hobucken&quot;,    &quot;state&quot;: &quot;CO&quot;&#125;</span><br></pre></td></tr></table></figure>
 <p><a href="https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true" target="_blank" rel="noopener">https://github.com/elastic/elasticsearch/blob/master/docs/src/test/resources/accounts.json?raw=true</a> 导入测试数据 </p>
 <p>POST bank/account/_bulk</p>
 <h2 id="四、进阶检索"><a href="#四、进阶检索" class="headerlink" title="四、进阶检索"></a>四、进阶检索</h2><h3 id="1、SearchAPI"><a href="#1、SearchAPI" class="headerlink" title="1、SearchAPI"></a>1、SearchAPI</h3><p>ES 支持两种基本方式检索 : </p>
@@ -624,10 +624,10 @@
                 <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
 
                 <div class="aplayer"
-                    data-id="undefined"
-                    data-server="undefined"
-                    data-type="undefined"
-                    data-fixed="undefined" >
+                    data-id=""
+                    data-server=""
+                    data-type=""
+                    data-fixed="" >
                 </div>
                 -->
                 <!-- require APlayer end -->
@@ -1058,29 +1058,12 @@ const gitment = new Gitment({
         
 
         
-            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&#34;🌱&#34;,&#34;just do it&#34;,&#34;🌾&#34;,&#34;🍀&#34;,&#34;don&#39;t give up&#34;,&#34;🍂&#34;,&#34;🌻&#34;,&#34;try it again&#34;,&#34;🍃&#34;,&#34;never say die&#34;,&#34;🌵&#34;,&#34;🌿&#34;,&#34;🌴&#34;]' color='[&#34;rgb(121,93,179)&#34; ,&#34;rgb(76,180,231)&#34; ,&#34;rgb(184,90,154)&#34; ,&#34;rgb(157,211,250)&#34; ,&#34;rgb(255,0,0)&#34; ,&#34;rgb(242,153,29)&#34; ,&#34;rgb(23,204,16)&#34; ,&#34;rgb(222,0,0)&#34; ,&#34;rgb(22,36,92)&#34; ,&#34;rgb(127,24,116)&#34; ,&#34;rgb(119,195,79)&#34; ,&#34;rgb(4,77,34)&#34; ,&#34;rgb(122,2,60)&#34;]'></script>
         
 
         <!-- background effects end -->
     
 
-<script type="text/x-mathjax-config">
-    MathJax.Hub.Config({
-        tex2jax: {
-            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
-            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
-            processEscapes: true
-        }
-    });
-    MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax();
-        for (var i = 0; i < all.length; ++i)
-            all[i].SourceElement().parentNode.className += ' has-jax';
-    });
-</script>
-<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
- -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 </body>
 
 </html>
