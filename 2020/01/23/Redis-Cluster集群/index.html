@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          Redis Cluster集群 - chenyawei-blog
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2020/01/23/Redis-Cluster集群/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS --> 
+    
+      
+<link rel="stylesheet" href="/css/dusign-light.css">
+
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    
+<link rel="stylesheet" href="/css/widget.css">
+
+
+    
+<link rel="stylesheet" href="/css/rocket.css">
+
+
+    
+<link rel="stylesheet" href="/css/signature.css">
+
+
+    
+      
+<link rel="stylesheet" href="/css/toc.css">
+
+    
+
+    
+<link rel="stylesheet" href="/css/dusign-common.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      
+<link rel="stylesheet" href="/css/font-awesome.css">
+
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                            
+                              <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
+                            
+                        </div>
+                        <h1>Redis Cluster集群</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2020-01-23
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">2k</span> and
+                                Reading Time <span class="post-count">7</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="1、Redis-Cluster简介"><a href="#1、Redis-Cluster简介" class="headerlink" title="1、Redis Cluster简介"></a>1、Redis Cluster简介</h2><p>Redis cluster是Redis的分布式解决方案。分布式环境下，不会还使用单点的redis，做到高可用和容灾，起码也是redis主从。redis的单线程工作，一台物理机只运行一个redis实例太过浪费，redis单机显然是存在单点故障的隐患。内存资源往往受限，纵向不停扩展内存并不是很实际，因此横向可伸缩扩展，需要多台主机协同提供服务，即分布式下多个Redis实例协同运行。</p>
+<h3 id="Redis-Cluster目标"><a href="#Redis-Cluster目标" class="headerlink" title="Redis Cluster目标"></a>Redis Cluster目标</h3><ol>
+<li>高性能</li>
+<li>线性扩容</li>
+<li>高可用</li>
+</ol>
+<h3 id="引入集群"><a href="#引入集群" class="headerlink" title="引入集群"></a>引入集群</h3><p>问题：</p>
+<ul>
+<li><p>容量不够，redis 如何进行扩容？ </p>
+</li>
+<li><p>并发写操作， redis 如何分摊？ </p>
+</li>
+<li><p>什么是集群： </p>
+<p>Redis 集群实现了对 Redis 的水平扩容，即启动 N 个 redis 节点，将整个数据库分布存储在这 N 个节点中，每个节点存储总数据的 1/N。 </p>
+<p>Redis 集群通过分区（partition）来提供一定程度的可用性（availability）： 即使集群中有一部分节点失效或者无法进行通讯， 集群也可以继续处理命令请求。</p>
+</li>
+</ul>
+<h2 id="2、创建集群"><a href="#2、创建集群" class="headerlink" title="2、创建集群"></a>2、创建集群</h2><h3 id="2-1-安装Ruby环境"><a href="#2-1-安装Ruby环境" class="headerlink" title="2.1 安装Ruby环境"></a>2.1 安装Ruby环境</h3><p>本身 redis 集群的安装是很麻烦了，通过 ruby 工具，可以非常方便的将一系列命令打包为一个脚本！ </p>
+<p>（1）无网环境（CentOS6） </p>
+<p><strong>依次执行</strong>在安装光盘下的 Package 目录(/media/CentOS_6.8_Final/Packages)下的 rpm 包：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh compat-readline5-5.2-17.1.el6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-libs-1.8.7.374-4.el6_6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-1.8.7.374-4.el6_6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-irb-1.8.7.374-4.el6_6.x86_64.rpm </span><br><span class="line">rpm -ivh ruby-rdoc-1.8.7.374-4.el6_6.x86_64.rpm</span><br><span class="line">rpm -ivh rubygems-1.3.7-5.el6.noarch.rpm</span><br></pre></td></tr></table></figure>
+<p>（2）无网环境（CentOS7）</p>
+<p>进入 Package 目录(/run/media/root/CentOS 7 x86_64/Packages)，拷贝如下安装包到独立目录 rpmruby</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb69vas1pkj308f08htcd.jpg" alt="image-20200123101101076"></p>
+<p>进入此目录运行如下命令，按照依赖安装</p>
+<p>rpm -Uvh *.rpm —nodeps —force</p>
+<p>（3）联网环境 </p>
+<p>在联网状态下，执行 yum 安装，执行 yum -y install ruby; </p>
+<p>之后安装 rubygem,rubygem 是 ruby 的包管理框架。yum -y install rubygems</p>
+<h3 id="2-2-安装-redis-gem"><a href="#2-2-安装-redis-gem" class="headerlink" title="2.2 安装 redis gem"></a>2.2 安装 redis gem</h3><p>redis-3.2.0.gem 是一个通过 ruby 操作 redis 的插件！ </p>
+<p>拷贝 redis-3.2.0.gem 到/opt 目录下，在 opt 目录下执行 gem install —local redis-3.2.0.gem；</p>
+<h3 id="2-3-制作6个redis-配置文件"><a href="#2-3-制作6个redis-配置文件" class="headerlink" title="2.3 制作6个redis 配置文件"></a>2.3 制作6个redis 配置文件</h3><p>端口号分别是：6379,6380,6381,6389,6390,6391 </p>
+<p>注意：每个配置文件中需要指定</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">daemonize yes: 服务在后台运行 </span><br><span class="line">port：端口号 </span><br><span class="line">pidfile:pid 保存文件 </span><br><span class="line">logfile：日志文件(如果没有指定的话，就不需要) </span><br><span class="line">dump.rdb: RDB 备份文件的名称 </span><br><span class="line">appendonly 关掉，或者是更改 appendonly 文件的名称。 </span><br><span class="line">cluster-enabled yes 打开集群模式 </span><br><span class="line">cluster-config-file nodes-6379.conf 设定节点配置文件名 </span><br><span class="line">cluster-node-timeout 15000 设定节点失联时间，超过该时间（毫秒），集群自动进行主从切换。</span><br></pre></td></tr></table></figure>
+<p>样例：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">include &#x2F;usr&#x2F;local&#x2F;myredis&#x2F;rediscluster&#x2F;redis_base.conf </span><br><span class="line">pidfile &quot;&#x2F;var&#x2F;run&#x2F;redis_6379.pid&quot; </span><br><span class="line">port 6379 </span><br><span class="line">dbfilename &quot;dump_6379.rdb&quot; </span><br><span class="line">cluster-enabled yes </span><br><span class="line">cluster-config-file nodes-6379.conf </span><br><span class="line">cluster-node-timeout 15000</span><br></pre></td></tr></table></figure>
+<p>注意在创建集群的时候，初始化的时候，把所有节点的 dump 文件全部删掉。</p>
+<h3 id="2-4-开启集群"><a href="#2-4-开启集群" class="headerlink" title="2.4 开启集群"></a>2.4 开启集群</h3><ul>
+<li>首先依次启动 6 个节点，启动后，会在当前文件夹生成 nodes-xxxx.conf 文件 </li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a1hm326j30bv02lwg4.jpg" alt="image-20200123101702935"></p>
+<ul>
+<li><p>配置集群</p>
+<p>在/opt/redis-3.2.5/src 目录下，执行命令：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.&#x2F;redis-trib.rb create --replicas 1 192.168.31.211:6379 192.168.31.211:6380 192.168.31.211:6381 192.168.31.211:6389 192.168.31.211:6390 192.168.31.211:6391</span><br></pre></td></tr></table></figure>
+<p>注意，此处不要用 127.0.0.1，请用真实 IP 地址！</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a34nxs6j30lp02a3zu.jpg" alt="image-20200123101837045"></p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a3a4aikj30kk032dia.jpg" alt="image-20200123101845271"></p>
+</li>
+<li><p>之后登录到客户端，通过 cluster nodes 命令查看集群信息</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a3z3n4gj30r2033jw5.jpg" alt="image-20200123101925666"></p>
+</li>
+<li><p>6 个节点，为什么是三主三从？</p>
+<p>配置机器，至少需要 6 个节点，否则会报错： </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a4q2u1ej30mh02mwgm.jpg" alt="image-20200123102009597"></p>
+<p>命令 create,代表创建一个集群。参数—replicas 1 表示我们希望为集群中的每个主节点创建一个从节点。一个集群至少要有<strong>三个主节点</strong>，分配原则尽量保证每个主数据库运行在不同的 IP 地址，每个从库和主库不在一个 IP 地 址上。</p>
+</li>
+</ul>
+<h3 id="2-5-slot-插槽"><a href="#2-5-slot-插槽" class="headerlink" title="2.5 slot 插槽"></a>2.5 slot 插槽</h3><p>进入集群后，如果我们，直接写入数据，可能会看到报错信息： </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6a610jlnj30eh02n3z9.jpg" alt="image-20200123102124264"></p>
+<p>这是因为，集群中多了 slot(插槽)的设计。一个 Redis 集群包含 16384 个插槽（hash slot）， 数据库中的每个 键都属于这 16384 个插槽的其中一个， 集群使用公式 CRC16(key) % 16384 来计算键 key 属于哪个槽， 其中 CRC16(key) 语句用于计算键 key 的 CRC16 校验和 。 </p>
+<p>集群中的每个节点负责处理一部分插槽。 举个例子， 如果一个集群可以有主节点， 其中： </p>
+<ul>
+<li>节点 A 负责处理 0 号至 5500 号插槽。 </li>
+<li>节点 B 负责处理 5501 号至 11000 号插槽。 </li>
+<li>节点 C 负责处理 11001 号至 16383 号插槽。</li>
+</ul>
+<h3 id="2-6-集群中写入数据"><a href="#2-6-集群中写入数据" class="headerlink" title="2.6 集群中写入数据"></a>2.6 集群中写入数据</h3><h4 id="2-6-1-客户端重定向"><a href="#2-6-1-客户端重定向" class="headerlink" title="2.6.1 客户端重定向"></a>2.6.1 客户端重定向</h4><ul>
+<li><p>在 redis-cli 每次录入、查询键值，redis 都会计算出该 key 应该送往的插槽，如果不是该客户端对应服务器插槽redis 会报错，并告知应前往的 redis 实例地址和端口。 </p>
+</li>
+<li><p>redis-cli 客户端提供了 –c 参数实现自动重定向。如 redis-cli -c –p 6379 登入后，再录入、查询键值对可以自动重定向。 </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6aa5icp0j30i801u3z6.jpg" alt="image-20200123102522197"></p>
+</li>
+<li><p>每个 slot 可以存储一批键值对。</p>
+</li>
+</ul>
+<h4 id="2-6-2-如何多键操作"><a href="#2-6-2-如何多键操作" class="headerlink" title="2.6.2 如何多键操作"></a>2.6.2 如何多键操作</h4><p>采用哈希算法后，会自动地分配 slot，而不在一个 slot 下的键值，是不能使用 mget,mset 等多键操作。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ab13p77j30h000xt9c.jpg" alt="image-20200123102613541"></p>
+<p>如果有需求，需要将一批业务数据一起插入呢？ </p>
+<p>解决：可以通过{}来定义组的概念，从而使 key 中{}内相同内容的键值对放到一个 slot 中去。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ac0ssfuj30il019gmg.jpg" alt="image-20200123102710350"></p>
+<h3 id="2-7-集群中读取数据"><a href="#2-7-集群中读取数据" class="headerlink" title="2.7 集群中读取数据"></a>2.7 集群中读取数据</h3><ul>
+<li><p>CLUSTER KEYSLOT <key> 计算键 key 应该被放置在哪个槽上 </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6afi7n2jj30c400yaa9.jpg" alt="image-20200123103031392"></p>
+</li>
+<li><p>CLUSTER COUNTKEYSINSLOT <slot> 返回槽 slot 目前包含的键值对数量 </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6afci8pgj30de00wglv.jpg" alt="image-20200123103022753"></p>
+</li>
+<li><p>CLUSTER KEYSLOT <key>:计算 key 应该放在哪个槽</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6af87otvj30d400u74h.jpg" alt="image-20200123103015499"></p>
+</li>
+<li><p>CLUSTER GETKEYSINSLOT <slot> <count> 返回 count 个 slot 槽中的键。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6af3qmf6j30cp01saai.jpg" alt="image-20200123103007786"></p>
+</li>
+</ul>
+<h3 id="2-8-集群中故障恢复"><a href="#2-8-集群中故障恢复" class="headerlink" title="2.8 集群中故障恢复"></a>2.8 集群中故障恢复</h3><p>问题 1：如果主节点下线？从节点能否自动升为主节点？ </p>
+<p>答：主节点下线，从节点自动升为主节点。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6agxu21mj30gl00h0sx.jpg" alt="image-20200123103153385"></p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ah3u8drj30se030dkn.jpg" alt="image-20200123103203503"></p>
+<p>问题 2：主节点恢复后，主从关系会如何？ </p>
+<p>主节点恢复后，主节点变为从节点！</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb6ahkdrupj30sj031q7u.jpg" alt="image-20200123103230091"></p>
+<p>问题 3：如果所有某一段插槽的主从节点都宕掉，redis 服务是否还能继续? </p>
+<p>答：服务是否继续，可以通过 redis.conf 中的 cluster-require-full-coverage 参数进行控制。 </p>
+<p>​        主从都宕掉，意味着有一片数据，会变成真空，没法再访问了！ </p>
+<p>​        如果无法访问的数据，是连续的业务数据，我们需要停止集群，避免缺少此部分数据，造成整个业务的异常。此时可以通过配置 cluster-require-full-coverage 为 yes. </p>
+<p>​        如果无法访问的数据，是相对独立的，对于其他业务的访问，并不影响，那么可以继续开启集群体提供服务。此时，可以配置 cluster-require-full-coverage 为 no。</p>
+<h3 id="2-9-集群的Jedis开发"><a href="#2-9-集群的Jedis开发" class="headerlink" title="2.9 集群的Jedis开发"></a>2.9 集群的Jedis开发</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Test</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testCluster</span><span class="params">()</span></span>&#123; </span><br><span class="line">  Set&lt;HostAndPort&gt; jedisClusterNodes = <span class="keyword">new</span> HashSet&lt;HostAndPort&gt;(); </span><br><span class="line">  <span class="comment">//Jedis Cluster will attempt to discover cluster nodes automatically </span></span><br><span class="line">  jedisClusterNodes.add(<span class="keyword">new</span> HostAndPort(<span class="string">"192.168.4.128"</span>, <span class="number">6379</span>)); </span><br><span class="line">  JedisCluster jc = <span class="keyword">new</span> JedisCluster(jedisClusterNodes); </span><br><span class="line">  jc.set(<span class="string">"foo"</span>, <span class="string">"bar"</span>); String value = jc.get(<span class="string">"foo"</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="2-10-集群的优缺点"><a href="#2-10-集群的优缺点" class="headerlink" title="2.10 集群的优缺点"></a>2.10 集群的优缺点</h3><p>优点： </p>
+<ul>
+<li>实现扩容 </li>
+<li>分摊压力 </li>
+<li>无中心配置相对简单 </li>
+</ul>
+<p>缺点： </p>
+<ul>
+<li>多键操作是不被支持的 </li>
+<li>多键的 Redis 事务是不被支持的。lua 脚本不被支持。 </li>
+<li>由于集群方案出现较晚，很多公司已经采用了其他的集群方案，而代理或者客户端分片的方案想要迁移至 redis cluster，需要整体迁移而不是逐步过渡，复杂度较大。</li>
+</ul>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2020/01/23/Redis应用案例/" data-toggle="tooltip" data-placement="top" title="Redis应用案例">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2020/01/22/Redis的Java客户端Jedis/" data-toggle="tooltip" data-placement="top" title="Redis的Java客户端Jedis">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="undefined"
+                    data-server="undefined"
+                    data-type="undefined"
+                    data-fixed="undefined" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Thu Jan 23 2020 10:38:21 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                        
+                          <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- Search -->
+
+<script src="/js/search.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>

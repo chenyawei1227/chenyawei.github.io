@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          异步和线程池 - chenyawei-blog
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2021/09/15/异步和线程池/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS --> 
+    
+      
+<link rel="stylesheet" href="/css/dusign-light.css">
+
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    
+<link rel="stylesheet" href="/css/widget.css">
+
+
+    
+<link rel="stylesheet" href="/css/rocket.css">
+
+
+    
+<link rel="stylesheet" href="/css/signature.css">
+
+
+    
+      
+<link rel="stylesheet" href="/css/toc.css">
+
+    
+
+    
+<link rel="stylesheet" href="/css/dusign-common.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      
+<link rel="stylesheet" href="/css/font-awesome.css">
+
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#java" title="java">java</a>
+                            
+                              <a class="tag" href="/tags/#基础理解" title="基础理解">基础理解</a>
+                            
+                        </div>
+                        <h1>异步和线程池</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2021-09-15
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">5.9k</span> and
+                                Reading Time <span class="post-count">27</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h3 id="一、初始化线程的4种方式"><a href="#一、初始化线程的4种方式" class="headerlink" title="一、初始化线程的4种方式"></a>一、初始化线程的4种方式</h3><h4 id="1、继承Thread"><a href="#1、继承Thread" class="headerlink" title="1、继承Thread"></a>1、继承Thread</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadTest</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">   		   Thread thread = <span class="keyword">new</span> Thread01();</span><br><span class="line">         thread.start();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Thread01</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"当前线程："</span> + Thread.currentThread().getId());</span><br><span class="line">            <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">"运行结果："</span> + i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2、实现Runnable接口"><a href="#2、实现Runnable接口" class="headerlink" title="2、实现Runnable接口"></a>2、实现Runnable接口</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadTest</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">   		   Runable01 runable01 = <span class="keyword">new</span> Runable01();</span><br><span class="line">         runable01.run();</span><br><span class="line">   &#125;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Runable01</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">      <span class="meta">@Override</span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"当前线程："</span> + Thread.currentThread().getId());</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">        System.out.println(<span class="string">"运行结果："</span> + i);</span><br><span class="line">      &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3、实现Callable接口-FutureTask-可以拿到返回结果-可以处理异常"><a href="#3、实现Callable接口-FutureTask-可以拿到返回结果-可以处理异常" class="headerlink" title="3、实现Callable接口 + FutureTask(可以拿到返回结果,可以处理异常)"></a>3、实现Callable接口 + FutureTask(可以拿到返回结果,可以处理异常)</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadTest</span> </span>&#123;</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">   		   FutureTask&lt;Integer&gt; futureTask = <span class="keyword">new</span> FutureTask&lt;&gt;(<span class="keyword">new</span> Callable01());</span><br><span class="line">         futureTask.run();</span><br><span class="line">         System.out.println(futureTask.get());</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Callable01</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Integer <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"当前线程："</span> + Thread.currentThread().getId());</span><br><span class="line">            <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">"运行结果："</span> + i);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4、线程池"><a href="#4、线程池" class="headerlink" title="4、线程池"></a>4、线程池</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadTest</span> </span>&#123;</span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> ExecutorService executor = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">   <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">   		   executor.execute(<span class="keyword">new</span> Runable01());  <span class="comment">// 无返回值</span></span><br><span class="line">         Future&lt;Integer&gt; submit = executor.submit(<span class="keyword">new</span> Callable01()); <span class="comment">// 有返回值</span></span><br><span class="line">         submit.get();</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Runable01</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"当前线程："</span> + Thread.currentThread().getId());</span><br><span class="line">            <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">"运行结果："</span> + i);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">Callable01</span> <span class="keyword">implements</span> <span class="title">Callable</span>&lt;<span class="title">Integer</span>&gt; </span>&#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> Integer <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">            System.out.println(<span class="string">"当前线程："</span> + Thread.currentThread().getId());</span><br><span class="line">            <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">            System.out.println(<span class="string">"运行结果："</span> + i);</span><br><span class="line">            <span class="keyword">return</span> i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>方式 1 和方式 2：主进程无法获取线程的运算结果。方式 3：主进程可以获取线程的运算结果，但是不利于控制服务器中的线程资源。可以导致服务器资源耗尽。业务代码中使用线程池的方式进行并行开发.</p>
+<h3 id="二、线程池的使用"><a href="#二、线程池的使用" class="headerlink" title="二、线程池的使用"></a>二、线程池的使用</h3><h4 id="1、线程池的七大参数"><a href="#1、线程池的七大参数" class="headerlink" title="1、线程池的七大参数"></a>1、线程池的七大参数</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 1、int corePoolSize,</span></span><br><span class="line"><span class="comment"> * 2、int maximumPoolSize,</span></span><br><span class="line"><span class="comment"> * 3、long keepAliveTime,</span></span><br><span class="line"><span class="comment"> * 4、TimeUnit unit,</span></span><br><span class="line"><span class="comment"> * 5、BlockingQueue&lt;Runnable&gt; workQueue,</span></span><br><span class="line"><span class="comment"> * 6、ThreadFactory threadFactory,</span></span><br><span class="line"><span class="comment"> * 7、RejectedExecutionHandler handler</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">ExecutorService threadPool = <span class="keyword">new</span> ThreadPoolExecutor(</span><br><span class="line">        <span class="number">200</span>,</span><br><span class="line">        <span class="number">10</span>,</span><br><span class="line">        <span class="number">10L</span>,</span><br><span class="line">        TimeUnit.SECONDS,</span><br><span class="line">        <span class="keyword">new</span> LinkedBlockingDeque&lt;Runnable&gt;(<span class="number">10000</span>),</span><br><span class="line">        Executors.defaultThreadFactory(),</span><br><span class="line">        <span class="keyword">new</span> ThreadPoolExecutor.AbortPolicy()</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+<h5 id="1-、int-corePoolSize"><a href="#1-、int-corePoolSize" class="headerlink" title="1)、int corePoolSize"></a>1)、int corePoolSize</h5><p>–  the number of threads to keep in the pool, even if they are idle, unless allowCoreThreadTimeOut is set.</p>
+<p>池中一直保持的线程的数量,即使线程空闲.除非设置了allowCoreThreadTimeOut</p>
+<h5 id="2-、maximumPoolSize"><a href="#2-、maximumPoolSize" class="headerlink" title="2)、maximumPoolSize"></a>2)、maximumPoolSize</h5><p>– the maximum number of threads to allow in the pool</p>
+<p>池中允许的最大线程数</p>
+<h5 id="3-、keepAliveTime"><a href="#3-、keepAliveTime" class="headerlink" title="3)、keepAliveTime"></a>3)、keepAliveTime</h5><p>– when the number of threads is greater than the core, this is the maximum time that excess idle threads will wait for new tasks before terminating.</p>
+<p>当线程数大于核心数时，这是多余的空闲线程在终止前等待新任务的最长时间。最终线程池维持在corePoolSize大小</p>
+<h5 id="4-、unit"><a href="#4-、unit" class="headerlink" title="4)、unit"></a>4)、unit</h5><p>– the time unit for the keepAliveTime argument</p>
+<p>keepAliveTime参数的时间单位</p>
+<h5 id="5-、workQueue"><a href="#5-、workQueue" class="headerlink" title="5)、workQueue"></a>5)、workQueue</h5><p>– the queue to use for holding tasks before they are executed. This queue will hold only the Runnable tasks submitted by the execute method.</p>
+<p>用于在执行任务之前保存任务的队列。 这个队列将只保存 execute 方法提交的 Runnable 任务。</p>
+<p>阻塞队列,用来存储等待执行的任务,如果当前对线程的需求超过了corePoolSize大小,就会放在这里等待空闲线程执行.</p>
+<h5 id="6-、threadFactory"><a href="#6-、threadFactory" class="headerlink" title="6)、threadFactory"></a>6)、threadFactory</h5><p> – the factory to use when the executor creates a new thread</p>
+<p>创建线程的工厂,比如指定线程名等</p>
+<h5 id="7-、handler"><a href="#7-、handler" class="headerlink" title="7)、handler"></a>7)、handler</h5><p> – the handler to use when execution is blocked because the thread bounds and queue capacities are reached</p>
+<p>由于达到线程边界和队列容量而阻塞执行时要使用的处理程序. </p>
+<p>拒绝策略,如果线程慢了,线程池就会使用拒绝策略.</p>
+<h4 id="2、运行流程"><a href="#2、运行流程" class="headerlink" title="2、运行流程"></a>2、运行流程</h4><h5 id="1-、线程池创建，准备好core数量的核心线程，准备接受任务"><a href="#1-、线程池创建，准备好core数量的核心线程，准备接受任务" class="headerlink" title="1)、线程池创建，准备好core数量的核心线程，准备接受任务"></a>1)、线程池创建，准备好core数量的核心线程，准备接受任务</h5><h5 id="2-、新的任务进来-用core线程最好的空闲线程执行"><a href="#2-、新的任务进来-用core线程最好的空闲线程执行" class="headerlink" title="2)、新的任务进来,用core线程最好的空闲线程执行"></a>2)、新的任务进来,用core线程最好的空闲线程执行</h5><ul>
+<li>1、core满了，就将再进来的任务放入阻塞队列中。空闲的core就会自己去阻塞队列取任务执行</li>
+<li>2、阻塞队列满了，就直接开新线程执行，最大只能开到max指定的数量 (new LinkedBlockingDeque&lt;&gt;(): 默认是Integer的最大值。并发量很大时可能会内存不够,可以指定阻塞队列的数量)</li>
+<li>3、max都执行完成,有很多空闲，指定的时间keepAliveTime以后，max减去core的这些线程自动销毁.最终保持到core大小</li>
+<li>4、如果线程数开到了max的数量,还有新任务进来,就用Handler指定的拒绝策略进行处理</li>
+</ul>
+<h5 id="3-、所有的线程创建都是由指定的factory创建的"><a href="#3-、所有的线程创建都是由指定的factory创建的" class="headerlink" title="3)、所有的线程创建都是由指定的factory创建的."></a>3)、所有的线程创建都是由指定的factory创建的.</h5><h4 id="3、常见的4种线程池"><a href="#3、常见的4种线程池" class="headerlink" title="3、常见的4种线程池"></a>3、常见的4种线程池</h4><ul>
+<li><p>newCachedThreadPool()</p>
+<p>创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。 60 秒内未使用的线程将被终止并从缓存中删除。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newCachedThreadPool</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">0</span>, Integer.MAX_VALUE,</span><br><span class="line">                                      <span class="number">60L</span>, TimeUnit.SECONDS,</span><br><span class="line">                                      <span class="keyword">new</span> SynchronousQueue&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>newFixedThreadPool(5)</p>
+<p>创建一个线程池，该线程池重用固定数量的线程在共享的无界队列中运行。 在任何时候，最多 nThreads 个线程将是活动的处理任务。 如果在所有线程都处于活动状态时提交了其他任务，它们将在队列中等待，直到有线程可用。 如果任何线程在关闭前的执行过程中因失败而终止，则在需要执行后续任务时，将有一个新线程取而代之。 池中的线程将一直存在，直到它被明确关闭。</p>
+<p>参数：nThreads——池中的线程数</p>
+<p>返回：新创建的线程池</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newFixedThreadPool</span><span class="params">(<span class="keyword">int</span> nThreads)</span> </span>&#123;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> ThreadPoolExecutor(nThreads, nThreads,</span><br><span class="line">                                     <span class="number">0L</span>, TimeUnit.MILLISECONDS,</span><br><span class="line">                                     <span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;());</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>newScheduledThreadPool(5)</p>
+<p>创建一个线程池，可以安排命令在给定延迟后运行，或定期执行。</p>
+<p>参数：corePoolSize——要保留在池中的线程数，即使它们是空闲的. </p>
+<p>返回：新创建的调度线程池</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ScheduledExecutorService <span class="title">newScheduledThreadPool</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ScheduledThreadPoolExecutor(corePoolSize);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ScheduledThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">super</span>(corePoolSize, Integer.MAX_VALUE, <span class="number">0</span>, NANOSECONDS,<span class="keyword">new</span> DelayedWorkQueue());</span><br><span class="line">&#125;    </span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="title">ThreadPoolExecutor</span><span class="params">(<span class="keyword">int</span> corePoolSize,<span class="keyword">int</span> maximumPoolSize,<span class="keyword">long</span> keepAliveTime,TimeUnit unit,</span></span></span><br><span class="line"><span class="function"><span class="params">                         BlockingQueue&lt;Runnable&gt; workQueue)</span></span>&#123;</span><br><span class="line">    <span class="keyword">this</span>(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue,</span><br><span class="line">    Executors.defaultThreadFactory(), defaultHandler);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>newSingleThreadExecutor</p>
+<p>创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。</p>
+<p>返回：新创建的单线程Executor</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newSingleThreadExecutor</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> FinalizableDelegatedExecutorService(</span><br><span class="line">      <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">1</span>, <span class="number">1</span>,<span class="number">0L</span>,TimeUnit.MILLISECONDS,<span class="keyword">new</span> LinkedBlockingQueue&lt;Runnable&gt;())</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>与其他等效的 newFixedThreadPool(1) 不同，返回的执行器保证不可重新配置以使用其他线程。 它保证不能重新配置从而使用其他线程。比如以下代码：</p>
+<p>(ThreadPoolExecutor) es2;  这行代码会报错.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	ExecutorService es1 = Executors.newFixedThreadPool(<span class="number">1</span>);</span><br><span class="line">	ExecutorService es2 = Executors.newSingleThreadExecutor();</span><br><span class="line">  </span><br><span class="line">	ThreadPoolExecutor tp1 = (ThreadPoolExecutor) es1;</span><br><span class="line">	tp1.setCorePoolSize(<span class="number">2</span>);</span><br><span class="line">	System.out.println(tp1.getCorePoolSize());</span><br><span class="line">  </span><br><span class="line">	ThreadPoolExecutor tp2 = (ThreadPoolExecutor) es2;</span><br><span class="line">	tp1.setCorePoolSize(<span class="number">2</span>);</span><br><span class="line">	System.out.println(tp1.getCorePoolSize());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">2</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.ClassCastException: java.util.concurrent.Executors$FinalizableDelegatedExecutorService cannot be cast to java.util.concurrent.ThreadPoolExecutor</span><br><span class="line">	at com.atguigu.gulimall.search.thread.PoolTest.main(PoolTest.java:21)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h4 id="4、开发中为什么使用线程池"><a href="#4、开发中为什么使用线程池" class="headerlink" title="4、开发中为什么使用线程池"></a>4、开发中为什么使用线程池</h4><ul>
+<li><p>降低资源的消耗</p>
+<p>通过重复利用已经创建好的线程降低线程的创建和销毁带来的损耗 </p>
+</li>
+<li><p>提高响应速度</p>
+<p>因为线程池中的线程数没有超过线程池的最大上限时，有的线程处于等待分配任务的状态,当任务来时无需创建新的线程就能执行 </p>
+</li>
+<li><p>提高线程的可管理性</p>
+<p>线程池会根据当前系统特点对池内的线程进行优化处理，减少创建和销毁线程带来的系统开销。无限的创建和销毁线程不仅消耗系统资源，还降低系统的稳定性，使用线程池进行统一分配</p>
+</li>
+</ul>
+<h3 id="三、CompleTableFuture-异步编排"><a href="#三、CompleTableFuture-异步编排" class="headerlink" title="三、CompleTableFuture 异步编排"></a>三、CompleTableFuture 异步编排</h3><p>业务场景： </p>
+<p>查询商品详情页的逻辑比较复杂，有些数据还需要远程调用，必然需要花费更多的时间。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1、获取sku的基本信息 0.5s</span><br><span class="line">2、获取sku的图片信息 0.5s</span><br><span class="line">3、获取sku的促销信息 1s</span><br><span class="line">4、获取spu的所有销售属性 1s</span><br><span class="line">5、获取规格参数组及组下的规格参数 1.5s</span><br><span class="line">6、spu 详情 1s</span><br></pre></td></tr></table></figure>
+<p>假如商品详情页的每个查询，需要如下标注的时间才能完成.那么，用户需要 5.5s 后才能看到商品详情页的内容。很显然是不能接受的。如果有多个线程同时完成这 6 步操作，也许只需要 1.5s 即可完成响应。 </p>
+<p>Future 是 Java 5 添加的类，用来描述一个异步计算的结果。你可以使用<em>isDone</em>方法检查计算是否完成，或者使用<code>get</code>阻塞住调用线程，直到计算完成返回结果，你也可以使用<em>cancel</em>方法停止任务的执行。 </p>
+<p>虽然<code>Future</code>以及相关使用方法提供了异步执行任务的能力，但是对于结果的获取却是很不方便，只能通过阻塞或者轮询的方式得到任务的结果。阻塞的方式显然和我们的异步编程的初衷相违背，轮询的方式又会耗费无谓的CPU资源，而且也不能及时地得到计算结果,为什么不能用观察者设计模式当计算结果完成及时通知监听者呢？ </p>
+<p>很多语言，比如 Node.js，采用回调的方式实现异步编程。Java 的一些框架，比如 Netty，自己扩展了 Java 的<code>Future</code>接口，提供了<code>addListener</code>等多个扩展方法；Google guava 也提供了通用的扩展 Future；Scala 也提供了简单易用且功能强大的 Future/Promise 异步编程模式。作为正统的 Java 类库，是不是应该做点什么，加强一下自身库的功能呢？</p>
+<p>在 Java 8 中, 新增加了一个包含 50 个方法左右的类: CompletableFuture，提供了非常强大的Future 的扩展功能，可以帮助我们简化异步编程的复杂性，提供了函数式编程的能力，可以通过回调的方式处理计算结果，并且提供了转换和组合 CompletableFuture 的方法。CompletableFuture 类实现了 Future 接口，所以你还是可以像以前一样通过<code>get</code>方法阻塞或者轮询的方式获得结果，但是这种方式不推荐使用。 </p>
+<p>CompletableFuture 和 FutureTask 同属于 Future 接口的实现类，都可以获取线程的执行结果。 </p>
+<p><img src="https://tva1.sinaimg.cn/large/008i3skNgy1gug082x1xtj60ff08jweq02.jpg" alt="image-20210914113919587"></p>
+<h4 id="1、创建异步对象"><a href="#1、创建异步对象" class="headerlink" title="1、创建异步对象"></a>1、创建异步对象</h4><p>CompletableFuture 提供了四个静态方法来创建一个异步操作.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">runAsync</span><span class="params">(Runnable runnable)</span> </span>&#123;</span><br><span class="line"><span class="keyword">return</span> asyncRunStage(asyncPool, runnable);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">runAsync</span><span class="params">(Runnable runnable,Executor executor)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> asyncRunStage(screenExecutor(executor), runnable);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> asyncSupplyStage(asyncPool, supplier);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">supplyAsync</span><span class="params">(Supplier&lt;U&gt; supplier,Executor executor)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> asyncSupplyStage(screenExecutor(executor), supplier);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>runAsync 都是没有返回结果的，supplyAsync 都是可以获取返回结果的; 可以传入自定义的线程池executor，否则就用默认的线程池；</p>
+<p>实例:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;Void&gt; future &#x3D; CompletableFuture.runAsync(() -&gt; &#123;</span><br><span class="line">    System.out.println(&quot;runAsync当前线程：&quot; + Thread.currentThread().getName());</span><br><span class="line">    int j &#x3D; 10 &#x2F; 2;</span><br><span class="line">    System.out.println(&quot;runAsync运行结果：&quot; + j);</span><br><span class="line">&#125;, executor);</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 方法完成后的感知</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">CompletableFuture&lt;Integer&gt; future1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">    System.out.println(<span class="string">"whenComplete当前线程："</span> + Thread.currentThread().getName());</span><br><span class="line">    <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">0</span>;</span><br><span class="line">    System.out.println(<span class="string">"whenComplete运行结果："</span> + i);</span><br><span class="line">    <span class="keyword">return</span> i;</span><br><span class="line">&#125;, executor).whenComplete((res,exception) -&gt; &#123;</span><br><span class="line">    <span class="comment">//虽然能得到异常信息，但是没法修改返回数据</span></span><br><span class="line">    System.out.println(<span class="string">"whenComplete异步任务成功完成了...结果是："</span> + res + <span class="string">"异常是："</span> + exception);</span><br><span class="line">&#125;).exceptionally(throwable -&gt; &#123;</span><br><span class="line">    <span class="comment">//可以感知异常，同时返回默认值</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">&#125;);</span><br><span class="line">System.out.println(<span class="string">"whenComplete获取最终结果："</span>+future1.get());</span><br></pre></td></tr></table></figure>
+<h4 id="2、计算完成时回调方法"><a href="#2、计算完成时回调方法" class="headerlink" title="2、计算完成时回调方法"></a>2、计算完成时回调方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">whenComplete</span><span class="params">(BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> Throwable&gt; action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniWhenCompleteStage(<span class="keyword">null</span>, action);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">whenCompleteAsync</span><span class="params">(BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> Throwable&gt; action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniWhenCompleteStage(asyncPool, action);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">whenCompleteAsync</span><span class="params">(BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> Throwable&gt; action, Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniWhenCompleteStage(screenExecutor(executor), action);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;T&gt; <span class="title">exceptionally</span><span class="params">(Function&lt;Throwable, ? extends T&gt; fn)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniExceptionallyStage(fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>whenComplete 可以处理正常和异常的计算结果，exceptionally 处理异常情况。 </p>
+</li>
+<li><p>whenComplete 和 whenCompleteAsync 的区别： </p>
+<p>whenComplete：是执行当前任务的线程执行继续执行 whenComplete 的任务。 </p>
+<p>whenCompleteAsync：是执行把 whenCompleteAsync 这个任务继续提交给线程池来进行执行。 </p>
+</li>
+</ul>
+<p>方法不以 Async 结尾，意味着 Action 使用相同的线程执行，而Async可能会使用其他线程执行（如果是使用相同的线程池，也可能会被同一个线程选中执行）</p>
+<p>例子: whenComplete方法完成后的感知:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> ExecutorService executor = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">        CompletableFuture&lt;Integer&gt; future1 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">          System.out.println(<span class="string">"whenComplete当前线程："</span> + Thread.currentThread().getName());</span><br><span class="line">          <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">0</span>;</span><br><span class="line">          System.out.println(<span class="string">"whenComplete运行结果："</span> + i);</span><br><span class="line">          <span class="keyword">return</span> i;</span><br><span class="line">        &#125;, executor).whenComplete((res,exception) -&gt; &#123;</span><br><span class="line">          <span class="comment">//虽然能得到异常信息，但是没法修改返回数据</span></span><br><span class="line">          System.out.println(<span class="string">"whenComplete异步任务成功完成了...结果是："</span> + res + <span class="string">"异常是："</span> + exception);</span><br><span class="line">        &#125;).exceptionally(throwable -&gt; &#123;</span><br><span class="line">          <span class="comment">//可以感知异常，同时返回默认值</span></span><br><span class="line">          <span class="keyword">return</span> <span class="number">10</span>;</span><br><span class="line">        &#125;);</span><br><span class="line">        System.out.println(<span class="string">"whenComplete获取最终结果："</span>+future1.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3、handle方法"><a href="#3、handle方法" class="headerlink" title="3、handle方法"></a>3、handle方法</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">handle</span><span class="params">(BiFunction&lt;? <span class="keyword">super</span> T, Throwable, ? extends U&gt; fn)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniHandleStage(<span class="keyword">null</span>, fn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">handleAsync</span><span class="params">(BiFunction&lt;? <span class="keyword">super</span> T, Throwable, ? extends U&gt; fn)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniHandleStage(asyncPool, fn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">handleAsync</span><span class="params">(BiFunction&lt;? <span class="keyword">super</span> T, Throwable, ? extends U&gt; fn, Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniHandleStage(screenExecutor(executor), fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和 complete 一样，可对结果做最后的处理（可处理异常），可改变返回值。</p>
+<p>例子: 方法执行完成后的处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ThreadTest</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> ExecutorService executor = Executors.newFixedThreadPool(<span class="number">10</span>);</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> ExecutionException, InterruptedException </span>&#123;</span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">          * 方法执行完成后的处理</span></span><br><span class="line"><span class="comment">          */</span></span><br><span class="line">          CompletableFuture&lt;Integer&gt; future2 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">              System.out.println(<span class="string">"handle当前线程："</span> + Thread.currentThread().getName());</span><br><span class="line">              <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">              System.out.println(<span class="string">"handle运行结果："</span> + i);</span><br><span class="line">              <span class="keyword">return</span> i;</span><br><span class="line">          &#125;, executor).handle((result,thr) -&gt; &#123;</span><br><span class="line">              <span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">                  <span class="keyword">return</span> result * <span class="number">2</span>;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">if</span> (thr != <span class="keyword">null</span>) &#123;</span><br><span class="line">                  System.out.println(<span class="string">"handle异步任务成功完成了...结果是："</span> + result + <span class="string">"异常是："</span> + thr);</span><br><span class="line">                  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">          &#125;);</span><br><span class="line">          System.out.println(<span class="string">"handle获取最终结果："</span>+future2.get());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="4、线程串行化方法"><a href="#4、线程串行化方法" class="headerlink" title="4、线程串行化方法"></a>4、线程串行化方法</h4><p>1)、thenRun：只要上面的任务执行完成，就开始执行 thenRun，只是处理完任务后，执行thenRun的后续操作带有Async 默认是异步执行的。同之前。以上都要前置任务成功完成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRun</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> uniRunStage(<span class="keyword">null</span>, action);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRunAsync</span><span class="params">(Runnable action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniRunStage(asyncPool, action);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenRunAsync</span><span class="params">(Runnable action,Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniRunStage(screenExecutor(executor), action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;Void&gt; future3 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"thenRunAsync当前线程："</span> + Thread.currentThread().getName());</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">  System.out.println(<span class="string">"thenRunAsync运行结果："</span> + i);</span><br><span class="line">  <span class="keyword">return</span> i;</span><br><span class="line">&#125;, executor).thenRunAsync(() -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"thenRunAsync任务2启动了..."</span>);</span><br><span class="line">&#125;, executor);</span><br></pre></td></tr></table></figure>
+<p>2)、thenAcceptAsync：能接受上一步结果，并消费处理，无返回结果。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenAccept</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniAcceptStage(<span class="keyword">null</span>, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenAcceptAsync</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniAcceptStage(asyncPool, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">thenAcceptAsync</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> T&gt; action,Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniAcceptStage(screenExecutor(executor), action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;Void&gt; future3 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"thenAcceptAsync当前线程："</span> + Thread.currentThread().getName());</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">  System.out.println(<span class="string">"thenAcceptAsync运行结果："</span> + i);</span><br><span class="line">  <span class="keyword">return</span> i;</span><br><span class="line">&#125;, executor).thenAcceptAsync(res -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"thenAcceptAsync任务2启动了..."</span> + res);</span><br><span class="line">&#125;, executor);</span><br></pre></td></tr></table></figure>
+<p>3)、thenApplyAsync：当一个线程依赖另一个线程时，获取上一个任务返回的结果，并返回当前任务的返回值。Function&lt;? super T,? extends U&gt; T：上一个任务返回结果的类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenApply</span><span class="params">(Function&lt;? <span class="keyword">super</span> T,? extends U&gt; fn)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniApplyStage(<span class="keyword">null</span>, fn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenApplyAsync</span><span class="params">(Function&lt;? <span class="keyword">super</span> T,? extends U&gt; fn)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniApplyStage(asyncPool, fn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">thenApplyAsync</span><span class="params">(Function&lt;? <span class="keyword">super</span> T,? extends U&gt; fn, Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> uniApplyStage(screenExecutor(executor), fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; future3 = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"thenApplyAsync当前线程："</span> + Thread.currentThread().getName());</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">  System.out.println(<span class="string">"thenApplyAsync运行结果："</span> + i);</span><br><span class="line">  <span class="keyword">return</span> i;</span><br><span class="line">&#125;, executor).thenApplyAsync(res -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"thenApplyAsync任务2启动了..."</span> + res);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"Hello"</span> + res;</span><br><span class="line">&#125;, executor);</span><br><span class="line">System.out.println(<span class="string">"thenApplyAsync获取最终结果："</span>+future3.get());</span><br></pre></td></tr></table></figure>
+<h4 id="5、两个任务组合-都要完成"><a href="#5、两个任务组合-都要完成" class="headerlink" title="5、两个任务组合-都要完成,"></a>5、两个任务组合-都要完成,</h4><p>两个任务必须都完成，触发该任务</p>
+<p>1)、runAfterBoth：组合两个 future，不需要获取 future 的结果，只需两个 future 处理完任务后,处理该任务。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterBoth</span><span class="params">(CompletionStage&lt;?&gt; other,Runnable action)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biRunStage(<span class="keyword">null</span>, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterBothAsync</span><span class="params">(CompletionStage&lt;?&gt; other,Runnable action)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biRunStage(asyncPool, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterBothAsync</span><span class="params">(CompletionStage&lt;?&gt; other,Runnable action,Executor executor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biRunStage(screenExecutor(executor), other, action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2)、thenAccept: 组合两个 future，获取两个 future 任务的返回结果，然后处理任务，没有返回值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;Void&gt; <span class="title">thenAcceptBoth</span><span class="params">(CompletionStage&lt;? extends U&gt; other,BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> U&gt; action)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biAcceptStage(<span class="keyword">null</span>, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;Void&gt; <span class="title">thenAcceptBothAsync</span><span class="params">(CompletionStage&lt;? extends U&gt; other,BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> U&gt; action)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biAcceptStage(asyncPool, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;Void&gt; <span class="title">thenAcceptBothAsync</span><span class="params">(CompletionStage&lt;? extends U&gt; other,BiConsumer&lt;? <span class="keyword">super</span> T, ? <span class="keyword">super</span> U&gt; action, Executor executor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biAcceptStage(screenExecutor(executor), other, action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3)、thenCombine: 组合两个 future，获取两个 future 的返回结果，并返回当前任务的返回值 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="keyword">public</span> &lt;U,V&gt; <span class="function">CompletableFuture&lt;V&gt; <span class="title">thenCombine</span><span class="params">(CompletionStage&lt;? extends U&gt; other,BiFunction&lt;? <span class="keyword">super</span> T,? <span class="keyword">super</span> U,? extends V&gt; fn)</span> </span>&#123;</span><br><span class="line">     <span class="keyword">return</span> biApplyStage(<span class="keyword">null</span>, other, fn);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U,V&gt; <span class="function">CompletableFuture&lt;V&gt; <span class="title">thenCombineAsync</span><span class="params">(CompletionStage&lt;? extends U&gt; other, BiFunction&lt;? <span class="keyword">super</span> T,? <span class="keyword">super</span> U,? extends V&gt; fn)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biApplyStage(asyncPool, other, fn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U,V&gt; <span class="function">CompletableFuture&lt;V&gt; <span class="title">thenCombineAsync</span><span class="params">(CompletionStage&lt;? extends U&gt; other,BiFunction&lt;? <span class="keyword">super</span> T,? <span class="keyword">super</span> U,? extends V&gt; fn, Executor executor)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> biApplyStage(screenExecutor(executor), other, fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;Object&gt; future_001 = CompletableFuture.supplyAsync(()-&gt;&#123;</span><br><span class="line">  System.out.println(<span class="string">"任务1线程："</span> + Thread.currentThread().getName());</span><br><span class="line">  <span class="keyword">int</span> i = <span class="number">10</span> / <span class="number">2</span>;</span><br><span class="line">  System.out.println(<span class="string">"任务1结束："</span> + i);</span><br><span class="line">  <span class="keyword">return</span> i;</span><br><span class="line">&#125;,executor);</span><br><span class="line"></span><br><span class="line">CompletableFuture&lt;Object&gt; future_002 = CompletableFuture.supplyAsync(()-&gt;&#123;</span><br><span class="line">  System.out.println(<span class="string">"任务2线程："</span> + Thread.currentThread().getName());</span><br><span class="line">  <span class="keyword">try</span> &#123;</span><br><span class="line">    Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    System.out.println(<span class="string">"任务2结束："</span>);</span><br><span class="line">  &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"Hello "</span>;</span><br><span class="line">&#125;,executor);</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* runAfterBothAsync：不能感知到future_001 和 future_002的结果(自己无返回)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">future_001.runAfterBothAsync(future_002,()-&gt;&#123;</span><br><span class="line">  System.out.println(<span class="string">"任务3开始"</span>);</span><br><span class="line">&#125;,executor);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 可以感知到future_001 和 future_002的结果(自己无返回)</span></span><br><span class="line"><span class="comment">* void accept(T t, U u); f1和f2为两个对应返回的结果</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">future_001.thenAcceptBothAsync(future_002,(f1,f2)-&gt;&#123;</span><br><span class="line">  System.out.println(<span class="string">"thenAcceptBothAsync任务3返回：f1= "</span> + f1 + <span class="string">" f2= "</span> + f2);</span><br><span class="line">&#125;,executor);</span><br><span class="line"></span><br><span class="line"> <span class="comment">/**</span></span><br><span class="line"><span class="comment"> *  可以感知到future_001 和 future_002的结果(自己有返回结果)</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">CompletableFuture&lt;String&gt; stringCompletableFuture = future_001.thenCombineAsync(future_002, (f1, f2) -&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> f1 + <span class="string">": "</span> + f2 + <span class="string">"===="</span>;</span><br><span class="line">&#125;, executor);</span><br><span class="line">System.out.println(<span class="string">"thenCombineAsync返回结果："</span> + stringCompletableFuture.get());</span><br></pre></td></tr></table></figure>
+<h4 id="6、两个任务组合-一个完成"><a href="#6、两个任务组合-一个完成" class="headerlink" title="6、两个任务组合-一个完成"></a>6、两个任务组合-一个完成</h4><p>当两个任务中，任意一个 future 任务完成的时候，执行任务。 </p>
+<p>1)、acceptEither：两个任务有一个执行完成，获取它的返回值，处理任务，没有新的返回值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">acceptEither</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  CompletionStage&lt;? extends T&gt; other, Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orAcceptStage(<span class="keyword">null</span>, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">acceptEitherAsync</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  CompletionStage&lt;? extends T&gt; other, Consumer&lt;? <span class="keyword">super</span> T&gt; action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orAcceptStage(asyncPool, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">acceptEitherAsync</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">  CompletionStage&lt;? extends T&gt; other, Consumer&lt;? <span class="keyword">super</span> T&gt; action,</span></span></span><br><span class="line"><span class="function"><span class="params">  Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orAcceptStage(screenExecutor(executor), other, action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>2)、runAfterEither：两个任务有一个执行完成，不需要获取 future 的结果，处理任务，也没有返回值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterEither</span><span class="params">(CompletionStage&lt;?&gt; other,Runnable action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orRunStage(<span class="keyword">null</span>, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterEitherAsync</span><span class="params">(CompletionStage&lt;?&gt; other,Runnable action)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orRunStage(asyncPool, other, action);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> CompletableFuture&lt;Void&gt; <span class="title">runAfterEitherAsync</span><span class="params">(CompletionStage&lt;?&gt; other,Runnable action,Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orRunStage(screenExecutor(executor), other, action);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>3)、applyToEither：两个任务有一个执行完成，获取它的返回值，处理任务并有新的返回值。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">applyToEither</span><span class="params">(CompletionStage&lt;? extends T&gt; other, Function&lt;? <span class="keyword">super</span> T, U&gt; fn)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orApplyStage(<span class="keyword">null</span>, other, fn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">applyToEitherAsync</span><span class="params">(CompletionStage&lt;? extends T&gt; other, Function&lt;? <span class="keyword">super</span> T, U&gt; fn)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orApplyStage(asyncPool, other, fn);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> &lt;U&gt; <span class="function">CompletableFuture&lt;U&gt; <span class="title">applyToEitherAsync</span><span class="params">(CompletionStage&lt;? extends T&gt; other, Function&lt;? <span class="keyword">super</span> T, U&gt; fn,Executor executor)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orApplyStage(screenExecutor(executor), other, fn);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 两个任务有一个执行完了(获取到返回结果)，就执行任务3.(自己没有返回值)</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">future_001.acceptEitherAsync(future_002,(res)-&gt;&#123;</span><br><span class="line">  System.out.println(<span class="string">"任务3执行: "</span>+res);</span><br><span class="line">&#125;,executor);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 两个任务有一个执行完了(不获取其返回结果)，就执行任务3（自己没有返回值）</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">future_001.runAfterEitherAsync(future_002,()-&gt;&#123;</span><br><span class="line">  System.out.println(<span class="string">"任务3执行"</span>);</span><br><span class="line">&#125;,executor);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 两个任务有一个执行完了（获取其返回结果），就执行任务3。（自己有返回值）</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">CompletableFuture&lt;String&gt; stringCompletableFuture2 = future_001.applyToEitherAsync(future_002, (res) -&gt; &#123;</span><br><span class="line">  <span class="keyword">return</span> res.toString() + <span class="string">"--&gt;😄😄"</span>;</span><br><span class="line">&#125;, executor);</span><br><span class="line">System.out.println(<span class="string">"任务3执行："</span>+stringCompletableFuture2.get());</span><br></pre></td></tr></table></figure>
+<h4 id="7、多任务组合"><a href="#7、多任务组合" class="headerlink" title="7、多任务组合"></a>7、多任务组合</h4><p>allOf：等待所有任务完成 </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Void&gt; <span class="title">allOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> andTree(cfs, <span class="number">0</span>, cfs.length - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>anyOf：只要有一个任务完成</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> CompletableFuture&lt;Object&gt; <span class="title">anyOf</span><span class="params">(CompletableFuture&lt;?&gt;... cfs)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> orTree(cfs, <span class="number">0</span>, cfs.length - <span class="number">1</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例子:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">CompletableFuture&lt;String&gt; futureImg = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"查询商品图片信息"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"apple.jpg"</span>;</span><br><span class="line">&#125;, executor);</span><br><span class="line">CompletableFuture&lt;String&gt; futureAttr = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"查询商品属性信息"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"黑色+256G"</span>;</span><br><span class="line">&#125;, executor);</span><br><span class="line">CompletableFuture&lt;String&gt; futureDesc = CompletableFuture.supplyAsync(() -&gt; &#123;</span><br><span class="line">  System.out.println(<span class="string">"查询商品简介"</span>);</span><br><span class="line">  <span class="keyword">return</span> <span class="string">"苹果"</span>;</span><br><span class="line">&#125;, executor);</span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 等待futureImg、futureAttr、futureDesc所有任务完成</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">CompletableFuture&lt;Void&gt; allof = CompletableFuture.allOf(futureImg, futureAttr, futureDesc);</span><br><span class="line">allof.get(); <span class="comment">// 等待所有结果完成</span></span><br><span class="line">System.out.println(<span class="string">"allOf等待所有结果完成: "</span>+futureImg.get()+<span class="string">"=&gt;"</span>+futureAttr.get()+<span class="string">"=&gt;"</span>+futureDesc.get());</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">         * 等待futureImg、futureAttr、futureDesc只要有一个任务完成</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">CompletableFuture&lt;Object&gt; anyof = CompletableFuture.anyOf(futureImg, futureAttr, futureDesc);</span><br><span class="line">anyof.get(); <span class="comment">// 只要有一个任务完成</span></span><br><span class="line">System.out.println(<span class="string">"anyOf只要有一个任务完成: "</span>+anyof.get());</span><br></pre></td></tr></table></figure>
+<h3 id="四、线程池的三种队列"><a href="#四、线程池的三种队列" class="headerlink" title="四、线程池的三种队列"></a>四、线程池的三种队列</h3><p>1、SynchronousQueue</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ExecutorService cachedThreadPool = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">4</span>, Runtime.getRuntime().availableProcessors() * <span class="number">2</span>, <span class="number">0</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> SynchronousQueue&lt;&gt;(), r -&gt; <span class="keyword">new</span> Thread(r, <span class="string">"ThreadTest"</span>));</span><br></pre></td></tr></table></figure>
+<p>SynchronousQueue没有容量，是无缓冲等待队列，是一个不存储元素的阻塞队列，会直接将任务交给消费者，必须等队列中的添加元素被消费后才能继续添加新的元素。拥有公平（FIFO）和非公平(LIFO)策略，非公平侧罗会导致一些数据永远无法被消费的情况？使用SynchronousQueue阻塞队列一般要求maximumPoolSizes为无界(Integer.MAX_VALUE)，避免线程拒绝执行操作。</p>
+<p>2、LinkedBlockingQueue</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ExecutorService cachedThreadPool = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">4</span>, Runtime.getRuntime().availableProcessors() * <span class="number">2</span>, <span class="number">0</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(), r -&gt; <span class="keyword">new</span> Thread(r, <span class="string">"ThreadTest"</span>));</span><br></pre></td></tr></table></figure>
+<p>LinkedBlockingQueue是一个无界缓存等待队列。当前执行的线程数量达到corePoolSize的数量时，剩余的元素会在阻塞队列里等待。（<strong>所以在使用此阻塞队列时maximumPoolSizes就相当于无效了</strong>），每个线程完全独立于其他线程。生产者和消费者使用独立的锁来控制数据的同步，即在高并发的情况下可以并行操作队列中的数据。</p>
+<p>注：这个队列需要注意的是，虽然通常称其为一个无界队列，但是可以人为指定队列大小，而且由于其用于记录队列大小的参数是int类型字段，所以通常意义上的无界其实就是队列长度为 Integer.MAX_VALUE，且在不指定队列大小的情况下也会默认队列大小为 Integer.MAX_VALUE，等同于如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ExecutorService cachedThreadPool = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">4</span>, Runtime.getRuntime().availableProcessors() * <span class="number">2</span>, <span class="number">0</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> LinkedBlockingQueue&lt;&gt;(Integer.MAX_VALUE), r -&gt; <span class="keyword">new</span> Thread(r, <span class="string">"ThreadTest"</span>));</span><br></pre></td></tr></table></figure>
+<p>3、ArrayBlockingQueue</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> ExecutorService cachedThreadPool = <span class="keyword">new</span> ThreadPoolExecutor(<span class="number">4</span>, Runtime.getRuntime().availableProcessors() * <span class="number">2</span>, <span class="number">0</span>, TimeUnit.MILLISECONDS, <span class="keyword">new</span> ArrayBlockingQueue&lt;&gt;(<span class="number">32</span>), r -&gt; <span class="keyword">new</span> Thread(r, <span class="string">"ThreadTest"</span>));</span><br></pre></td></tr></table></figure>
+<p>ArrayBlockingQueue是一个有界缓存等待队列，可以指定缓存队列的大小，当正在执行的线程数等于corePoolSize时，多余的元素缓存在ArrayBlockingQueue队列中等待有空闲的线程时继续执行，当ArrayBlockingQueue已满时，加入ArrayBlockingQueue失败，会开启新的线程去执行，当线程数已经达到最大的maximumPoolSizes时，再有新的元素尝试加入ArrayBlockingQueue时会执行拒绝策略。</p>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                    
+                        <li class="next">
+                            <a href="/2021/06/29/Lucene/" data-toggle="tooltip" data-placement="top" title="Lucene">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="undefined"
+                    data-server="undefined"
+                    data-type="undefined"
+                    data-fixed="undefined" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Wed Sep 15 2021 22:01:26 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#java" title="java">java</a>
+                        
+                          <a class="tag" href="/tags/#基础理解" title="基础理解">基础理解</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- Search -->
+
+<script src="/js/search.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>

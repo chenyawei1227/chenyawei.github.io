@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- Head tag -->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="baidu-site-verification" content="093lY4ziMu" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="description" content="A hexo theme">
+    <meta name="keyword"  content="Chenyawei,luke, hexo">
+    <link rel="shortcut icon" href="/img/ironman-draw.png">
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--<link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>-->
+    <title>
+        
+          Redis的五大数据类型 - chenyawei-blog
+        
+    </title>
+
+    <link rel="canonical" href="https://bytenote.cn/2020/01/14/Redis的五大数据类型/">
+
+    <!-- Bootstrap Core CSS -->
+    
+<link rel="stylesheet" href="/css/bootstrap.min.css">
+
+
+    <!-- Custom CSS --> 
+    
+      
+<link rel="stylesheet" href="/css/dusign-light.css">
+
+      <!-- background effects end -->
+    
+    
+    <!-- Pygments Highlight CSS -->
+    
+<link rel="stylesheet" href="/css/highlight.css">
+
+
+    
+<link rel="stylesheet" href="/css/widget.css">
+
+
+    
+<link rel="stylesheet" href="/css/rocket.css">
+
+
+    
+<link rel="stylesheet" href="/css/signature.css">
+
+
+    
+      
+<link rel="stylesheet" href="/css/toc.css">
+
+    
+
+    
+<link rel="stylesheet" href="/css/dusign-common.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.googleapis.css">
+
+
+    <!-- Custom Fonts -->
+    <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <!--<link href="https://cdn.staticfile.org/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    
+      
+<link rel="stylesheet" href="/css/font-awesome.css">
+
+    
+
+    <link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    
+        <!-- background effects start -->
+        
+        <!-- background effects end -->
+    
+
+	<!-- Modified by Yu-Hsuan Yen -->
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        
+            background-image: url('')
+            /*post*/
+        
+    }
+    
+    #signature{
+        background-image: url('/img/signature/Just-do-it-white.png');
+    }
+    
+</style>
+
+<header class="intro-header" >
+    <!-- Signature -->
+    <div id="signature">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                
+                    <div class="post-heading">
+                        <div class="tags">
+                            
+                              <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                            
+                              <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
+                            
+                        </div>
+                        <h1>Redis的五大数据类型</h1>
+                        <h2 class="subheading"></h2>
+                        <span class="meta">
+                            Posted by Chenyawei on
+                            2020-01-14
+                        </span>
+
+                        
+                            <div class="blank_box"></div>
+                            <span class="meta">
+                                Words <span class="post-count">1.4k</span> and
+                                Reading Time <span class="post-count">5</span> Minutes
+                            </span>
+                            <div class="blank_box"></div>
+                            <!-- 不蒜子统计 start -->
+                            <span class="meta">
+                                Viewed <span id="busuanzi_value_page_pv"><i class="fa fa-spinner fa-spin"></i></span> Times
+                            </span>
+                            <!-- 不蒜子统计 end -->
+                        
+
+                    </div>
+                
+
+                </div>
+            </div>
+        </div>      
+    </div>
+    <div class="waveWrapper">
+        <div class="wave wave_before" style="background-image: url('/img/wave-top80.png')"></div>
+        <div class="wave wave_after" style="background-image: url('/img/wave-top80.png')"></div>
+    </div>
+</header>
+
+	
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Chenyawei&#39;s Blog</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <!-- Known Issue, found by Hux:
+            <nav>'s height woule be hold on by its content.
+            so, when navbar scale out, the <nav> will cover tags.
+            also mask any touch event of tags, unfortunately.
+        -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+
+                    
+
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/about/">About</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/archive/">Archives</a>
+                        </li>
+                        
+                    
+
+                        
+                        <li>
+                            <a href="/tags/">Tags</a>
+                        </li>
+                        
+                    
+
+                    <li>
+                        <a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Chinese Blog</a>
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">Store</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    $toggle.addEventListener('click', handleMagic)
+    function handleMagic(e){
+        if ($navbar.className.indexOf('in') > 0) {
+        // CLOSE
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        }else{
+        // OPEN
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+</script>
+
+
+    <!-- Main Content -->
+    <!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+            <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <h2 id="一、Redis的五大数据类型"><a href="#一、Redis的五大数据类型" class="headerlink" title="一、Redis的五大数据类型"></a>一、Redis的五大数据类型</h2><ul>
+<li><p>String（字符串）</p>
+<p>string是redis最基本的类型，可以理解为Memcached一样的类型，一个key对应一个value。</p>
+<p>string类型是二进制安全的，意思是redis的string可以包含任何数据。比如ipg图片或者序列化的对象。</p>
+<p>string类型是Redis最基本的数据结构，一个redis中字符串value最多可以是512M。</p>
+</li>
+<li><p>Hash（哈希，类似java里的Map）</p>
+<p>Redis hash是一个键值对集合。</p>
+<p>Redis hash是一个string类型的field和value的映射表，hash特别适合用于存储对象。</p>
+<p>类似java里面的Map<String,Object></p>
+</li>
+<li><p>List（列表）</p>
+<p>Redis列表是简单的字符串列表，按照插入顺序排序。可以添加一个元素到列表的头部（左边）或者尾部（右边）。</p>
+<p>它的底层是一个链表。</p>
+</li>
+<li><p>Set（集合)</p>
+<p>Redis的Set是string类型的无序集合。它是通过HashTable实现的。</p>
+</li>
+<li><p>Zset（sorted set：有序集合）</p>
+<p>Redis zset 和 set 一样也是string类型元素的集合,且不允许重复的成员。</p>
+<p>不同的是每个元素都会关联一个double类型的分数。</p>
+<p>redis正是通过分数来为集合中的成员进行从小到大的排序。zset的成员是唯一的,但分数(score)却可以重复。</p>
+</li>
+</ul>
+<p>哪里去获得redis常见数据类型操作命令: <a href="http://redisdoc.com/" target="_blank" rel="noopener">http://redisdoc.com/</a></p>
+<h2 id="二、Redis-键-key"><a href="#二、Redis-键-key" class="headerlink" title="二、Redis 键(key)"></a>二、Redis 键(key)</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahedgtxgxj30hv0iogmu.jpg" alt="img"> </p>
+<p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">keys *</span><br><span class="line">exists key的名字,判断某个key是否存在</span><br><span class="line">move key db --&gt;当前库就没有了，被移出了</span><br><span class="line">expire key 秒钟：为给定的key设置过期时间</span><br><span class="line">ttl key查看还有多少秒过期，-1表示永不过期，-2表示已过期</span><br><span class="line">type key 查看你的key是什么类型</span><br></pre></td></tr></table></figure>
+<h2 id="三、Redis字符串-String-，单值单value"><a href="#三、Redis字符串-String-，单值单value" class="headerlink" title="三、Redis字符串(String)，单值单value"></a>三、Redis字符串(String)，单值单value</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahef8wrbpj30ma0hi75m.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahefabmn4j30mb07f0t5.jpg" alt="img"> </p>
+<p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">set&#x2F;get&#x2F;del&#x2F;append&#x2F;strlen</span><br><span class="line">Incr&#x2F;decr&#x2F;incrby&#x2F;decrby,一定要是数字才能进行加减</span><br><span class="line">getrange&#x2F;setrange</span><br><span class="line">setex(set with expire)键秒值&#x2F;setnx(set if not exist)</span><br><span class="line">mset&#x2F;mget&#x2F;msetnx</span><br><span class="line">getset(先get在set)</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">append: 的使用：</span><br><span class="line"></span><br><span class="line">127.0.0.1:6379&gt; set k1 hello</span><br><span class="line">OK</span><br><span class="line">127.0.0.1:6379&gt; append k1 h</span><br><span class="line">(integer) 6</span><br><span class="line">127.0.0.1:6379&gt; get k1</span><br><span class="line">&quot;helloh&quot;</span><br><span class="line">127.0.0.1:6379&gt;</span><br></pre></td></tr></table></figure>
+<p>getrange:获取指定区间范围内的值，类似between……and的关系</p>
+<ul>
+<li>从零到负一表示全部:</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahep76q5wj308r049mx5.jpg" alt="img"> </p>
+<p>setrange设置指定区间范围内的值，格式是setrange key值 具体值</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahep8fc4dj309r043dft.jpg" alt="img"> </p>
+<h2 id="四、Redis列表-List-，单值多value"><a href="#四、Redis列表-List-，单值多value" class="headerlink" title="四、Redis列表(List)，单值多value"></a>四、Redis列表(List)，单值多value</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheq787trj30mb0cwwfg.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheq8lhguj30md08s0t7.jpg" alt="img"> </p>
+<p>案例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">lpush&#x2F;rpush&#x2F;lrange</span><br><span class="line">lpop&#x2F;rpop</span><br><span class="line">lindex,按照索引下表获得元素（从上到下）</span><br><span class="line">llen</span><br><span class="line">lren key 删N个value</span><br><span class="line">ltrim key 开始index 结束index，截取指定范围的值后再赋值给key</span><br><span class="line">rpoplpush 源列表 目的列表</span><br><span class="line">lset key index value</span><br><span class="line">linsert key before&#x2F;after 值1 值2</span><br><span class="line">性能总结</span><br><span class="line">它是一个字符链表，left，right都可以插入添加。</span><br><span class="line">如果键不存在，创建新的链表。</span><br><span class="line">如果键已经存在，新增内容。</span><br><span class="line">如果值全移除，对应的键也就消失了。</span><br><span class="line">链表的操作无论是头和尾效率都极高，但假如是对中间元素进行操作，效率就很惨淡了。</span><br></pre></td></tr></table></figure>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahessv0whj30a80b3jrn.jpg" alt="img"> 通过索引获取列表中的元素 lindex key index</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahet8sto5j309b03a0sn.jpg" alt="img"> </p>
+<ul>
+<li><p>从left往right删除2个值等于v1的元素，返回的值为实际删除的数量</p>
+</li>
+<li><p>LREM list3 0 值，表示删除全部给定的值。</p>
+</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahetnaoaej30em0cy74p.jpg" alt="img"> </p>
+<ul>
+<li>ltrim：截取指定索引区间的元素，格式是ltrim list的key 起始索引 结束索引</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheu8ut4pj30do0cpgm0.jpg" alt="img"> a </p>
+<ul>
+<li><p>移除列表的最后一个元素，并将该元素添加到另一个列表并返回:</p>
+<p>Rpoplpush list2 list3</p>
+</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheugs9e4j30a1066jrd.jpg" alt="img"> </p>
+<ul>
+<li>Lset list3 2 c++  通过索引设置列表的元素的值</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheuqkspuj309t0fd0t1.jpg" alt="img"> </p>
+<ul>
+<li>在list某个已有值的前后再添加具体值</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gaheuz2lsgj30dx0g1t9c.jpg" alt="img"> </p>
+<h2 id="五、Redis集合-Set-，单值多value"><a href="#五、Redis集合-Set-，单值多value" class="headerlink" title="五、Redis集合(Set)，单值多value"></a>五、Redis集合(Set)，单值多value</h2><ul>
+<li>常用</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahf9sda8ej30cy0iimya.jpg" alt="img"> s</p>
+<p>案例</p>
+<ul>
+<li>sadd/smembers/sismember</li>
+</ul>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfbi56gxj30av09pwep.jpg" alt="img"> </p>
+<ul>
+<li><p>scard，获取集合里面的元素个数</p>
+<p>获取集合里面的元素个数</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfblc0dyj30ao02xwee.jpg" alt="img"> </p>
+</li>
+<li><p>srem key value 删除集合中元素</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfbo6porj307q01x744.jpg" alt="img"> </p>
+</li>
+<li><p>srandmember key 某个整数(随机出几个数)</p>
+<p>*  从set集合里面随机取出2个</p>
+<p>*  如果超过最大数量就全部取出，</p>
+<p>*  如果写的值是负数，比如-3 ，表示需要取出3个，但是可能会有重复值。</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfchmmonj30970diwev.jpg" alt="img"> </p>
+</li>
+<li><p>spop key 随机出栈</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfd7ypxkj307v07x74b.jpg" alt="img"> </p>
+</li>
+<li><p>smove key1 key2 在key1里某个值      作用是将key1里的某个值赋给key2</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfdt5vwcj308s07laa3.jpg" alt="img"> </p>
+</li>
+<li><p>数学集合类</p>
+<p>差集：sdiff</p>
+<p>在第一个set里面而不在后面任何一个set里面的项</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfgn46iqj309s07nwek.jpg" alt="img"> </p>
+<p>交集：sinter</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfgl5p8qj309v0bbt8x.jpg" alt="img"> </p>
+<p>并集：sunion</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gahfghfbktj30a3057745.jpg" alt="img"> </p>
+</li>
+</ul>
+<h2 id="六、Redis哈希-Hash-KV模式不变，但V是一个键值对"><a href="#六、Redis哈希-Hash-KV模式不变，但V是一个键值对" class="headerlink" title="六、Redis哈希(Hash) KV模式不变，但V是一个键值对"></a>六、Redis哈希(Hash) KV模式不变，但V是一个键值对</h2><p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38a94plyj30b50gq0un.jpg" alt="img"> </p>
+<p>KV模式不变，但V是一个键值对</p>
+<p>  hset/hget/hmset/hmget/hgetall/hdel</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38a796ilj30cx0dk754.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38a3yb7tj30er06s74o.jpg" alt="img"> </p>
+<p>hlen</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb3z4y6ycaj30f40a2dgl.jpg"/></p>
+<p> hexists key 在key里面的某个值的key</p>
+<p> hkeys/hvals</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38a13prwj307x06g3yj.jpg" alt="img"> </p>
+<p> hincrby/hincrbyfloat</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb389zdij1j30b407pdg1.jpg" alt="img"> </p>
+<p> hsetnx   </p>
+<p>不存在赋值，</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38al6colj309604b3yi.jpg" alt="img"> </p>
+<h2 id="七、Redis有序集合Zset-sorted-set-在set基础上，加一个score值"><a href="#七、Redis有序集合Zset-sorted-set-在set基础上，加一个score值" class="headerlink" title="七、Redis有序集合Zset(sorted set),在set基础上，加一个score值"></a>七、Redis有序集合Zset(sorted set),在set基础上，加一个score值</h2><p>在set基础上，加一个score值。之前set是k1 v1 v2 v3，现在zset是k1 score1 v1 score2 v2</p>
+<p>常用</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38aiv0ocj30mc0ckdgs.jpg" alt="img"> </p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38aglg17j30me0cpwfl.jpg" alt="img"> </p>
+<p> zadd/zrange. 新建/查找</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38aeqqryj30cu0anaab.jpg" alt="img"> </p>
+<p> zrangebyscore key 开始score 结束score 显示分数withscores, “(“ 表示小于</p>
+<p>zrangebyscore zset1 (70 (90 withscores           (“ 表示小于</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38az5uwwj30bt0d8mxh.jpg" alt="img"> </p>
+<p>zrangebyscore zset1 60 -inf withscores        大于等于60分的</p>
+<p>zrangebyscore zset1 (60 -inf withscores      大于60分的</p>
+<p>zrangebyscore zset1 (60 +inf withscores limit 0 2     下标位置limit在0到2</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38b0svy1j30dw0ebwex.jpg" alt="img"> </p>
+<p> withscores</p>
+<p>limit 作用是返回限制  limit 开始下标步 多少步</p>
+<p>zrem key 某score下对应的value值，作用是删除元素，格式是zrem zset的key 项的值，项的值可以是多个 zrem key score某个对应值，可以是多个值</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38c33s46j30ch08gglr.jpg" alt="img"> </p>
+<p> zcard/zcount key score区间/zrank key values值，作用是获得下标值/zscore key 对应值,获得分数</p>
+<p>zcard ：获取集合中元素个数</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38c76yfvj308f023wec.jpg" alt="img"> </p>
+<p>zcount ：获取分数区间内元素个数，zcount key 开始分数区间 结束分数区间</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38cbjolrj30ah027745.jpg" alt="img"> </p>
+<p>zrank： 获取value在zset中的下标位置</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38cdft2wj30cv0ap3ys.jpg" alt="img"> </p>
+<p>zscore：按照值获得对应的分数</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38cg5ii6j30d30dmwew.jpg" alt="img"> </p>
+<p> zrevrank key values值，作用是逆序获得下标值</p>
+<p>正序、逆序获得下标索引值</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38df9wofj30b303e3yg.jpg" alt="img"> </p>
+<p> zrevrange</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38ddi9b9j30dz0cf74n.jpg" alt="img"> </p>
+<p> zrevrangebyscore  key 结束score 开始score</p>
+<p>zrevrangebyscore zset1 90 60 withscores  分数是反着来的</p>
+<p><img src="https://tva1.sinaimg.cn/large/006tNbRwgy1gb38dc1xtgj30gk0d03yz.jpg" alt="img"> </p>
+
+                
+                <hr>
+                <!-- Pager -->
+                <ul class="pager">
+                    
+                        <li class="previous">
+                            <a href="/2020/01/21/Redis解析配置文件redis-conf/" data-toggle="tooltip" data-placement="top" title="Redis解析配置文件redis.conf">&larr; Previous Post</a>
+                        </li>
+                    
+                    
+                        <li class="next">
+                            <a href="/2020/01/14/Redis入门介绍/" data-toggle="tooltip" data-placement="top" title="Redis入门介绍">Next Post &rarr;</a>
+                        </li>
+                    
+                </ul>
+
+                <div class="comment_notes_blank"></div>
+
+                <!-- tip start -->
+                
+                <div class="visitor_notice">
+                    <img 
+                        src="/img/notice.png" 
+                        alt="notice"
+                        title="notice"/>
+                    <p class="notice">
+                        欢迎访问 <a href="https://www.bytenote.cn" target="bytenote">chenyawei</a> 的博客, 若有问题或者有好的建议欢迎留言，笔者看到之后会及时回复。 评论点赞需要github账号登录，如果没有账号的话请点击 <a href="https://github.com" target="view_window" > github </a> 注册， 谢谢 !
+                    </p>
+                </div>
+                <div class="comment_notes">
+                    <p>
+                        If you like this blog or find it useful for you, you are welcome to comment on it. 
+                        You are also welcome to share this blog, so that more people can participate in it.
+                        If the images used in the blog infringe your copyright, please contact the author to delete them. Thank you !
+                    </p>
+                </div>
+                
+                <!-- tip end -->
+
+                <!--分享-->
+                
+                <!--分享-->
+
+                <!-- require APlayer start --><!--
+                
+                <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.css">
+                <script src="https://cdn.jsdelivr.net/npm/aplayer@1.10/dist/APlayer.min.js"></script>
+                <script src="https://cdn.jsdelivr.net/npm/meting@1.2/dist/Meting.min.js"></script>
+
+                <div class="aplayer"
+                    data-id="undefined"
+                    data-server="undefined"
+                    data-type="undefined"
+                    data-fixed="undefined" >
+                </div>
+                -->
+                <!-- require APlayer end -->
+
+                <!-- gitment start -->
+                
+                <hr>
+                <div id="blog_comments"></div>
+
+
+<!-- <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script> -->
+
+
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+
+
+<!-- <link rel="stylesheet" href="/css/gitment.css">
+<script type="text/javascript" src="/js/gitment.js"></script> -->
+
+
+<!-- <script src="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/gitment.browser.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/theme-next/theme-next-gitment@1/default.css"/> -->
+
+<!--
+<link rel="stylesheet" href="https://billts.site/extra_css/gitment.css">
+<script src="https://billts.site/js/gitment.js"></script>
+-->
+
+<script>
+const myTheme = {
+  render(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'gitment-container gitment-root-container'
+    
+     // your custom component
+    container.appendChild(instance.renderSomething(state, instance))
+    
+    container.appendChild(instance.renderHeader(state, instance))
+    container.appendChild(instance.renderComments(state, instance))
+    container.appendChild(instance.renderEditor(state, instance))
+    //container.appendChild(instance.renderFooter(state, instance))
+    return container
+  },
+  renderSomething(state, instance) {
+    const container = document.createElement('div')
+    container.lang = "en-US"
+    container.className = 'hello_visitor'
+    if (state.user.login) {
+      container.innerText = `Hello ${state.user.login}, Welcome to comment system`
+    }
+    return container
+  }
+}
+
+
+const gitment = new Gitment({
+    id: 'Tue Jan 14 2020 12:13:20 GMT+0800', // optional
+    owner: "chenyawei1227",
+    repo: "comments",
+    oauth: {
+      client_id: "6a6df0d17c78f49f9e9c",
+      client_secret: "0d8968f17d43240fa2a0364955d823f615f067f8",
+    },
+    theme: myTheme,
+    // ...
+    // For more available options, check out the documentation below
+  })
+  
+  gitment.render('blog_comments')
+  // or
+  // gitment.render(document.getElementById('comments'))
+  // or
+  // document.body.appendChild(gitment.render())
+</script>
+                
+                <!-- gitment end -->
+
+                <!-- 来必力City版安装代码 -->
+                
+                <!-- City版安装代码已完成 -->
+
+                <!-- disqus comment start -->
+                
+                <!-- disqus comment end -->
+            </div>
+            
+            <!-- Tabe of Content -->
+            <!-- Table of Contents -->
+
+                
+            <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <!-- no hr -->
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                       
+                          <a class="tag" href="/tags/#redis" title="redis">redis</a>
+                        
+                          <a class="tag" href="/tags/#中间件" title="中间件">中间件</a>
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+
+                    
+                        <li><a href="https://www.jianshu.com/u/78b636e8a217" target="_blank">Luke&#39;s Blog</a></li>
+                    
+                        <li><a href="#" target="_blank">Luke&#39;s Web</a></li>
+                    
+                        <li><a href="https://github.com/chenyawei1227" target="_blank">Luke&#39;s Github</a></li>
+                    
+                        <li><a href="#" target="_blank">Other</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("https://cdn.bootcss.com/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'left',
+          icon: 'ℬ'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+
+
+    <style  type="text/css">
+        .notice {
+            color:rgba(51,51,51,0.9);
+            margin:0px;
+            padding:0px;
+        }
+
+        .visitor_notice a {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:normal;
+            font-style:italic;
+        }
+
+        .visitor_notice a:hover {
+            text-decoration:none;
+            color:rgba(51,51,51,0.9);
+            font-weight:bolder;
+            font-style:italic;
+        }
+    </style>
+
+
+<style  type="text/css">
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+
+        .comment_notes_blank {
+            height:100px;
+        }
+        
+        .comment_notes {
+            color:rgba(51,51,51,0.9);
+            text-align:left;
+            font-style:italic;
+        }
+
+        .visitor_notice {
+            border:1px solid rgba(209,216,220,0.9);
+            padding:20px 20px 20px 20px;
+            border-radius:10px;
+        }
+
+        .visitor_notice img{
+            height:40px;
+            width:40px;
+            float:left;
+            position:relative;
+            margin:0px 10px 0px 0px;
+            padding:0px;
+            top:0px;
+            left:0px;
+        }
+    }
+
+    .comment_notes_blank {
+        height:100px;
+    }
+    
+    .comment_notes {
+        color:rgba(51,51,51,0.9);
+        text-align:left;
+        font-style:italic;
+    }
+
+    .visitor_notice {
+        border:1px solid rgba(209,216,220,0.9);
+        padding:20px 20px 20px 20px;
+        border-radius:10px;
+    }
+
+    .visitor_notice img{
+        height:40px;
+        width:40px;
+        float:left;
+        position:relative;
+        margin:0px 10px 0px 0px;
+        padding:0px;
+        top:0px;
+        left:0px;
+    }
+
+</style>
+
+
+
+    <!-- Footer -->
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+
+                
+                    <li>
+                        <a target="_blank"  href="https://github.com/chenyawei1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://twitter.com/cyw119900">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/profile.php?id=100011498883719">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/cyw1227">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                
+
+                
+
+                
+
+                
+
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; Chenyawei 个人博客   豫ICP备19044156号
+                    <br>
+                    Powered by 
+                    <a href="https://github.com/chenyawei1227/hexo-theme-snail" target="_blank" rel="noopener">
+                        <i>hexo-theme-snail</i>
+                    </a> | 
+                    <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0"
+                        width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=dusign&repo=hexo-theme-snail&type=star&count=true">
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+
+</footer>
+
+<!-- jQuery -->
+
+<script src="/js/jquery.min.js"></script>
+
+
+<!-- Bootstrap Core JavaScript -->
+
+<script src="/js/bootstrap.min.js"></script>
+
+
+<!-- Custom Theme JavaScript -->
+
+<script src="/js/hux-blog.min.js"></script>
+
+
+<!-- Search -->
+
+<script src="/js/search.js"></script>
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async("https://bytenote.cn/js/jquery.tagcloud.js",function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+<script>
+    // dynamic User by Hux
+    var _gaId = 'UA-XXXXXXXX-X';
+    var _gaDomain = 'yoursite';
+
+    // Originial
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+    ga('create', _gaId, _gaDomain);
+    ga('send', 'pageview');
+</script>
+
+
+
+
+<!-- Baidu Tongji -->
+
+
+<!-- Search -->
+
+    <script type="text/javascript">      
+        var search_path = "search.xml";
+        if (search_path.length == 0) {
+            search_path = "search.xml";
+        }
+    var path = "/" + search_path;
+    searchFunc(path, 'local-search-input', 'local-search-result');
+    </script>
+
+
+<!-- busuanzi -->
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+	<a id="rocket" href="#top" class=""></a>
+	<script type="text/javascript" src="/js/totop.js?v=1.0.0" async=""></script>
+    <script type="text/javascript" src="/js/toc.js?v=1.0.0" async=""></script>
+
+    
+        <!-- background effects start -->
+        
+
+        
+            <script type="text/javascript" src="/js/mouse-click.js" content='[&quot;🌱&quot;,&quot;just do it&quot;,&quot;🌾&quot;,&quot;🍀&quot;,&quot;don&#39;t give up&quot;,&quot;🍂&quot;,&quot;🌻&quot;,&quot;try it again&quot;,&quot;🍃&quot;,&quot;never say die&quot;,&quot;🌵&quot;,&quot;🌿&quot;,&quot;🌴&quot;]' color='[&quot;rgb(121,93,179)&quot; ,&quot;rgb(76,180,231)&quot; ,&quot;rgb(184,90,154)&quot; ,&quot;rgb(157,211,250)&quot; ,&quot;rgb(255,0,0)&quot; ,&quot;rgb(242,153,29)&quot; ,&quot;rgb(23,204,16)&quot; ,&quot;rgb(222,0,0)&quot; ,&quot;rgb(22,36,92)&quot; ,&quot;rgb(127,24,116)&quot; ,&quot;rgb(119,195,79)&quot; ,&quot;rgb(4,77,34)&quot; ,&quot;rgb(122,2,60)&quot;]'></script>
+        
+
+        <!-- background effects end -->
+    
+
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.6/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+
+</html>
